@@ -12,6 +12,14 @@ from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm
 from tutorials.helpers import login_prohibited
 
 
+#############################################################
+from .models import Admin, Tutor, Student, Lesson, Invoice
+from .forms import AdminForm, TutorForm, StudentForm, LessonForm, InvoiceForm
+
+
+
+
+
 @login_required
 def dashboard(request):
     """Display the current user's dashboard."""
@@ -151,3 +159,13 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+    
+
+
+
+    #####################
+
+
+
+
+

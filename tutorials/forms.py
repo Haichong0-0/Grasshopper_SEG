@@ -4,6 +4,10 @@ from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 from .models import User
 
+###################################################
+from .models import Admin, Tutor, Student, Lesson, Invoice
+###################################################
+
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
 
@@ -108,3 +112,49 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
             password=self.cleaned_data.get('new_password'),
         )
         return user
+    
+
+    #########################################################
+
+class AdminForm(forms.ModelForm):
+    "Form for admins"
+
+    class Meta:
+
+        model = Admin
+        fields = '__all__'
+
+
+class TutorForm(forms.ModelForm):
+    "Form for tutors"
+
+    class Meta:
+
+        model = Tutor
+        fields = '__all__'
+
+
+class StudentForm(forms.ModelForm):
+    "Form for admins"
+
+    class Meta:
+
+        model = Student
+        fields = '__all__'
+
+
+class LessonForm(forms.ModelForm):
+    "Form for lessons"
+
+    class Meta:
+
+        model = Lesson
+        fields = '__all__'
+
+class InvoiceForm(forms.ModelForm):
+    "Form for invoices"
+
+    class Meta:
+
+        model = Invoice
+        fields = '__all__'
