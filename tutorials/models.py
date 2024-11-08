@@ -40,3 +40,20 @@ class User(AbstractUser):
         """Return a URL to a miniature version of the user's gravatar."""
         
         return self.gravatar(size=60)
+    
+
+
+class Admin(): # Deyu
+
+
+class Tutor(): # George
+
+
+class Student(): # Arjan
+
+
+class Lesson(): # Fatimah
+
+
+class Invoic(): # George
+ 
