@@ -4,6 +4,8 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ImproperlyConfigured
+from django.forms import BaseModelForm
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView
@@ -16,6 +18,7 @@ from tutorials.helpers import login_prohibited
 from .models import Admin, Tutor, Student, Lesson, Invoice
 from .forms import AdminForm, TutorForm, StudentForm, LessonForm, InvoiceForm
 
+from django.views.generic import CreateView, ListView, DeleteView
 
 
 
@@ -161,11 +164,13 @@ class SignUpView(LoginProhibitedMixin, FormView):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
     
 
+class AdminCreateView(LoginRequiredMixin, CreateView):
+    """View to create a new admin"""
+    model = Admin
+    templateName = "admin.html"
+    formClass = AdminForm
+    #fields = '__all__'
 
-
-    #####################
-
-
-
-
+class AdminUpdateView(LoginRequiredMixin, UpdateView):
+    """View to update an admin"""
 

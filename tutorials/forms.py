@@ -117,7 +117,7 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
     #########################################################
 
 class AdminForm(forms.ModelForm):
-    "Form for admins"
+    """Form for admins"""
 
     class Meta:
 
