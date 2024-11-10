@@ -41,19 +41,57 @@ class User(AbstractUser):
         
         return self.gravatar(size=60)
     
-
-
 class Admin(): # Deyu
-
-
+    pass
+    
 class Tutor(): # George
+    pass
 
 
 class Student(): # Arjan
+    pass
+    
+class Lesson(models.Model): #Fatimah
+    FREQUENCY_CHOICES = [
+        ('weekly'),
+        ('fortnightly'),
+        ('every other week')
+    ]
+    
+    DURATION_CHOICES = [
+        (60, '1 hour'),
+        (120, '2 hours'),
+    ]
 
+    TERMS = [
+        ('September-Christmas'),
+        ('January-Easter term'),
+        ('May-July')
+    ]
 
-class Lesson(): # Fatimah
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='lessons')
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, related_name='lessons')
+    subject = models.CharField(max_length=100)
+    frequency = models.CharField(max_length=20, choices=FREQUENCY_CHOICES)
+    term = models.CharField(max_length=50, choices=TERMS)
+    duration = models.IntegerField(choices=DURATION_CHOICES, default=60)
+    start_date = models.DateField()
+    day_of_week = models.CharField(max_length=10, choices=[
+        ('monday', 'Monday'),
+        ('tuesday', 'Tuesday'),
+        ('wednesday', 'Wednesday'),
+        ('thursday', 'Thursday'),
+        ('friday', 'Friday'),
+        ('saturday', 'Saturday'),
+        ('sunday', 'Sunday'),
+    ])
+    start_time = models.TimeField()
+    location = models.CharField(max_length=100, default="Online") 
+    is_approved = models.BooleanField(default=False)
+    invoice_paid = models.BooleanField(default=False)
+    price_per_term = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
 
 
 class Invoic(): # George
+    pass
  
