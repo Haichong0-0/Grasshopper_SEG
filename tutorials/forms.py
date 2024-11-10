@@ -32,7 +32,7 @@ class UserForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email']
+        fields = ['first_name', 'last_name', 'username', 'email', 'date_of_birth', 'bio']
 
 class NewPasswordMixin(forms.Form):
     """Form mixing for new_password and password_confirmation fields."""
@@ -91,6 +91,7 @@ class PasswordForm(NewPasswordMixin):
         return self.user
 
 
+
 class SignUpForm(NewPasswordMixin, forms.ModelForm):
     """Form enabling unregistered users to sign up."""
 
@@ -98,7 +99,7 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email']
+        fields = ['first_name', 'last_name', 'username', 'email', 'date_of_birth', 'bio']
 
     def save(self):
         """Create a new user."""
@@ -110,6 +111,8 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
             last_name=self.cleaned_data.get('last_name'),
             email=self.cleaned_data.get('email'),
             password=self.cleaned_data.get('new_password'),
+            date_of_birth = self.cleaned_data.get('date_of_birth'),
+            bio = self.cleaned_data.get('bio')
         )
         return user
     

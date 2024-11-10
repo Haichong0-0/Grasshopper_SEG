@@ -42,18 +42,27 @@ class User(AbstractUser):
         return self.gravatar(size=60)
     
 
+class Admin(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='admin')
+    role = models.CharField(max_length=50, blank=True, default="Admin")
 
-class Admin(): # Deyu
+    def save(self, *args, **kwargs):
+        self.user.is_staff = True
+        self.user.use_superuser = True
+        self.user.save()
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return (f"Admin: {self.user.full_name()}")
+
+# class Tutor(): # George
 
 
-class Tutor(): # George
+# class Student(): # Arjan
 
 
-class Student(): # Arjan
+# class Lesson(): # Fatimah
 
 
-class Lesson(): # Fatimah
-
-
-class Invoic(): # George
+# class Invoic(): # George
  
