@@ -50,6 +50,21 @@ class Tutor(): # George
 
 
 class Student(): # Arjan
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+
+    preferred_language = models.CharField(max_length=50)
+    preferred_tutor = models.ForeignKey('Tutor', on_delete=models.SET_NULL, null=True, blank=True)
+    preferred_lesson_duration = models.IntegerField(default=60)
+    preferred_lesson_frequency = models.CharField(max_length=20, choices=[('weekly', 'Weekly'), ('fortnightly', 'Fortnightly')])
+
+
+    current_term_start_date = models.DateField(null=True, blank=True)
+    current_term_end_date = models.DateField(null=True, blank=True)
+    current_term_tutor = models.ForeignKey('Tutor', on_delete=models.SET_NULL, null=True, blank=True)
+    current_term_lesson_time = models.TimeField(null=True, blank=True)
 
 
 class Lesson(): # Fatimah
