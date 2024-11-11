@@ -44,16 +44,61 @@ class User(AbstractUser):
 
 
 class Admin(): # Deyu
+    pass
 
 
-class Tutor(): # George
+class Tutor(User):  # George
+    SUBJECTS = [("Ruby on Rails"), 
+                ("Python"), 
+                ("Javascript"), 
+                ("C++"), 
+                ("C#"), 
+                ("React"), 
+                ("Angular"), 
+                ("Vue.js"), 
+                ("Node.js"), 
+                ("Express.js"), 
+                ("Django"), 
+                ("Flask"), 
+                ("Spring"), 
+                ("Hibernate"), 
+                ("JPA"), 
+                ("SQL"), 
+                ("MongoDB"), 
+                ("PostgreSQL"), 
+                ("MySQL"), 
+                ("Git")]
+               
+    subject = models.CharField(max_length=100, blank=False)
+    timings = models.CharField(max_length=255, blank=True)
+
+    def setTimings(self, timings_list):
+        self.Timings = ','.join(timings_list)
+
+    def getTimings(self):
+        return self.Timings.split(',')
+
 
 
 class Student(): # Arjan
+    pass
 
 
 class Lesson(): # Fatimah
+    pass
 
 
-class Invoic(): # George
- 
+class Invoic(models.Model): # George
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    topic = models.CharField(max_length=100, blank=False)
+    no_of_classes = models.IntegerField(blank=False)
+    price_per_class = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
+    sum = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
+
+    class Meta:
+        def calculate_sum(self):
+            self.sum = self.no_of_classes * self.price_per_class
+            self.save()
+        def getInvoice(self):
+            return self.sum 
