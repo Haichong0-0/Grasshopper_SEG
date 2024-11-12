@@ -116,7 +116,7 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
 
     #########################################################
 
-class AdminForm(forms.ModelForm):
+'''class AdminForm(forms.ModelForm):
     """Form for admins"""
 
     class Meta:
@@ -157,4 +157,4 @@ class InvoiceForm(forms.ModelForm):
     class Meta:
 
         model = Invoice
-        fields = '__all__'
+        fields = '__all__'''

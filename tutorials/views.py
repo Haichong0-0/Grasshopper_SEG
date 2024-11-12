@@ -164,7 +164,8 @@ class SignUpView(LoginProhibitedMixin, FormView):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
     
 
-class AdminCreateView(LoginRequiredMixin, CreateView):
+
+'''class AdminCreateView(LoginRequiredMixin, CreateView):
     """View to create a new admin"""
     model = Admin
     templateName = "admin.html"
@@ -172,5 +173,6 @@ class AdminCreateView(LoginRequiredMixin, CreateView):
     #fields = '__all__'
 
 class AdminUpdateView(LoginRequiredMixin, UpdateView):
-    """View to update an admin"""
+    """View to update an admin"""'''
+
 
