@@ -41,19 +41,20 @@ class User(AbstractUser):
         
         return self.gravatar(size=60)
     
+    
+    
+'''class Admin(): # Deyu
 
 
-class Admin(): # Deyu
+#class Tutor(): # George
 
 
-class Tutor(): # George
+#class Student(): # Arjan
 
 
-class Student(): # Arjan
+#class Lesson(): # Fatimah
 
 
-class Lesson(): # Fatimah
-
-
-class Invoic(): # George
+#class Invoic(): # George
  
+'''

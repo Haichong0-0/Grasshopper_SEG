@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator
 from .models import User
 
 ###################################################
-from .models import Admin, Tutor, Student, Lesson, Invoice
+'''from .models import Admin, Tutor, Student, Lesson, Invoice'''
 ###################################################
 
 class LogInForm(forms.Form):
@@ -114,7 +114,7 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
         return user
     
 
-    #########################################################
+
 
 '''class AdminForm(forms.ModelForm):
     """Form for admins"""

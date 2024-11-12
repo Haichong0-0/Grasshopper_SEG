@@ -15,8 +15,8 @@ from tutorials.helpers import login_prohibited
 
 
 #############################################################
-from .models import Admin, Tutor, Student, Lesson, Invoice
-from .forms import AdminForm, TutorForm, StudentForm, LessonForm, InvoiceForm
+'''from .models import Admin, Tutor, Student, Lesson, Invoice
+from .forms import AdminForm, TutorForm, StudentForm, LessonForm, InvoiceForm'''
 
 from django.views.generic import CreateView, ListView, DeleteView
 
