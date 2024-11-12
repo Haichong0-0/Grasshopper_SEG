@@ -12,6 +12,7 @@ from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
 from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm
 from tutorials.helpers import login_prohibited
+from tutorials.models import User
 
 
 #############################################################
@@ -162,6 +163,16 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
+class UserListView(ListView):
+    model = User
+    template_name = 'user_list.html'
+    context_object_name = 'users'
+
+    def get_queryset(self):
+        """Customize the queryset to fetch all users."""
+        return User.objects.all()
+
     
 
 
