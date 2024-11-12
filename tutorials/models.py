@@ -68,27 +68,33 @@ class Tutor(User):  # George
                 ("PostgreSQL"), 
                 ("MySQL"), 
                 ("Git")]
-               
+    
+    tutorNo = models.AutoField(primary_key=True)           
     subject = models.CharField(max_length=100, blank=False)
     timings = models.CharField(max_length=255, blank=True)
-
+    bio = models.TextField(blank=True)
     def setTimings(self, timings_list):
         self.Timings = ','.join(timings_list)
 
     def getTimings(self):
         return self.Timings.split(',')
 
-
+class TutorAvailability(): 
+    tutorNo = models.ForeignKey(Tutor, on_delete=models.CASCADE)
+    day = models.CharField(max_length=10, blank=False)
+    starttime = models.TimeField(blank=False)
+    endtime = models.TimeField(blank=False)
 
 class Student(): # Arjan
     pass
 
 
-class Lesson(): # Fatimah
+class Lesson(): # Fatimah 
     pass
 
 
-class Invoic(models.Model): # George
+class Invoice(models.Model): # George
+    orderNo = models.AutoField(primary_key=True)
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     topic = models.CharField(max_length=100, blank=False)
@@ -102,3 +108,4 @@ class Invoic(models.Model): # George
             self.save()
         def getInvoice(self):
             return self.sum 
+
