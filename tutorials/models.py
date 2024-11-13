@@ -52,6 +52,13 @@ class Student(): # Arjan
     pass
     
 class Lesson(models.Model): #Fatimah
+
+    SUBJECT_CHOICES = [
+        ('ruby_on_rails', 'Web Development in Ruby on Rails'),
+        ('python_tensorflow', 'Training neural networks with Python/TensorFlow'),
+        ('front_end_development', 'Front-End Development with Javascript/React.js'),
+    ]
+
     FREQUENCY_CHOICES = [
         ('weekly'),
         ('fortnightly'),
@@ -69,9 +76,27 @@ class Lesson(models.Model): #Fatimah
         ('May-July')
     ]
 
+    STATUS_CHOICES = [
+        ('requested'),
+        ('pending'),
+        ('confirmed')
+    ]
+
+    TIME_CHOICES = [
+        ('09:00', '9:00 AM'),
+        ('10:00', '10:00 AM'),
+        ('11:00', '11:00 AM'),
+        ('12:00', '12:00 PM'),
+        ('13:00', '1:00 PM'),
+        ('14:00', '2:00 PM'),
+        ('15:00', '3:00 PM'),
+        ('16:00', '4:00 PM'),
+        ('17:00', '5:00 PM'),
+    ]
+
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='lessons')
-    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, related_name='lessons')
-    subject = models.CharField(max_length=100)
+    tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='lessons')
+    subject = models.CharField(max_length=100, choices=SUBJECT_CHOICES)
     frequency = models.CharField(max_length=20, choices=FREQUENCY_CHOICES)
     term = models.CharField(max_length=50, choices=TERMS)
     duration = models.IntegerField(choices=DURATION_CHOICES, default=60)
@@ -85,9 +110,9 @@ class Lesson(models.Model): #Fatimah
         ('saturday', 'Saturday'),
         ('sunday', 'Sunday'),
     ])
-    start_time = models.TimeField()
+    start_time = models.CharField(max_length=5, choices=TIME_CHOICES, default='09:00')
     location = models.CharField(max_length=100, default="Online") 
-    is_approved = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='requested')
     invoice_paid = models.BooleanField(default=False)
     price_per_term = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
 
