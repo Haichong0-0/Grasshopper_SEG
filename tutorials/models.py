@@ -42,8 +42,6 @@ class User(AbstractUser):
         return self.gravatar(size=60)
 
 
-
-
 class Tutor(User):  # George
     SUBJECTS = [
         ('ruby_on_rails', 'Ruby on Rails'),
@@ -154,7 +152,7 @@ class Lesson(models.Model): #Fatimah
     ]
 
     #student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='lessons')
-    #tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='lessons')
+    tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='lessons')
     subject = models.CharField(max_length=100, choices=SUBJECTS)
     frequency = models.CharField(max_length=20, choices=FREQUENCY_CHOICES)
     term = models.CharField(max_length=50, choices=TERMS)
