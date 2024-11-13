@@ -43,7 +43,7 @@ class User(AbstractUser):
     
     
     
-'''class Admin(): # Deyu
+#class Admin(): # Deyu
 
 
 #class Tutor(): # George
@@ -52,9 +52,89 @@ class User(AbstractUser):
 #class Student(): # Arjan
 
 
-#class Lesson(): # Fatimah
+class Lesson(models.Model): #Fatimah
 
+    SUBJECTS = [
+        ('ruby_on_rails', 'Ruby on Rails'),
+        ('python', 'Python'),
+        ('javascript', 'Javascript'),
+        ('c_plus_plus', 'C++'),
+        ('c_sharp', 'C#'),
+        ('react', 'React'),
+        ('angular', 'Angular'),
+        ('vue_js', 'Vue.js'),
+        ('node_js', 'Node.js'),
+        ('express_js', 'Express.js'),
+        ('django', 'Django'),
+        ('flask', 'Flask'),
+        ('spring', 'Spring'),
+        ('hibernate', 'Hibernate'),
+        ('jpa', 'JPA'),
+        ('sql', 'SQL'),
+        ('mongodb', 'MongoDB'),
+        ('postgresql', 'PostgreSQL'),
+        ('mysql', 'MySQL'),
+        ('git', 'Git'),
+    ]
+
+    FREQUENCY_CHOICES = [
+        ('weekly', 'Weekly'),
+        ('fortnightly', 'Fortnightly'),
+        ('every other week', 'Every other week')
+    ]
+    
+    DURATION_CHOICES = [
+        (60, '1 hour'),
+        (120, '2 hours'),
+    ]
+
+    TERMS = [
+        ('September-Christmas', 'September-Christmas'),
+        ('January-Easter term','January-Easter' ),
+        ('May-July','May-July')
+    ]
+
+
+    STATUS_CHOICES = [
+        ('requested', 'Requested'),
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed')
+    ]
+
+    TIME_CHOICES = [
+        ('09:00', '9:00 AM'),
+        ('10:00', '10:00 AM'),
+        ('11:00', '11:00 AM'),
+        ('12:00', '12:00 PM'),
+        ('13:00', '1:00 PM'),
+        ('14:00', '2:00 PM'),
+        ('15:00', '3:00 PM'),
+        ('16:00', '4:00 PM'),
+        ('17:00', '5:00 PM'),
+    ]
+
+    DAYS = [
+        ('monday', 'Monday'),
+        ('tuesday', 'Tuesday'),
+        ('wednesday', 'Wednesday'),
+        ('thursday', 'Thursday'),
+        ('friday', 'Friday'),
+        ('saturday', 'Saturday'),
+        ('sunday', 'Sunday'),
+    ]
+
+    #student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='lessons')
+    #tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='lessons')
+    subject = models.CharField(max_length=100, choices=SUBJECTS)
+    frequency = models.CharField(max_length=20, choices=FREQUENCY_CHOICES)
+    term = models.CharField(max_length=50, choices=TERMS)
+    duration = models.IntegerField(choices=DURATION_CHOICES, default=60)
+    start_date = models.DateField()
+    day_of_week = models.CharField(max_length=10, choices=DAYS)
+    start_time = models.CharField(max_length=5, choices=TIME_CHOICES, default='09:00')
+    location = models.CharField(max_length=100, default="Online") 
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='requested')
+    invoice_paid = models.BooleanField(default=False)
+    price_per_term = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
 
 #class Invoic(): # George
- 
-'''

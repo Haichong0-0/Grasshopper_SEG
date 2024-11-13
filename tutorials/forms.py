@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator
 from .models import User
 
 ###################################################
-'''from .models import Admin, Tutor, Student, Lesson, Invoice'''
+from .models import Lesson
 ###################################################
 
 class LogInForm(forms.Form):
@@ -113,6 +113,12 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
         )
         return user
     
+
+class LessonForm(forms.ModelForm):
+    "Form for lessons"
+    class Meta:
+        model = Lesson
+        fields = ['subject','frequency','term','duration']
 
 
 

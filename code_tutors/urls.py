@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from tutorials import views
+from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,5 +31,7 @@ urlpatterns = [
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('sign_up/', views.SignUpView.as_view(), name='sign_up'),
     path('users/', views.UserListView.as_view(), name='user_list'),
+    path('requestlesson/', lesson_create_view, name='lesson_create'),
+    path('student_dashboard/', student_dashboard, name='student_dashboard')
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
