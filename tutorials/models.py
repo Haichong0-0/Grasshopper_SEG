@@ -40,8 +40,38 @@ class User(AbstractUser):
         """Return a URL to a miniature version of the user's gravatar."""
         
         return self.gravatar(size=60)
+
+
+
+
+class Tutor(User):  # George
+    SUBJECTS = [
+        ('ruby_on_rails', 'Ruby on Rails'),
+        ('python', 'Python'),
+        ('javascript', 'Javascript'),
+        ('c_plus_plus', 'C++'),
+        ('c_sharp', 'C#'),
+        ('react', 'React'),
+        ('angular', 'Angular'),
+        ('vue_js', 'Vue.js'),
+        ('node_js', 'Node.js'),
+        ('express_js', 'Express.js'),
+        ('django', 'Django'),
+        ('flask', 'Flask'),
+        ('spring', 'Spring'),
+        ('hibernate', 'Hibernate'),
+        ('jpa', 'JPA'),
+        ('sql', 'SQL'),
+        ('mongodb', 'MongoDB'),
+        ('postgresql', 'PostgreSQL'),
+        ('mysql', 'MySQL'),
+        ('git', 'Git'),
+    ]
     
-    
+    tutorNo = models.AutoField(primary_key=True)          
+    subject = models.CharField(max_length=100, blank=False,choices=SUBJECTS)
+    bio = models.TextField(blank=True)
+
     
 '''class Admin(): # Deyu
 
