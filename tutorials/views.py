@@ -12,11 +12,12 @@ from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
 from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm
 from tutorials.helpers import login_prohibited
+from tutorials.models import User
 
 
 #############################################################
-from .models import Admin, Tutor, Student, Lesson, Invoice
-from .forms import AdminForm, TutorForm, StudentForm, LessonForm, InvoiceForm
+'''from .models import Admin, Tutor, Student, Lesson, Invoice
+from .forms import AdminForm, TutorForm, StudentForm, LessonForm, InvoiceForm'''
 
 from django.views.generic import CreateView, ListView, DeleteView
 
@@ -162,9 +163,20 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
+class UserListView(ListView):
+    model = User
+    template_name = 'user_list.html'
+    context_object_name = 'users'
+
+    def get_queryset(self):
+        """Customize the queryset to fetch all users."""
+        return User.objects.all()
+
     
 
-class AdminCreateView(LoginRequiredMixin, CreateView):
+
+'''class AdminCreateView(LoginRequiredMixin, CreateView):
     """View to create a new admin"""
     model = Admin
     templateName = "admin.html"
@@ -172,5 +184,6 @@ class AdminCreateView(LoginRequiredMixin, CreateView):
     #fields = '__all__'
 
 class AdminUpdateView(LoginRequiredMixin, UpdateView):
-    """View to update an admin"""
+    """View to update an admin"""'''
+
 
