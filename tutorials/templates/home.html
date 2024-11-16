@@ -1,14 +1,20 @@
 {% extends 'base.html' %}
 {% block body %}
   <div class="container vh-100">
+    <a href='{% url 'log_in' %}' class="btn btn-lg btn-secondary">
+      Admin login
+    </a>
     <div class="row h-100">
       <div class="col-12 my-auto">
         <div class="card cover-card offset-sm-2 offset-md-4 offset-lg-7">
-          <h1 class="cover-heading">Task Manager</h1>
-          <p class="cover-text">A task manager application by Team <i>Grasshopper</i></p>
+          <h1 class="cover-heading">Online Lessons</h1>
+          <p class="cover-text"> Online lessons <i>online lessons</i></p>
           <p>
-            <a href='{% url 'sign_up' %}' class="btn btn-lg btn-secondary">
-              Sign up
+            <a href="{% url 'sign_up' %}?variation=student" class="btn btn-lg btn-secondary" onclick="">
+              Student Sign up
+            </a>
+            <a href="{% url 'sign_up' %}?variation=tutor" class="btn btn-lg btn-secondary">
+              Tutor Sign up
             </a>
           </p>
           <p>
@@ -21,3 +27,4 @@
     </div>
   </div>
 {% endblock %}
+

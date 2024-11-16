@@ -1,15 +1,73 @@
+<!-- Deyu: will use bootstrap to improve the aesthetics in the future -->
+
 {% extends 'base_content.html' %}
 {% block content %}
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <h1>Sign up</h1>
+      <h1>{{ message }}</h1>
       <form action="{% url 'sign_up' %}" method="post">
         {% csrf_token %}
-        {% include 'partials/bootstrap_form.html' with form=form %}
+
+        <!-- Common fields for both students and tutors -->
+        <div class="mb-3">
+          {{ form.first_name.label_tag }}
+          {{ form.first_name }}
+        </div>
+        <div class="mb-3">
+          {{ form.last_name.label_tag }}
+          {{ form.last_name }}
+        </div>
+        <div class="mb-3">
+          {{ form.username.label_tag }}
+          {{ form.username }}
+        </div>
+        <div class="mb-3">
+          {{ form.email.label_tag }}
+          {{ form.email }}
+        </div>
+
+          <!-- Password fields -->
+        <div class="mb-3">
+          {{ form.password.label_tag }}
+          {{ form.password }}
+        </div>
+        <div class="mb-3">
+          {{ form.password_confirmation.label_tag }}
+          {{ form.password_confirmation }}
+        </div>
+
+        <!-- student fields -->
+        {% if user_type == 'student' %}
+          <div class="mb-3">
+            {{ form.date_of_birth.label_tag }}
+            {{ form.date_of_birth }}
+          </div>
+          <div class="mb-3">
+            {{ form.subjects.label_tag }}
+            {{ form.subjects }}
+          </div>
+          <div class="mb-3">
+            {{ form.proficiency_level.label_tag }}
+            {{ form.proficiency_level }}
+          </div>
+        {% endif %}
+
+        <!-- tutor fields -->
+        {% if user_type == 'tutor' %}
+          <div class="mb-3">
+            {{ form.subjects.label_tag }}
+            {{ form.subjects }}
+          </div>
+        {% endif %}
+
         <input type="submit" value="Sign up" class="btn btn-primary">
       </form>
     </div>
   </div>
 </div>
 {% endblock %}
+
+
+
+

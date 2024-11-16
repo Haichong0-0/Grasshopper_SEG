@@ -149,20 +149,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
 
-class SignUpView(LoginProhibitedMixin, FormView):
-    """Display the sign up screen and handle sign ups."""
-
-    form_class = SignUpForm
-    template_name = "sign_up.html"
-    redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
-
-    def form_valid(self, form):
-        self.object = form.save()
-        login(self.request, self.object)
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
 class UserListView(ListView):
     model = User
@@ -173,7 +159,42 @@ class UserListView(ListView):
         """Customize the queryset to fetch all users."""
         return User.objects.all()
 
-    
+
+class SignUpView(LoginProhibitedMixin, FormView): # Deyu
+    """Display the sign-up screen and handle sign-ups."""
+
+    form_class = SignUpForm
+    template_name = "sign_up.html"
+    redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
+
+    def get_form_kwargs(self):
+        # Pass the 'variation' parameter as 'user_type' to the form.
+        kwargs = super().get_form_kwargs()
+         # has an option of seeing a variation of the sign-up page, student or tutor
+        kwargs['user_type'] = self.request.GET.get('variation')  
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        # Add a custom message based on the user_type
+        context = super().get_context_data(**kwargs)
+        variation = self.request.GET.get('variation')
+
+        if variation == 'student':
+            context['message'] = "Student sign up"
+        elif variation == 'tutor':
+            context['message'] = "Tutor sign up"
+
+        context['user_type'] = variation
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save()
+        login(self.request, self.object)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
 
 
 '''class AdminCreateView(LoginRequiredMixin, CreateView):

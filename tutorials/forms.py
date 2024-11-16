@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from .models import User
+from .models import User, Tutor, Student
 
 ###################################################
 '''from .models import Admin, Tutor, Student, Lesson, Invoice'''
@@ -32,7 +32,7 @@ class UserForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email']
+        fields = ['first_name', 'last_name', 'username', 'email', 'date_of_birth']
 
 class NewPasswordMixin(forms.Form):
     """Form mixing for new_password and password_confirmation fields."""
@@ -98,7 +98,23 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email']
+        fields = ['first_name', 'last_name', 'username', 'email',  'password']  # Base fields common to both students and tutors
+
+    def __init__(self, *args, **kwargs):
+        # Get the user type if provided (for conditional fields)
+        user_type = kwargs.pop('user_type', None)
+        super().__init__(*args, **kwargs)
+
+        # Add fields conditionally based on user_type
+        if user_type == 'student':
+            # Fields specific to students
+            self.fields['date_of_birth'] = forms.DateField(required=True, label="Date of Birth")
+            self.fields['subjects'] = forms.CharField(max_length=100, required=True, label="Subjects")
+            self.fields['proficiency_level'] = forms.ChoiceField(
+                choices=Student.PROFICIENCY_LEVEL_CHOICES,
+                required=True,
+                label="Proficiency Level"
+            )
 
     def save(self):
         """Create a new user."""
