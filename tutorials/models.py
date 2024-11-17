@@ -18,6 +18,9 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=50, blank=False)
     email = models.EmailField(unique=True, blank=False)
 
+    # for tutors
+    '''is_tutor = models.BooleanField(default=False)'''
+
 
     class Meta:
         """Model options."""
@@ -73,7 +76,7 @@ class Tutor(User):  # George
     bio = models.TextField(blank=True)
 
     
-class Admin(): # Deyu
+#class Admin(): # Deyu
 
 
 
