@@ -173,17 +173,17 @@ class UserListView(ListView):
         """Customize the queryset to fetch all users."""
         return User.objects.all()
 
+
+
+
+#@login_required
+def tutor_dashboard(request):
+    """display tutor dashboard if user is a tutor"""
     
-
-
-'''class AdminCreateView(LoginRequiredMixin, CreateView):
-    """View to create a new admin"""
-    model = Admin
-    templateName = "admin.html"
-    formClass = AdminForm
-    #fields = '__all__'
-
-class AdminUpdateView(LoginRequiredMixin, UpdateView):
-    """View to update an admin"""'''
-
+    context = {
+        #'full_name': request.user.full_name(),
+        #'gravatar': request.user.gravatar(),
+    }
+    
+    return render(request, 'tutor_dashboard.html', context)
 
