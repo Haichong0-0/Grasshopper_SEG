@@ -4,8 +4,9 @@ from tutorials.models import Lesson
 
 def student_dashboard(request):
     context = {
-        'message': 'Welcome to your dashboard!',
+        'user': 'Student!',
     }
+
     return render(request, 'student_dashboard_templates/student_dashboard.html', context)
 
 def lesson_create_view(request):

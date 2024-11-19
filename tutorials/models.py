@@ -77,7 +77,39 @@ class Tutor(User):  # George
 #class Tutor(): # George
 
 
-#class Student(): # Arjan
+class Student(): # Arjan
+    BEGINNER = 'Beginner'
+    NOVICE = 'Novice'
+    INTERMEDIATE = 'Intermediate'
+    ADVANCED = 'Advanced'
+    MASTERY = 'Mastery'
+    PROFICIENCY_LEVEL_CHOICES = [
+        (BEGINNER, 'Beginner'),
+        (NOVICE, 'Novice'),
+        (INTERMEDIATE, 'Intermediate'),
+        (ADVANCED, 'Advanced'),
+        (MASTERY, 'Mastery'),
+    ]
+    proficiency_level = models.CharField(
+        max_length=12,
+        choices=PROFICIENCY_LEVEL_CHOICES,
+        default=INTERMEDIATE,
+        blank=True,
+        null=True
+    )
+
+    phone = models.CharField(max_length=12, default='07777777777')
+
+    preferred_language = models.CharField(max_length=50, default="Python")
+    preferred_tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='student_preferring_tutor')
+    preferred_lesson_duration = models.IntegerField(default=60)
+    preferred_lesson_frequency = models.CharField(max_length=20, choices=[('weekly', 'Weekly'), ('fortnightly', 'Fortnightly')], default="('weekly', 'Weekly')")
+
+
+    current_term_start_date = models.DateField(null=True, blank=True)
+    current_term_end_date = models.DateField(null=True, blank=True)
+    current_term_tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='student_with_current_term_tutor')
+    current_term_lesson_time = models.TimeField(null=True, blank=True)
 
 
 class Lesson(models.Model): #Fatimah
@@ -151,7 +183,7 @@ class Lesson(models.Model): #Fatimah
         ('sunday', 'Sunday'),
     ]
 
-    #student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='lessons')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='lessons')
     tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='lessons')
     subject = models.CharField(max_length=100, choices=SUBJECTS)
     frequency = models.CharField(max_length=20, choices=FREQUENCY_CHOICES)
