@@ -48,7 +48,7 @@ class User(AbstractUser):
 
 
 class Tutor(User):  # George
-    SUBJECTS = [
+    SUBJECTS = [ # All of the subjects that a Tutor is available to teach
         ('ruby_on_rails', 'Ruby on Rails'),
         ('python', 'Python'),
         ('javascript', 'Javascript'),
@@ -69,11 +69,11 @@ class Tutor(User):  # George
         ('postgresql', 'PostgreSQL'),
         ('mysql', 'MySQL'),
         ('git', 'Git'),
-    ]
+    ] 
     
-    tutorNo = models.AutoField(primary_key=True)          
-    subject = models.CharField(max_length=100, blank=False,choices=SUBJECTS)
-    bio = models.TextField(blank=True)
+    tutorNo = models.AutoField(primary_key=True)  # field for tutor no
+    subject = models.CharField(max_length=100, blank=False,choices=SUBJECTS) # field for tutor subject
+    bio = models.TextField(blank=True) # field for tutor bio
 
     
 #class Admin(): # Deyu
@@ -81,18 +81,18 @@ class Tutor(User):  # George
 
 
 class Student(): # Arjan
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField()
-    phone = models.CharField(max_length=20)
+    first_name = models.CharField(max_length=50) # field for student first name
+    last_name = models.CharField(max_length=50) # field for student last name
+    email = models.EmailField() # field for student email
+    phone = models.CharField(max_length=20) # field for student phone
 
-    preferred_language = models.CharField(max_length=50)
-    preferred_tutor = models.ForeignKey('Tutor', on_delete=models.SET_NULL, null=True, blank=True)
-    preferred_lesson_duration = models.IntegerField(default=60)
-    preferred_lesson_frequency = models.CharField(max_length=20, choices=[('weekly', 'Weekly'), ('fortnightly', 'Fortnightly')])
+    preferred_language = models.CharField(max_length=50) # field for the preferred language of a student
+    preferred_tutor = models.ForeignKey('Tutor', on_delete=models.SET_NULL, null=True, blank=True) # field for the preferred tutor of a student
+    preferred_lesson_duration = models.IntegerField(default=60) # preferred student lesson time
+    preferred_lesson_frequency = models.CharField(max_length=20, choices=[('weekly', 'Weekly'), ('fortnightly', 'Fortnightly')]) # preferred student lesson frequency
 
 
-    current_term_start_date = models.DateField(null=True, blank=True)
+    current_term_start_date = models.DateField(null=True, blank=True) # student term time enrollment field details
     current_term_end_date = models.DateField(null=True, blank=True)
     current_term_tutor = models.ForeignKey('Tutor', on_delete=models.SET_NULL, null=True, blank=True)
     current_term_lesson_time = models.TimeField(null=True, blank=True)
