@@ -25,11 +25,24 @@ from django.views.generic import CreateView, ListView, DeleteView
 
 
 @login_required
-def dashboard(request):
-    """Display the current user's dashboard."""
+@login_required
+def admin_dashboard(request):
+    """Display the admin's dashboard."""
 
     current_user = request.user
-    return render(request, 'dashboard.html', {'user': current_user})
+    return render(request, 'admin_dashboard.html', {'user': current_user})
+
+def tutor_dashboard(request):
+    """Display the tutor's dashboard."""
+
+    current_user = request.user
+    return render(request, 'tutor_dashboard.html', {'user': current_user})
+
+def student_dashboard(request):
+    """Display the student's dashboard."""
+
+    current_user = request.user
+    return render(request, 'student_dashboard.html', {'user': current_user})
 
 
 @login_prohibited

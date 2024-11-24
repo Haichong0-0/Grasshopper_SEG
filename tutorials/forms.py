@@ -98,35 +98,56 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email',  'password']  # Base fields common to both students and tutors
+        fields = ['first_name', 'last_name', 'username', 'email']  # Base fields common to both students and tutors
 
     def __init__(self, *args, **kwargs):
         # Get the user type if provided (for conditional fields)
-        user_type = kwargs.pop('user_type', None)
+        self.user_type = kwargs['request'].GET.get('variations')
+        self.request = kwargs.pop('request', None)  # Extract the request object
         super().__init__(*args, **kwargs)
 
+        try:
+            self.user_type = kwargs['data'].GET.get('variations')
+            self.request = kwargs.pop('data', None)  # Extract the request object
+        # self.user_type = kwargs['request'].GET.get('variations')
+
+        except Exception as e:
+            print(e)
+
         # Add fields conditionally based on user_type
-        if user_type == 'student':
+        if self.user_type == 'student':
+            self.type = 'student'
             # Fields specific to students
             self.fields['date_of_birth'] = forms.DateField(required=True, label="Date of Birth")
-            self.fields['subjects'] = forms.CharField(max_length=100, required=True, label="Subjects")
+            # self.fields['subjects'] = forms.CharField(max_length=100, required=True, label="Subjects")
             self.fields['proficiency_level'] = forms.ChoiceField(
                 choices=Student.PROFICIENCY_LEVEL_CHOICES,
                 required=True,
                 label="Proficiency Level"
             )
+        else:
+            self.type = 'tutor'
 
     def save(self):
-        """Create a new user."""
+        """Create a new user with optional additional processing based on user type."""
+        user = super().save(commit=False)
+        variation = self.request.POST.get('variations')
 
-        super().save(commit=False)
+        user.set_password(self.cleaned_data['new_password'])
+
         user = User.objects.create_user(
-            self.cleaned_data.get('username'),
+            username=self.cleaned_data.get('username'),
             first_name=self.cleaned_data.get('first_name'),
             last_name=self.cleaned_data.get('last_name'),
             email=self.cleaned_data.get('email'),
             password=self.cleaned_data.get('new_password'),
+            type_of_user= variation if variation else 'student'
         )
+        print(self.type, 'type')
+        
+        if commit:
+            user.save()
+
         return user
     
 

@@ -1,5 +1,3 @@
-<!-- Deyu: will use bootstrap to improve the aesthetics in the future -->
-
 {% extends 'base_content.html' %}
 {% block content %}
 <div class="container">
@@ -8,6 +6,17 @@
       <h1>{{ message }}</h1>
       <form action="{% url 'sign_up' %}" method="post">
         {% csrf_token %}
+
+      <!-- Display form errors -->
+      {% if form.errors %}
+      <div class="alert alert-danger">
+          <ul>
+              {% for field, errors in form.errors.items %}
+                  <li>{{ field }}: {{ errors|join:", " }}</li>
+              {% endfor %}
+          </ul>
+      </div>
+      {% endif %}
 
         <!-- Common fields for both students and tutors -->
         <div class="mb-3">
@@ -29,15 +38,15 @@
 
           <!-- Password fields -->
         <div class="mb-3">
-          {{ form.password.label_tag }}
-          {{ form.password }}
+          {{ form.new_password.label_tag }}
+          {{ form.new_password }}
         </div>
         <div class="mb-3">
           {{ form.password_confirmation.label_tag }}
           {{ form.password_confirmation }}
         </div>
 
-        <!-- student fields -->
+        <!-- Conditional fields for student only -->
         {% if user_type == 'student' %}
           <div class="mb-3">
             {{ form.date_of_birth.label_tag }}
@@ -51,14 +60,16 @@
             {{ form.proficiency_level.label_tag }}
             {{ form.proficiency_level }}
           </div>
+          <input type="hidden" name="variations" value="student">
         {% endif %}
 
-        <!-- tutor fields -->
+        <!-- Conditional fields for tutor only -->
         {% if user_type == 'tutor' %}
           <div class="mb-3">
             {{ form.subjects.label_tag }}
             {{ form.subjects }}
           </div>
+          <input type="hidden" name="variations" value="tutor">
         {% endif %}
 
         <input type="submit" value="Sign up" class="btn btn-primary">
@@ -67,7 +78,3 @@
   </div>
 </div>
 {% endblock %}
-
-
-
-

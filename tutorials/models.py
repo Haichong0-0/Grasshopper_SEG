@@ -19,27 +19,13 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, blank=False)
     date_of_birth = models.DateField(default='2000-01-01')
 
-    # # Student-specific fields (nullable for other roles)
-    # BEGINNER = 'Beginner'
-    # NOVICE = 'Novice'
-    # INTERMEDIATE = 'Intermediate'
-    # ADVANCED = 'Advanced'
-    # MASTERY = 'Mastery'
-    # PROFICIENCY_LEVEL_CHOICES = [
-    #     (BEGINNER, 'Beginner'),
-    #     (NOVICE, 'Novice'),
-    #     (INTERMEDIATE, 'Intermediate'),
-    #     (ADVANCED, 'Advanced'),
-    #     (MASTERY, 'Mastery'),
-    # ]
-    # proficiency_level = models.CharField(
-    #     max_length=12,
-    #     choices=PROFICIENCY_LEVEL_CHOICES,
-    #     default=NOVICE,
-    #     blank=True,
-    #     null=True
-    # )
+    USER_TYPES = (
+        ('admin', 'Admin'),
+        ('tutor', 'Tutor'),
+        ('student', 'Student'),
+    )
 
+    type_of_user = models.CharField(max_length=20, choices=USER_TYPES, default='student')
 
     class Meta:
         """Model options."""
@@ -78,6 +64,9 @@ class Admin(User):
 
 
 class Tutor(User):  # George # Deyu
+
+    type_of_user = 'tutor'
+
     SUBJECTS = [
         ('ruby_on_rails', 'Ruby on Rails'),
         ('python', 'Python'),
@@ -116,6 +105,8 @@ class Tutor(User):  # George # Deyu
 
 class Student(User): # Arjan # Deyu
 
+    type_of_user = 'student'
+    
     BEGINNER = 'Beginner'
     NOVICE = 'Novice'
     INTERMEDIATE = 'Intermediate'
