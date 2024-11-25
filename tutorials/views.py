@@ -97,9 +97,17 @@ class LogInView(LoginProhibitedMixin, View):
         form = LogInForm(request.POST)
         self.next = request.POST.get('next') or settings.REDIRECT_URL_WHEN_LOGGED_IN
         user = form.get_user()
+
         if user is not None:
             login(request, user)
-            return redirect(self.next)
+            if user.type_of_user=="student":  
+                print(self.next)
+                return redirect(reverse('student_dashboard'))
+            elif user.type_of_user=="tutor":  
+                return redirect(reverse('tutor_dashboard'))
+            elif user.type_of_user=="admin":  
+                return redirect(reverse('admin_dashboard'))
+        
         messages.add_message(request, messages.ERROR, "The credentials provided were invalid!")
         return self.render()
 
@@ -180,11 +188,14 @@ class SignUpView(LoginProhibitedMixin, FormView): # Deyu
     template_name = "sign_up.html"
     redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
 
+    
     def get_form_kwargs(self):
         # Pass the 'variation' parameter as 'user_type' to the form.
         kwargs = super().get_form_kwargs()
-         # has an option of seeing a variation of the sign-up page, student or tutor
-        kwargs['user_type'] = self.request.GET.get('variation')  
+        kwargs['request'] = self.request  # Pass the request object
+        # has an option of seeing a variation of the sign-up page, student or tutor
+        # kwargs['user_type'] = self.request.GET.get('variation') 
+        print('coming from get_form_kwargs: ', kwargs) 
         return kwargs
 
     def get_context_data(self, **kwargs):
@@ -194,7 +205,9 @@ class SignUpView(LoginProhibitedMixin, FormView): # Deyu
 
         if variation == 'student':
             context['message'] = "Student sign up"
+            context['message'] = "Student sign up"
         elif variation == 'tutor':
+            context['message'] = "Tutor sign up"
             context['message'] = "Tutor sign up"
 
         context['user_type'] = variation
@@ -204,11 +217,21 @@ class SignUpView(LoginProhibitedMixin, FormView): # Deyu
         self.object = form.save()
         login(self.request, self.object)
         return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        """Log form errors for debugging."""
+        print("Form errors:", form.errors)  # Log errors to console
+        return super().form_invalid(form) 
 
     def get_success_url(self):
-        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
-
-
+        """Redirect based on user type."""
+        user = self.request.user
+        if user.is_staff:  # Admin user
+            return reverse('admin_dashboard')
+        elif user.type_of_user=="tutor":  
+            return reverse('tutor_dashboard')
+        elif user.type_of_user=="student":  
+            return reverse('student_dashboard')
 
 '''class AdminCreateView(LoginRequiredMixin, CreateView):
     """View to create a new admin"""

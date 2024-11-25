@@ -128,7 +128,7 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
         else:
             self.type = 'tutor'
 
-    def save(self):
+    def save(self, commit=True):
         """Create a new user with optional additional processing based on user type."""
         user = super().save(commit=False)
         variation = self.request.POST.get('variations')
@@ -143,7 +143,6 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
             password=self.cleaned_data.get('new_password'),
             type_of_user= variation if variation else 'student'
         )
-        print(self.type, 'type')
         
         if commit:
             user.save()
