@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Your Schedule</h2>
+
+        {% if lessons %}
+        <table class="table table-striped">
+            <thead class="table-dark">
+    <tr>
+        <th scope="col">Date</th> <!-- Added Date -->
+        <th scope="col">Subject</th>
+        <th scope="col">Day</th>
+        <th scope="col">Time</th>
+        <th scope="col">Duration</th>
+        <th scope="col">Location</th>
+        <th scope="col">Status</th>
+    </tr>
+</thead>
+<tbody>
+    {% for lesson in lessons %}
+    <tr>
+        <td>{{ lesson.start_date }}</td> <!-- Display Date -->
+        <td>{{ lesson.get_subject_display }}</td>
+        <td>{{ lesson.get_day_of_week_display }}</td>
+        <td>{{ lesson.get_start_time_display }}</td>
+        <td>{{ lesson.duration }} minutes</td>
+        <td>{{ lesson.location }}</td>
+        <td>
+            <span class="badge
+                {% if lesson.status == 'confirmed' %} bg-success
+                {% elif lesson.status == 'pending' %} bg-warning
+                {% else %} bg-secondary
+                {% endif %}">
+                {{ lesson.get_status_display }}
+            </span>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+
+        </table>
+        {% else %}
+        <p class="text-muted">You have no scheduled lessons at the moment.</p>
+        {% endif %}
+
+        <!-- Back to Dashboard Button -->
+        <a href="{% url 'student_dashboard' %}" class="btn btn-secondary mt-3">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

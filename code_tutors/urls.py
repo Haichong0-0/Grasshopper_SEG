@@ -19,7 +19,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from tutorials import views
-from tutorials.studentViews.student_dashboard import student_dashboard, lesson_create_view, student_invoices
+from tutorials.studentViews.student_dashboard import student_dashboard, lesson_create_view, student_invoices, \
+    student_schedule
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,5 +35,6 @@ urlpatterns = [
     path('requestlesson/', lesson_create_view, name='lesson_create'),
     path('student_dashboard/', student_dashboard, name='student_dashboard'),
     path('invoices/', student_invoices, name='invoices'),
+    path('schedule/', student_schedule, name='student_schedule')
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

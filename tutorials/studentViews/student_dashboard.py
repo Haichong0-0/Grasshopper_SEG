@@ -32,3 +32,14 @@ def student_invoices(request):
         'invoices': invoices,
     }
     return render(request, 'student_dashboard_templates/student_invoices.html', context)
+
+def student_schedule(request):
+    if request.user.is_authenticated and hasattr(request.user, 'student'):
+        lessons = Lesson.objects.filter(student=request.user.student).order_by('start_date','start_time')
+    else:
+        lessons = []
+
+    context = {
+        'lessons': lessons,
+    }
+    return render(request, 'student_dashboard_templates/student_schedule.html', context)
