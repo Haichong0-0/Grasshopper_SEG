@@ -199,12 +199,31 @@ def tutor_lessons(request):
 
 
 #@login_required
-def tutor_calendar(request):
-    """calendar page for tutors"""
+def tutor_schedule(request):
+    """schedule page for tutors"""
 
     context = {
 
     }
 
-    return render(request, 'tutor_calendar.html', context)
+    return render(request, 'tutor_schedule.html', context)
+
+def tutor_payment(request):
+    """payment page for tutors"""
+
+    context = {
+
+    }
+
+    return render(request, 'tutor_payment.html', context)
+
+def tutor_welcome(request):
+    """welcome page for tutors"""
+
+    context = {
+
+    }
+
+    return render(request, 'tutor_welcome.html', context)
+
 
