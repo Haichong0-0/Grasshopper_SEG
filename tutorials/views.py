@@ -187,3 +187,24 @@ def tutor_dashboard(request):
     
     return render(request, 'tutor_dashboard.html', context)
 
+#@login_required
+def tutor_lessons(request):
+    """lessons page for tutors"""
+
+    context = {
+
+    }
+
+    return render(request, 'tutor_lessons.html', context)
+
+
+#@login_required
+def tutor_calendar(request):
+    """calendar page for tutors"""
+
+    context = {
+
+    }
+
+    return render(request, 'tutor_calendar.html', context)
+
