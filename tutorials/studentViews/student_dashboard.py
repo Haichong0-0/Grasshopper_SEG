@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from tutorials.forms import LessonForm
-from tutorials.models import Lesson, Student
+from tutorials.models import Lesson, Student, Invoice
 from django.contrib.auth.decorators import login_required 
 
 @login_required
 def student_dashboard(request):
+
     context = {
         'user': 'Student!',
     }
@@ -33,8 +34,19 @@ def lesson_create_view(request):
         form = LessonForm()
     return render(request, 'student_dashboard_templates/lesson_form.html', {'form': form})
 
+
 def student_calenadr(request):
     pass
+
+def student_invoices(request):
+
+    invoices = Invoice.objects.all()
+
+    context = {
+        'invoices': invoices,
+    }
+    return render(request, 'student_dashboard_templates/student_invoices.html', context)
+
 
 @login_required
 def student_lessons_view(request):
