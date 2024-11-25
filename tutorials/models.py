@@ -78,7 +78,7 @@ class Tutor(User):  # George
 
 
 
-class Student(): # Arjan
+class Student(User): # Arjan
     BEGINNER = 'Beginner'
     NOVICE = 'Novice'
     INTERMEDIATE = 'Intermediate'
@@ -157,7 +157,7 @@ class Lesson(models.Model): #Fatimah
 
 
     STATUS_CHOICES = [
-        ('requested', 'Requested'),
+        ('Rejected', 'Rejected'),
         ('pending', 'Pending'),
         ('confirmed', 'Confirmed')
     ]
@@ -190,11 +190,11 @@ class Lesson(models.Model): #Fatimah
     frequency = models.CharField(max_length=20, choices=FREQUENCY_CHOICES)
     term = models.CharField(max_length=50, choices=TERMS)
     duration = models.IntegerField(choices=DURATION_CHOICES, default=60)
-    start_date = models.DateField()
+    start_date = models.DateField(null=True, blank=True)
     day_of_week = models.CharField(max_length=10, choices=DAYS)
     start_time = models.CharField(max_length=5, choices=TIME_CHOICES, default='09:00')
     location = models.CharField(max_length=100, default="Online") 
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='requested')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     invoice_paid = models.BooleanField(default=False)
     price_per_term = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
 
