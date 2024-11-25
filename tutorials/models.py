@@ -78,7 +78,7 @@ class Tutor(User):  # George
 
 
 
-class Student(): # Arjan
+class Student(User): # Arjan
     BEGINNER = 'Beginner'
     NOVICE = 'Novice'
     INTERMEDIATE = 'Intermediate'
@@ -198,4 +198,12 @@ class Lesson(models.Model): #Fatimah
     invoice_paid = models.BooleanField(default=False)
     price_per_term = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
 
-#class Invoic(): # George
+
+class Invoice(models.Model):  # George
+    orderNo = models.AutoField(primary_key=True)
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    topic = models.CharField(max_length=100, blank=False)
+    no_of_classes = models.IntegerField(blank=False)
+    price_per_class = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
+    sum = models.DecimalField(max_digits=10, decimal_places=2, blank=False)

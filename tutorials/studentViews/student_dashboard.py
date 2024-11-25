@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from tutorials.forms import LessonForm
-from tutorials.models import Lesson
+from tutorials.models import Lesson, Invoice
 
 def student_dashboard(request):
+
     context = {
         'user': 'Student!',
     }
@@ -21,3 +22,13 @@ def lesson_create_view(request):
 
 def student_calenadr(request):
     pass
+
+
+def student_invoices(request):
+
+    invoices = Invoice.objects.all()
+
+    context = {
+        'invoices': invoices,
+    }
+    return render(request, 'student_dashboard_templates/student_invoices.html', context)
