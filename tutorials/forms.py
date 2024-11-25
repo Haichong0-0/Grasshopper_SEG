@@ -131,23 +131,44 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
     def save(self, commit=True):
         """Create a new user with optional additional processing based on user type."""
         user = super().save(commit=False)
-        variation = self.request.POST.get('variations')
+        variation = self.request.POST.get('variations', None)
 
         user.set_password(self.cleaned_data['new_password'])
 
-        user = User.objects.create_user(
-            username=self.cleaned_data.get('username'),
-            first_name=self.cleaned_data.get('first_name'),
-            last_name=self.cleaned_data.get('last_name'),
-            email=self.cleaned_data.get('email'),
-            password=self.cleaned_data.get('new_password'),
-            type_of_user= variation if variation else 'student'
-        )
-        
-        if commit:
-            user.save()
+        if variation == 'student':
+            print ("student object being initialised.")
+            student = Student.objects.create(
+                username=self.cleaned_data.get('username'),
+                first_name=self.cleaned_data.get('first_name'),
+                last_name=self.cleaned_data.get('last_name'),
+                email=self.cleaned_data.get('email'),
+                password=self.cleaned_data.get('new_password'),
+                # type_of_user= 'student'
+                # type_of_user=self.cleaned_data.get('variations'),
+            )
+            print("Student object created: ", student)
 
-        return user
+            if commit:
+                student.save()
+            print("Student object created: ", student)
+            return student
+    
+        elif variation == 'tutor':
+                print ("Creating a Tutor object...")
+                tutor = Tutor.objects.create(
+                    username=self.cleaned_data.get('username'),
+                    first_name=self.cleaned_data.get('first_name'),
+                    last_name=self.cleaned_data.get('last_name'),
+                    email=self.cleaned_data.get('email'),
+                    password=self.cleaned_data.get('new_password'),     
+                    # type_of_user= 'tutor',
+                    # type_of_user=self.cleaned_data.get('variations'),
+            )
+
+        if commit:
+            tutor.save()
+        print("Tutor object created: ", tutor)
+        return tutor
     
 
 

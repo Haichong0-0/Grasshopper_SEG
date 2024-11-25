@@ -90,7 +90,7 @@ class Tutor(User):  # George # Deyu
         ('git', 'Git'),
     ]
     
-    tutorNo = models.AutoField(primary_key=True, default='1')           
+    tutorNo = models.AutoField(primary_key=True)           
     subject = models.CharField(max_length=100, blank=False, default="Python")
     timings = models.CharField(max_length=255, blank=True)
     bio = models.CharField(max_length=520, blank=True, null=True)
