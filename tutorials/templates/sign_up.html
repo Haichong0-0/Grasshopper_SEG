@@ -3,10 +3,75 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <h1>Sign up</h1>
+      <h1>{{ message }}</h1>
       <form action="{% url 'sign_up' %}" method="post">
         {% csrf_token %}
-        {% include 'partials/bootstrap_form.html' with form=form %}
+
+      <!-- Display form errors -->
+      {% if form.errors %}
+      <div class="alert alert-danger">
+          <ul>
+              {% for field, errors in form.errors.items %}
+                  <li>{{ field }}: {{ errors|join:", " }}</li>
+              {% endfor %}
+          </ul>
+      </div>
+      {% endif %}
+
+        <!-- Common fields for both students and tutors -->
+        <div class="mb-3">
+          {{ form.first_name.label_tag }}
+          {{ form.first_name }}
+        </div>
+        <div class="mb-3">
+          {{ form.last_name.label_tag }}
+          {{ form.last_name }}
+        </div>
+        <div class="mb-3">
+          {{ form.username.label_tag }}
+          {{ form.username }}
+        </div>
+        <div class="mb-3">
+          {{ form.email.label_tag }}
+          {{ form.email }}
+        </div>
+
+          <!-- Password fields -->
+        <div class="mb-3">
+          {{ form.new_password.label_tag }}
+          {{ form.new_password }}
+        </div>
+        <div class="mb-3">
+          {{ form.password_confirmation.label_tag }}
+          {{ form.password_confirmation }}
+        </div>
+
+        <!-- Conditional fields for student only -->
+        {% if user_type == 'student' %}
+          <div class="mb-3">
+            {{ form.date_of_birth.label_tag }}
+            {{ form.date_of_birth }}
+          </div>
+          <div class="mb-3">
+            {{ form.subjects.label_tag }}
+            {{ form.subjects }}
+          </div>
+          <div class="mb-3">
+            {{ form.proficiency_level.label_tag }}
+            {{ form.proficiency_level }}
+          </div>
+          <input type="hidden" name="variations" value="student">
+        {% endif %}
+
+        <!-- Conditional fields for tutor only -->
+        {% if user_type == 'tutor' %}
+          <div class="mb-3">
+            {{ form.subjects.label_tag }}
+            {{ form.subjects }}
+          </div>
+          <input type="hidden" name="variations" value="tutor">
+        {% endif %}
+
         <input type="submit" value="Sign up" class="btn btn-primary">
       </form>
     </div>
