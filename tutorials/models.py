@@ -65,6 +65,9 @@ class Admin(User):
 
 
 class Tutor(User):  
+
+    type_of_user = 'tutor'
+    
     SUBJECTS = [ # All of the subjects that a Tutor is available to teach
         ('ruby_on_rails', 'Ruby on Rails'),
         ('python', 'Python'),
