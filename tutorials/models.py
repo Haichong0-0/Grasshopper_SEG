@@ -137,9 +137,7 @@ class Student(User): #Arjun #Deyu
     preferred_tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='student_preferring_tutor')
     preferred_lesson_duration = models.IntegerField(default=60)
     preferred_lesson_frequency = models.CharField(max_length=20, choices=[('weekly', 'Weekly'), ('fortnightly', 'Fortnightly')], default="('weekly', 'Weekly')")
-
-
-    current_term_start_date = models.DateField(null=True, blank=True) # student term time enrollment field details
+    current_term_start_date = models.DateField(null=True, blank=True)
     current_term_end_date = models.DateField(null=True, blank=True)
     current_term_tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='student_with_current_term_tutor')
     current_term_lesson_time = models.TimeField(null=True, blank=True)
