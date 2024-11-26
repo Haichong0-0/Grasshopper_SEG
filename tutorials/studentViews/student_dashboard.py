@@ -29,7 +29,7 @@ def lesson_create_view(request):
                 return render(request, 'student_dashboard_templates/lesson_form.html', {'form': form})
             
             lesson.save()
-            return redirect('student_lessons')
+            return redirect('student_schedule')
     else:
         form = LessonForm()
     return render(request, 'student_dashboard_templates/lesson_form.html', {'form': form})
@@ -49,14 +49,18 @@ def student_invoices(request):
 
 
 @login_required
-def student_lessons_view(request):
-    confirmed_lessons = Lesson.objects.filter(student=request.user, status='Confirmed')
-    pending_lessons = Lesson.objects.filter(student=request.user, status='Pending')
-    rejected_lessons = Lesson.objects.filter(student=request.user, status='Rejected')
+def student_schedule(request):
+    if request.user.is_authenticated and hasattr(request.user, 'student'):
+        confirmed_lessons = Lesson.objects.filter(student=request.user, status='Confirmed').order_by('start_date','start_time')
+        pending_lessons = Lesson.objects.filter(student=request.user, status='Pending').order_by('start_date','start_time')
+        rejected_lessons = Lesson.objects.filter(student=request.user, status='Rejected').order_by('start_date','start_time')
+    else:
+        confirmed_lessons = []
+        pending_lessons = []
+        rejected_lessons = []
 
-    return render(request, 'student_dashboard_templates/lessons_list.html', {
+    return render(request, 'student_dashboard_templates/student_schedule.html', {
         'confirmed_lessons': confirmed_lessons,
         'pending_lessons': pending_lessons,
         'rejected_lessons': rejected_lessons,
     })
-    
