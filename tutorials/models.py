@@ -64,11 +64,7 @@ class Admin(User):
         return (f"Admin: {self.user.full_name()}")
 
 
-class Tutor(User):  # George # Deyu
-
-    type_of_user = 'tutor'
-
-class Tutor(User):  # George
+class Tutor(User):  
     SUBJECTS = [ # All of the subjects that a Tutor is available to teach
         ('ruby_on_rails', 'Ruby on Rails'),
         ('python', 'Python'),
@@ -105,7 +101,7 @@ class Tutor(User):  # George
 
 
 
-class Student(User): # Arjan # Deyu
+class Student(User): #Arjun #Deyu
 
     type_of_user = 'student'
     
@@ -132,12 +128,6 @@ class Student(User): # Arjan # Deyu
 
     phone = models.CharField(max_length=12, default='07777777777')
 
-
-class Student(): # Arjan
-    first_name = models.CharField(max_length=50) # field for student first name
-    last_name = models.CharField(max_length=50) # field for student last name
-    email = models.EmailField() # field for student email
-    phone = models.CharField(max_length=20) # field for student phone
 
     preferred_language = models.CharField(max_length=50, default="Python")
     preferred_tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='student_preferring_tutor')

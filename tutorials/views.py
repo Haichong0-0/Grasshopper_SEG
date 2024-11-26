@@ -29,30 +29,40 @@ def admin_dashboard(request):
     """Display the admin's dashboard."""
 
     current_user = request.user
-    print("current_user(admin_dashboard): ", current_user)
-    return render(request, 'admin_dashboard.html', {'user': current_user})
+    if (current_user.type_of_user == 'admin'):
+
+        print("current_user(admin_dashboard): ", current_user.type_of_user)
+        return render(request, 'admin_dashboard.html', {'user': current_user})
+    else:
+        return render(request, 'access_denied.html', {'user': current_user})
 
 @login_required
 def tutor_dashboard(request):
     """Display the tutor's dashboard."""
 
     current_user = request.user
-    print("current_user(tutor_dashboard): ", current_user)
-    return render(request, 'tutor_dashboard.html', {'user': current_user})
+    if (current_user.type_of_user == 'tutor'):
+        print("current_user(tutor_dashboard): ", current_user)
+        return render(request, 'tutor_dashboard.html', {'user': current_user})
+    else:
+        return render(request, 'access_denied.html', {'user': current_user})
 
 @login_required
 def student_dashboard(request):
     """Display the student's dashboard."""
 
     current_user = request.user
-    print("current_user(student_dashboard): ", current_user)
-    return render(request, 'student_dashboard.html', {'user': current_user})
+    if (current_user.type_of_user == 'student'):
+        print("current_user(student_dashboard): ", current_user)
+        return render(request, 'student_dashboard.html', {'user': current_user})
+    else:
+        return render(request, 'access_denied.html', {'user': current_user})
 
 
 @login_prohibited
 def home(request):
     """Display the application's start/home screen."""
-
+    print(request.user.is_authenticated) # for testing purposes
     return render(request, 'home.html')
 
 
@@ -69,6 +79,7 @@ class LoginProhibitedMixin:
 
     def handle_already_logged_in(self, *args, **kwargs):
         url = self.get_redirect_when_logged_in_url()
+        print("after handle_already_logged_in: ", url)
         return redirect(url)
 
     def get_redirect_when_logged_in_url(self):
@@ -93,6 +104,7 @@ class LogInView(LoginProhibitedMixin, View):
         """Display log in template."""
 
         self.next = request.GET.get('next') or ''
+        print("get(): ", self.next)
         return self.render()
 
     def post(self, request):
@@ -187,16 +199,16 @@ class UserListView(ListView):
 
 
 
-#@login_required
-def tutor_dashboard(request):
-    """display tutor dashboard if user is a tutor"""
+# #@login_required
+# def tutor_dashboard(request):
+#     """display tutor dashboard if user is a tutor"""
     
-    context = {
-        #'full_name': request.user.full_name(),
-        #'gravatar': request.user.gravatar(),
-    }
+#     context = {
+#         #'full_name': request.user.full_name(),
+#         #'gravatar': request.user.gravatar(),
+#     }
     
-    return render(request, 'tutor_dashboard.html', context)
+#     return render(request, 'tutor_dashboard.html', context)
 
 #@login_required
 def tutor_lessons(request):
@@ -222,7 +234,7 @@ class SignUpView(LoginProhibitedMixin, FormView):
         kwargs['request'] = self.request  # Pass the request object
         # has an option of seeing a variation of the sign-up page, student or tutor
         # kwargs['user_type'] = self.request.GET.get('variation') 
-        print('coming from get_form_kwargs: ', kwargs) 
+        print('coming from get_form_kwargs: ', kwargs)  # Deyu: for testing
         return kwargs
 
     def get_context_data(self, **kwargs):
@@ -232,10 +244,10 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
         if variation == 'student':
             context['message'] = "Student sign up"
-            context['message'] = "Student sign up"
+            # context['message'] = "Student sign up"
         elif variation == 'tutor':
             context['message'] = "Tutor sign up"
-            context['message'] = "Tutor sign up"
+            # context['message'] = "Tutor sign up"
 
         context['user_type'] = variation
         return context
@@ -254,12 +266,16 @@ class SignUpView(LoginProhibitedMixin, FormView):
         """Redirect based on user type."""
 
         user = self.request.user
-        if user.is_staff:  # Admin user
+        if user.type_of_user=="admin":   # Admin user
             return reverse('admin_dashboard')
         elif user.type_of_user=="tutor":  
             return reverse('tutor_dashboard')
         elif user.type_of_user=="student":  
+            print('after get_success_url')
             return reverse('student_dashboard')
+        else:
+            print('after get_success_url, else statement')
+            return reverse('home')
 
 #@login_required
 def tutor_schedule(request):
