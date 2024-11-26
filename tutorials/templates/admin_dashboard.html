@@ -18,10 +18,13 @@
     
     {% for tutor in tutors %}
     <tr>
+        <!--  ID Column -->
         <td>#</td>
+        <!-- Book Details Column -->
         <td>
             {{ tutor.username }} ({{ tutor.first_name }}) "<i>{{ tutor.first_name }}</i>"
         </td>
+        <!-- Actions Column -->
         <td>
             <a href="{% url 'get_book' book.id %}" class="btn btn-primary btn-sm">
                 <i class="bi bi-eye"></i> <!-- Eye icon for Show -->
@@ -51,10 +54,13 @@
   <tbody>
     {% for student in students %}
     <tr>
+        <!--  ID Column -->
         <td>#</td>
+        <!-- Book Details Column -->
         <td>
             {{ student.username }} ({{ student.first_name }}) "<i>{{ student.first_name }}</i>"
         </td>
+        <!-- Actions Column -->
         <td>
             <a href="{% url 'get_book' book.id %}" class="btn btn-primary btn-sm">
                 <i class="bi bi-eye"></i> <!-- Eye icon for Show -->
@@ -86,10 +92,13 @@
   <tbody>
     {% for payment in payments %}
     <tr>
+        <!--  ID Column -->
         <td>#</td>
+        <!-- Book Details Column -->
         <td>
             {{ payment.from_user }} ({{ payment.to_tutor }}) "<i>{{ payment.amount }}</i>"
         </td>
+        <!-- Actions Column -->
         <td>
             <a href="{% url 'get_book' book.id %}" class="btn btn-primary btn-sm">
                 <i class="bi bi-eye"></i> <!-- Eye icon for Show -->
@@ -105,23 +114,6 @@
     {% endfor %}
 </tbody>
 </table>
-
-<div>
-  <div>
-    <div>
-      <div>
-        <div>
-
-  
-        </div>
-  
-      </div>
-  
-    </div>
-  
-  </div>
-
-</div>
 
 
 

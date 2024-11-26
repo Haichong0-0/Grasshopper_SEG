@@ -25,11 +25,28 @@ from django.views.generic import CreateView, ListView, DeleteView
 
 
 @login_required
-def dashboard(request):
-    """Display the current user's dashboard."""
+def admin_dashboard(request):
+    """Display the admin's dashboard."""
 
     current_user = request.user
-    return render(request, 'dashboard.html', {'user': current_user})
+    print("current_user(admin_dashboard): ", current_user)
+    return render(request, 'admin_dashboard.html', {'user': current_user})
+
+@login_required
+def tutor_dashboard(request):
+    """Display the tutor's dashboard."""
+
+    current_user = request.user
+    print("current_user(tutor_dashboard): ", current_user)
+    return render(request, 'tutor_dashboard.html', {'user': current_user})
+
+@login_required
+def student_dashboard(request):
+    """Display the student's dashboard."""
+
+    current_user = request.user
+    print("current_user(student_dashboard): ", current_user)
+    return render(request, 'student_dashboard.html', {'user': current_user})
 
 
 @login_prohibited
@@ -84,9 +101,17 @@ class LogInView(LoginProhibitedMixin, View):
         form = LogInForm(request.POST)
         self.next = request.POST.get('next') or settings.REDIRECT_URL_WHEN_LOGGED_IN
         user = form.get_user()
+
         if user is not None:
             login(request, user)
-            return redirect(self.next)
+            if user.type_of_user=="student":  
+                print(self.next)
+                return redirect(reverse('student_dashboard'))
+            elif user.type_of_user=="tutor":  
+                return redirect(reverse('tutor_dashboard'))
+            elif user.type_of_user=="admin":  
+                return redirect(reverse('admin_dashboard'))
+        
         messages.add_message(request, messages.ERROR, "The credentials provided were invalid!")
         return self.render()
 
@@ -149,20 +174,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
 
-class SignUpView(LoginProhibitedMixin, FormView):
-    """Display the sign up screen and handle sign ups."""
-
-    form_class = SignUpForm
-    template_name = "sign_up.html"
-    redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
-
-    def form_valid(self, form):
-        self.object = form.save()
-        login(self.request, self.object)
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
 class UserListView(ListView):
     model = User
@@ -173,17 +184,109 @@ class UserListView(ListView):
         """Customize the queryset to fetch all users."""
         return User.objects.all()
 
+
+
+
+#@login_required
+def tutor_dashboard(request):
+    """display tutor dashboard if user is a tutor"""
     
+    context = {
+        #'full_name': request.user.full_name(),
+        #'gravatar': request.user.gravatar(),
+    }
+    
+    return render(request, 'tutor_dashboard.html', context)
 
+#@login_required
+def tutor_lessons(request):
+    """lessons page for tutors"""
 
-'''class AdminCreateView(LoginRequiredMixin, CreateView):
-    """View to create a new admin"""
-    model = Admin
-    templateName = "admin.html"
-    formClass = AdminForm
-    #fields = '__all__'
+    context = {
 
-class AdminUpdateView(LoginRequiredMixin, UpdateView):
-    """View to update an admin"""'''
+    }
+
+    return render(request, 'tutor_lessons.html', context)
+
+class SignUpView(LoginProhibitedMixin, FormView): 
+    """Display the sign-up screen and handle sign-ups."""
+
+    form_class = SignUpForm
+    template_name = "sign_up.html"
+    redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
+
+    
+    def get_form_kwargs(self):
+        # Pass the 'variation' parameter as 'user_type' to the form.
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request  # Pass the request object
+        # has an option of seeing a variation of the sign-up page, student or tutor
+        # kwargs['user_type'] = self.request.GET.get('variation') 
+        print('coming from get_form_kwargs: ', kwargs) 
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        # Add a custom message based on the user_type
+        context = super().get_context_data(**kwargs)
+        variation = self.request.GET.get('variation')
+
+        if variation == 'student':
+            context['message'] = "Student sign up"
+            context['message'] = "Student sign up"
+        elif variation == 'tutor':
+            context['message'] = "Tutor sign up"
+            context['message'] = "Tutor sign up"
+
+        context['user_type'] = variation
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save()
+        login(self.request, self.object)
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        """Log form errors for debugging."""
+        print("Form errors:", form.errors)  # Log errors to console
+        return super().form_invalid(form) 
+
+    def get_success_url(self):
+        """Redirect based on user type."""
+
+        user = self.request.user
+        if user.is_staff:  # Admin user
+            return reverse('admin_dashboard')
+        elif user.type_of_user=="tutor":  
+            return reverse('tutor_dashboard')
+        elif user.type_of_user=="student":  
+            return reverse('student_dashboard')
+
+#@login_required
+def tutor_schedule(request):
+    """schedule page for tutors"""
+
+    context = {
+
+    }
+
+    return render(request, 'tutor_schedule.html', context)
+
+def tutor_payment(request):
+    """payment page for tutors"""
+
+    context = {
+
+    }
+
+    return render(request, 'tutor_payment.html', context)
+
+def tutor_welcome(request):
+    """welcome page for tutors"""
+
+    context = {
+
+    }
+
+    return render(request, 'tutor_welcome.html', context)
 
 

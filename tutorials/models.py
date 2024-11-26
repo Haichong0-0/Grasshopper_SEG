@@ -1,3 +1,4 @@
+
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -14,10 +15,19 @@ class User(AbstractUser):
             message='Username must consist of @ followed by at least three alphanumericals'
         )]
     )
+        
     first_name = models.CharField(max_length=50, blank=False)
     last_name = models.CharField(max_length=50, blank=False)
     email = models.EmailField(unique=True, blank=False)
+    date_of_birth = models.DateField(default='2000-01-01')
 
+    USER_TYPES = (
+        ('admin', 'Admin'),
+        ('tutor', 'Tutor'),
+        ('student', 'Student'),
+    )
+
+    type_of_user = models.CharField(max_length=20, choices=USER_TYPES, default='student')
 
     class Meta:
         """Model options."""
@@ -41,9 +51,24 @@ class User(AbstractUser):
         
         return self.gravatar(size=60)
 
+class Admin(User):
 
-class Tutor(User):  # George
-    SUBJECTS = [
+    type_of_user = 'admin'
+
+    def save(self, *args, **kwargs):
+        self.user.is_staff = True
+        self.user.use_superuser = True
+        self.user.save()
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return (f"Admin: {self.user.full_name()}")
+
+class Tutor(User):  
+
+    type_of_user = 'tutor'
+
+    SUBJECTS = [ # All of the subjects that a Tutor is available to teach
         ('ruby_on_rails', 'Ruby on Rails'),
         ('python', 'Python'),
         ('javascript', 'Javascript'),
@@ -65,25 +90,30 @@ class Tutor(User):  # George
         ('mysql', 'MySQL'),
         ('git', 'Git'),
     ]
+
+
+    subject = models.CharField(max_length=100, blank=False, choices=SUBJECTS,default="Python")
+    timings = models.CharField(max_length=255, blank=True)
+    bio = models.CharField(max_length=520, blank=True, null=True)
+
+    def setTimings(self, timings_list):
+        self.Timings = ','.join(timings_list)
+
+    def getTimings(self):
+        return self.Timings.split(',')
+
+
+
+class Student(User): #Arjun #Deyu
+
+    type_of_user = 'student'
     
-    tutorNo = models.AutoField(primary_key=True)          
-    subject = models.CharField(max_length=100, blank=False,choices=SUBJECTS)
-    bio = models.TextField(blank=True)
-
-    
-#class Admin(): # Deyu
-
-
-#class Tutor(): # George
-
-
-
-class Student(User): # Arjan
     BEGINNER = 'Beginner'
     NOVICE = 'Novice'
     INTERMEDIATE = 'Intermediate'
     ADVANCED = 'Advanced'
     MASTERY = 'Mastery'
+    
     PROFICIENCY_LEVEL_CHOICES = [
         (BEGINNER, 'Beginner'),
         (NOVICE, 'Novice'),
@@ -101,17 +131,23 @@ class Student(User): # Arjan
 
     phone = models.CharField(max_length=12, default='07777777777')
 
+
     preferred_language = models.CharField(max_length=50, default="Python")
     preferred_tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='student_preferring_tutor')
     preferred_lesson_duration = models.IntegerField(default=60)
     preferred_lesson_frequency = models.CharField(max_length=20, choices=[('weekly', 'Weekly'), ('fortnightly', 'Fortnightly')], default="('weekly', 'Weekly')")
 
 
-    current_term_start_date = models.DateField(null=True, blank=True)
+    current_term_start_date = models.DateField(null=True, blank=True) # student term time enrollment field details
     current_term_end_date = models.DateField(null=True, blank=True)
     current_term_tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='student_with_current_term_tutor')
     current_term_lesson_time = models.TimeField(null=True, blank=True)
 
+class TutorAvailability():  # George
+    tutorNo = models.ForeignKey(Tutor, on_delete=models.CASCADE)
+    day = models.CharField(max_length=10, blank=False)
+    starttime = models.TimeField(blank=False)
+    endtime = models.TimeField(blank=False)
 
 class Lesson(models.Model): #Fatimah
 
@@ -207,3 +243,4 @@ class Invoice(models.Model):  # George
     no_of_classes = models.IntegerField(blank=False)
     price_per_class = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
     sum = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
+ 
