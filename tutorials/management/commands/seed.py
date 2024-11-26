@@ -107,7 +107,7 @@ class Command(BaseCommand):
         print("Tutor seeding complete.      ")
 
     def create_admins(self):
-        for data in user_fixtures:
+        for data in admin_fixtures:
             self.try_create_user(data)
 
 

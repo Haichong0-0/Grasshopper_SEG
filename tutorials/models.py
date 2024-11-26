@@ -64,10 +64,11 @@ class Admin(User):
     def __str__(self):
         return (f"Admin: {self.user.full_name()}")
 
+
 class Tutor(User):  
 
     type_of_user = 'tutor'
-
+    
     SUBJECTS = [ # All of the subjects that a Tutor is available to teach
         ('ruby_on_rails', 'Ruby on Rails'),
         ('python', 'Python'),
