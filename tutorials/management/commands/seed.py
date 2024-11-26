@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from tutorials.models import User, Tutor
+from tutorials.models import User, Tutor, Student, Admin
 import pytz
 from faker import Faker
 from random import choice
@@ -27,8 +27,9 @@ lesson_fixtures = [
 class Command(BaseCommand):
     """Build automation command to seed the database."""
 
-    USER_COUNT = 300
-    TUTOR_COUNT = 30
+    TUTOR_COUNT = 50
+    STUDENT_COUNT = 200
+    ADMIN_COUNT = 10
     DEFAULT_PASSWORD = 'Password123'
     help = 'Seeds the database with sample data'
 
@@ -39,7 +40,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         #self.create_users()
         self.create_tutors()
-        self.create_users()
+        self.create_admins()
+        self.create_students()
         
         self.users = User.objects.all()
 
@@ -103,16 +105,6 @@ class Command(BaseCommand):
                 self.try_create_tutor(user)
             tutor_count = Tutor.objects.count()
         print("Tutor seeding complete.      ")
-    
-    def create_students(self):
-        student_count = Student.objects.count()
-        while student_count < self.STUDENT_COUNT:
-            print(f"Seeding Student {student_count}/{self.STUDENT_COUNT}", end='\r')
-            user = self.generate_user()
-            if user:
-                self.try_create_student(user)
-            student_count = Student.objects.count()
-        print("student seeding complete.      ")
 
     def create_admins(self):
         for data in user_fixtures:
@@ -124,6 +116,19 @@ class Command(BaseCommand):
             self.generate_tutor(user)
         except Exception as e:
             print(f"Error creating tutor: {e}")
+
+    def try_create_student(self, user):
+        try:
+            self.generate_student(user)
+        except Exception as e:
+            print(f"Error creating students: {e}")
+
+    def try_create_admin(self, data):
+        try:
+            return self.create_admins(data)
+        except Exception as e:
+            print(f"Error creating admin: {e}")
+            return None
 
     def generate_tutor(self, user):
         subject = choice([subject[0] for subject in Tutor.SUBJECTS])
@@ -143,6 +148,47 @@ class Command(BaseCommand):
             bio=self.faker.text(),
         )
 
+    def generate_admin(self, data):
+        admin = Admin.objects.create_user(
+            username=data['username'],
+            email=data['email'],
+            password=Command.DEFAULT_PASSWORD,
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+        )
+        return admin
+    
+    def generate_student(self, user):
+        proficiency_level = choice([Student.BEGINNER, Student.NOVICE, Student.INTERMEDIATE, Student.ADVANCED, Student.MASTERY])
+        preferred_language = choice(["Python", "Java", "JavaScript", "C++", "Ruby"])
+        preferred_frequency = choice(['weekly', 'fortnightly'])
+        preferred_tutor = None
+        un = user.username
+        mail = user.email
+        pw = user.password
+        fn = user.first_name
+        lastn = user.last_name
+        phone = "07777777777" 
+        user.delete()
+        student = Student.objects.create(
+            username=un,
+            email=mail,
+            password=pw,
+            first_name=fn,
+            last_name=lastn,
+            proficiency_level=proficiency_level,
+            phone=phone,
+            preferred_language=preferred_language,
+            preferred_tutor=preferred_tutor,
+            preferred_lesson_duration=60,
+            preferred_lesson_frequency=preferred_frequency,
+            current_term_start_date=None,
+            current_term_end_date=None,
+            current_term_tutor=None,
+            current_term_lesson_time=None,
+        )
+
+    
 
 def create_username(first_name, last_name):
     return '@' + first_name.lower() + last_name.lower()
