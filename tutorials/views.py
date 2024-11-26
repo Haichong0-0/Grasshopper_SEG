@@ -25,23 +25,27 @@ from django.views.generic import CreateView, ListView, DeleteView
 
 
 @login_required
-@login_required
 def admin_dashboard(request):
     """Display the admin's dashboard."""
 
     current_user = request.user
+    print("current_user(admin_dashboard): ", current_user)
     return render(request, 'admin_dashboard.html', {'user': current_user})
 
+@login_required
 def tutor_dashboard(request):
     """Display the tutor's dashboard."""
 
     current_user = request.user
+    print("current_user(tutor_dashboard): ", current_user)
     return render(request, 'tutor_dashboard.html', {'user': current_user})
 
+@login_required
 def student_dashboard(request):
     """Display the student's dashboard."""
 
     current_user = request.user
+    print("current_user(student_dashboard): ", current_user)
     return render(request, 'student_dashboard.html', {'user': current_user})
 
 
@@ -181,7 +185,7 @@ class UserListView(ListView):
         return User.objects.all()
 
 
-class SignUpView(LoginProhibitedMixin, FormView): # Deyu
+class SignUpView(LoginProhibitedMixin, FormView): 
     """Display the sign-up screen and handle sign-ups."""
 
     form_class = SignUpForm
@@ -225,6 +229,7 @@ class SignUpView(LoginProhibitedMixin, FormView): # Deyu
 
     def get_success_url(self):
         """Redirect based on user type."""
+
         user = self.request.user
         if user.is_staff:  # Admin user
             return reverse('admin_dashboard')

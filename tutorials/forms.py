@@ -143,7 +143,7 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
                 last_name=self.cleaned_data.get('last_name'),
                 email=self.cleaned_data.get('email'),
                 password=self.cleaned_data.get('new_password'),
-                # type_of_user= 'student'
+                type_of_user= 'student'
                 # type_of_user=self.cleaned_data.get('variations'),
             )
             print("Student object created: ", student)
@@ -161,14 +161,14 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
                     last_name=self.cleaned_data.get('last_name'),
                     email=self.cleaned_data.get('email'),
                     password=self.cleaned_data.get('new_password'),     
-                    # type_of_user= 'tutor',
+                type_of_user= 'tutor',
                     # type_of_user=self.cleaned_data.get('variations'),
             )
 
-        if commit:
-            tutor.save()
-        print("Tutor object created: ", tutor)
-        return tutor
+                if commit:
+                    tutor.save()
+                print("Tutor object created: ", tutor)
+                return tutor
     
 
 
