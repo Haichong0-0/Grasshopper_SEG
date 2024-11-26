@@ -50,7 +50,7 @@
                 <a class="nav-link active" href="{% url 'student_dashboard' %}">Dashboard</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'student_schedule' %}">My lessons</a>
+                <a class="nav-link" href="{% url 'student_schedule' %}">Schedule</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'lesson_create' %}">Request Lesson</a>
@@ -67,7 +67,7 @@
     <!-- Content Area -->
     <div class="content-area">
         <!-- Top Navbar -->
-        <h1> Welcome, {{request.user.first_name}} </h1>
+        <h1> Welcome, {{user}} </h1>
 
         <!-- Main Dashboard Content -->
 
