@@ -2,8 +2,13 @@
 
 import django.contrib.auth.models
 import django.core.validators
-from django.db import migrations, models
+import django.db.models.deletion
 import django.utils.timezone
+from django.conf import settings
+import django.db.models.deletion
+import django.utils.timezone
+from django.conf import settings
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -29,6 +34,8 @@ class Migration(migrations.Migration):
                 ('first_name', models.CharField(max_length=50)),
                 ('last_name', models.CharField(max_length=50)),
                 ('email', models.EmailField(max_length=254, unique=True)),
+                ('date_of_birth', models.DateField(default='2000-01-01')),
+                ('type_of_user', models.CharField(choices=[('admin', 'Admin'), ('tutor', 'Tutor'), ('student', 'Student')], default='student', max_length=20)),
                 ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups')),
                 ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.permission', verbose_name='user permissions')),
             ],
@@ -37,6 +44,172 @@ class Migration(migrations.Migration):
             },
             managers=[
                 ('objects', django.contrib.auth.models.UserManager()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Admin',
+            fields=[
+                ('user_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'verbose_name': 'user',
+                'verbose_name_plural': 'users',
+                'abstract': False,
+            },
+            bases=('tutorials.user',),
+            managers=[
+                ('objects', django.contrib.auth.models.UserManager()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Tutor',
+            fields=[
+                ('user_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
+                ('subject', models.CharField(choices=[('ruby_on_rails', 'Ruby on Rails'), ('python', 'Python'), ('javascript', 'Javascript'), ('c_plus_plus', 'C++'), ('c_sharp', 'C#'), ('react', 'React'), ('angular', 'Angular'), ('vue_js', 'Vue.js'), ('node_js', 'Node.js'), ('express_js', 'Express.js'), ('django', 'Django'), ('flask', 'Flask'), ('spring', 'Spring'), ('hibernate', 'Hibernate'), ('jpa', 'JPA'), ('sql', 'SQL'), ('mongodb', 'MongoDB'), ('postgresql', 'PostgreSQL'), ('mysql', 'MySQL'), ('git', 'Git')], default='Python', max_length=100)),
+                ('timings', models.CharField(blank=True, max_length=255)),
+                ('bio', models.CharField(blank=True, max_length=520, null=True)),
+            ],
+            options={
+                'verbose_name': 'user',
+                'verbose_name_plural': 'users',
+                'abstract': False,
+            },
+            bases=('tutorials.user',),
+            managers=[
+                ('objects', django.contrib.auth.models.UserManager()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Student',
+            fields=[
+                ('user_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
+                ('proficiency_level', models.CharField(blank=True, choices=[('Beginner', 'Beginner'), ('Novice', 'Novice'), ('Intermediate', 'Intermediate'), ('Advanced', 'Advanced'), ('Mastery', 'Mastery')], default='Intermediate', max_length=12, null=True)),
+                ('phone', models.CharField(default='07777777777', max_length=12)),
+                ('preferred_language', models.CharField(default='Python', max_length=50)),
+                ('preferred_lesson_duration', models.IntegerField(default=60)),
+                ('preferred_lesson_frequency', models.CharField(choices=[('weekly', 'Weekly'), ('fortnightly', 'Fortnightly')], default="('weekly', 'Weekly')", max_length=20)),
+                ('current_term_start_date', models.DateField(blank=True, null=True)),
+                ('current_term_end_date', models.DateField(blank=True, null=True)),
+                ('current_term_lesson_time', models.TimeField(blank=True, null=True)),
+                ('current_term_tutor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='student_with_current_term_tutor', to='tutorials.tutor')),
+                ('preferred_tutor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='student_preferring_tutor', to='tutorials.tutor')),
+            ],
+            options={
+                'verbose_name': 'user',
+                'verbose_name_plural': 'users',
+                'abstract': False,
+            },
+            bases=('tutorials.user',),
+            managers=[
+                ('objects', django.contrib.auth.models.UserManager()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Lesson',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('subject', models.CharField(choices=[('ruby_on_rails', 'Ruby on Rails'), ('python', 'Python'), ('javascript', 'Javascript'), ('c_plus_plus', 'C++'), ('c_sharp', 'C#'), ('react', 'React'), ('angular', 'Angular'), ('vue_js', 'Vue.js'), ('node_js', 'Node.js'), ('express_js', 'Express.js'), ('django', 'Django'), ('flask', 'Flask'), ('spring', 'Spring'), ('hibernate', 'Hibernate'), ('jpa', 'JPA'), ('sql', 'SQL'), ('mongodb', 'MongoDB'), ('postgresql', 'PostgreSQL'), ('mysql', 'MySQL'), ('git', 'Git')], max_length=100)),
+                ('frequency', models.CharField(choices=[('weekly', 'Weekly'), ('fortnightly', 'Fortnightly'), ('every other week', 'Every other week')], max_length=20)),
+                ('term', models.CharField(choices=[('September-Christmas', 'September-Christmas'), ('January-Easter term', 'January-Easter'), ('May-July', 'May-July')], max_length=50)),
+                ('duration', models.IntegerField(choices=[(60, '1 hour'), (120, '2 hours')], default=60)),
+                ('start_date', models.DateField()),
+                ('day_of_week', models.CharField(choices=[('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday'), ('sunday', 'Sunday')], max_length=10)),
+                ('start_time', models.CharField(choices=[('09:00', '9:00 AM'), ('10:00', '10:00 AM'), ('11:00', '11:00 AM'), ('12:00', '12:00 PM'), ('13:00', '1:00 PM'), ('14:00', '2:00 PM'), ('15:00', '3:00 PM'), ('16:00', '4:00 PM'), ('17:00', '5:00 PM')], default='09:00', max_length=5)),
+                ('location', models.CharField(default='Online', max_length=100)),
+                ('status', models.CharField(choices=[('requested', 'Requested'), ('pending', 'Pending'), ('confirmed', 'Confirmed')], default='requested', max_length=20)),
+                ('invoice_paid', models.BooleanField(default=False)),
+                ('price_per_term', models.DecimalField(decimal_places=2, default=0.0, max_digits=6)),
+                ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='lessons', to='tutorials.student')),
+                ('tutor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='lessons', to='tutorials.tutor')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Admin',
+            fields=[
+                ('user_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'verbose_name': 'user',
+                'verbose_name_plural': 'users',
+                'abstract': False,
+            },
+            bases=('tutorials.user',),
+            managers=[
+                ('objects', django.contrib.auth.models.UserManager()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Tutor',
+            fields=[
+                ('user_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
+                ('subject', models.CharField(choices=[('ruby_on_rails', 'Ruby on Rails'), ('python', 'Python'), ('javascript', 'Javascript'), ('c_plus_plus', 'C++'), ('c_sharp', 'C#'), ('react', 'React'), ('angular', 'Angular'), ('vue_js', 'Vue.js'), ('node_js', 'Node.js'), ('express_js', 'Express.js'), ('django', 'Django'), ('flask', 'Flask'), ('spring', 'Spring'), ('hibernate', 'Hibernate'), ('jpa', 'JPA'), ('sql', 'SQL'), ('mongodb', 'MongoDB'), ('postgresql', 'PostgreSQL'), ('mysql', 'MySQL'), ('git', 'Git')], default='Python', max_length=100)),
+                ('timings', models.CharField(blank=True, max_length=255)),
+                ('bio', models.CharField(blank=True, max_length=520, null=True)),
+            ],
+            options={
+                'verbose_name': 'user',
+                'verbose_name_plural': 'users',
+                'abstract': False,
+            },
+            bases=('tutorials.user',),
+            managers=[
+                ('objects', django.contrib.auth.models.UserManager()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Student',
+            fields=[
+                ('user_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
+                ('proficiency_level', models.CharField(blank=True, choices=[('Beginner', 'Beginner'), ('Novice', 'Novice'), ('Intermediate', 'Intermediate'), ('Advanced', 'Advanced'), ('Mastery', 'Mastery')], default='Intermediate', max_length=12, null=True)),
+                ('phone', models.CharField(default='07777777777', max_length=12)),
+                ('preferred_language', models.CharField(default='Python', max_length=50)),
+                ('preferred_lesson_duration', models.IntegerField(default=60)),
+                ('preferred_lesson_frequency', models.CharField(choices=[('weekly', 'Weekly'), ('fortnightly', 'Fortnightly')], default="('weekly', 'Weekly')", max_length=20)),
+                ('current_term_start_date', models.DateField(blank=True, null=True)),
+                ('current_term_end_date', models.DateField(blank=True, null=True)),
+                ('current_term_lesson_time', models.TimeField(blank=True, null=True)),
+                ('current_term_tutor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='student_with_current_term_tutor', to='tutorials.tutor')),
+                ('preferred_tutor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='student_preferring_tutor', to='tutorials.tutor')),
+            ],
+            options={
+                'verbose_name': 'user',
+                'verbose_name_plural': 'users',
+                'abstract': False,
+            },
+            bases=('tutorials.user',),
+            managers=[
+                ('objects', django.contrib.auth.models.UserManager()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Lesson',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('subject', models.CharField(choices=[('ruby_on_rails', 'Ruby on Rails'), ('python', 'Python'), ('javascript', 'Javascript'), ('c_plus_plus', 'C++'), ('c_sharp', 'C#'), ('react', 'React'), ('angular', 'Angular'), ('vue_js', 'Vue.js'), ('node_js', 'Node.js'), ('express_js', 'Express.js'), ('django', 'Django'), ('flask', 'Flask'), ('spring', 'Spring'), ('hibernate', 'Hibernate'), ('jpa', 'JPA'), ('sql', 'SQL'), ('mongodb', 'MongoDB'), ('postgresql', 'PostgreSQL'), ('mysql', 'MySQL'), ('git', 'Git')], max_length=100)),
+                ('frequency', models.CharField(choices=[('weekly', 'Weekly'), ('fortnightly', 'Fortnightly'), ('every other week', 'Every other week')], max_length=20)),
+                ('term', models.CharField(choices=[('September-Christmas', 'September-Christmas'), ('January-Easter term', 'January-Easter'), ('May-July', 'May-July')], max_length=50)),
+                ('duration', models.IntegerField(choices=[(60, '1 hour'), (120, '2 hours')], default=60)),
+                ('start_date', models.DateField(blank=True, null=True)),
+                ('day_of_week', models.CharField(choices=[('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday'), ('sunday', 'Sunday')], max_length=10)),
+                ('start_time', models.CharField(choices=[('09:00', '9:00 AM'), ('10:00', '10:00 AM'), ('11:00', '11:00 AM'), ('12:00', '12:00 PM'), ('13:00', '1:00 PM'), ('14:00', '2:00 PM'), ('15:00', '3:00 PM'), ('16:00', '4:00 PM'), ('17:00', '5:00 PM')], default='09:00', max_length=5)),
+                ('location', models.CharField(default='Online', max_length=100)),
+                ('status', models.CharField(choices=[('Rejected', 'Rejected'), ('pending', 'Pending'), ('confirmed', 'Confirmed')], default='Pending', max_length=20)),
+                ('invoice_paid', models.BooleanField(default=False)),
+                ('price_per_term', models.DecimalField(decimal_places=2, default=0.0, max_digits=6)),
+                ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='lessons', to='tutorials.student')),
+                ('tutor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='lessons', to='tutorials.tutor')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Invoice',
+            fields=[
+                ('orderNo', models.AutoField(primary_key=True, serialize=False)),
+                ('topic', models.CharField(max_length=100)),
+                ('no_of_classes', models.IntegerField()),
+                ('price_per_class', models.DecimalField(decimal_places=2, max_digits=10)),
+                ('sum', models.DecimalField(decimal_places=2, max_digits=10)),
+                ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tutorials.student')),
+                ('tutor', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tutorials.tutor')),
             ],
         ),
     ]

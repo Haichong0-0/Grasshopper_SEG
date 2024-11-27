@@ -2,10 +2,10 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from .models import User
+from .models import User, Tutor, Student
 
 ###################################################
-'''from .models import Admin, Tutor, Student, Lesson, Invoice'''
+from .models import Lesson
 ###################################################
 
 class LogInForm(forms.Form):
@@ -32,7 +32,7 @@ class UserForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email']
+        fields = ['first_name', 'last_name', 'username', 'email', 'date_of_birth']
 
 class NewPasswordMixin(forms.Form):
     """Form mixing for new_password and password_confirmation fields."""
@@ -98,21 +98,84 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email']
+        fields = ['first_name', 'last_name', 'username', 'email']  # Base fields common to both students and tutors
 
-    def save(self):
-        """Create a new user."""
+    def __init__(self, *args, **kwargs):
+        # Get the user type if provided (for conditional fields)
+        self.user_type = kwargs['request'].GET.get('variations')
+        self.request = kwargs.pop('request', None)  # Extract the request object
+        super().__init__(*args, **kwargs)
 
-        super().save(commit=False)
-        user = User.objects.create_user(
-            self.cleaned_data.get('username'),
-            first_name=self.cleaned_data.get('first_name'),
-            last_name=self.cleaned_data.get('last_name'),
-            email=self.cleaned_data.get('email'),
-            password=self.cleaned_data.get('new_password'),
-        )
-        return user
+        try:
+            self.user_type = kwargs['data'].GET.get('variations')
+            self.request = kwargs.pop('data', None)  # Extract the request object
+        # self.user_type = kwargs['request'].GET.get('variations')
+
+        except Exception as e:
+            print(e)
+
+        # Add fields conditionally based on user_type
+        if self.user_type == 'student':
+            self.type = 'student'
+            # Fields specific to students
+            self.fields['date_of_birth'] = forms.DateField(required=True, label="Date of Birth")
+            # self.fields['subjects'] = forms.CharField(max_length=100, required=True, label="Subjects")
+            self.fields['proficiency_level'] = forms.ChoiceField(
+                choices=Student.PROFICIENCY_LEVEL_CHOICES,
+                required=True,
+                label="Proficiency Level"
+            )
+        else:
+            self.type = 'tutor'
+
+    def save(self, commit=True):
+        """Create a new user with optional additional processing based on user type."""
+        user = super().save(commit=False)
+        variation = self.request.POST.get('variations', None)
+
+        user.set_password(self.cleaned_data['new_password'])
+
+        if variation == 'student':
+            print ("student object being initialised.")
+            student = Student.objects.create(
+                username=self.cleaned_data.get('username'),
+                first_name=self.cleaned_data.get('first_name'),
+                last_name=self.cleaned_data.get('last_name'),
+                email=self.cleaned_data.get('email'),
+                password=self.cleaned_data.get('new_password'),
+                type_of_user= 'student'
+                # type_of_user=self.cleaned_data.get('variations'),
+            )
+            print("Student object created: ", student)
+
+            if commit:
+                student.save()
+            print("Student object created: ", student)
+            return student
     
+        elif variation == 'tutor':
+                print ("Creating a Tutor object...")
+                tutor = Tutor.objects.create(
+                    username=self.cleaned_data.get('username'),
+                    first_name=self.cleaned_data.get('first_name'),
+                    last_name=self.cleaned_data.get('last_name'),
+                    email=self.cleaned_data.get('email'),
+                    password=self.cleaned_data.get('new_password'),     
+                type_of_user= 'tutor',
+                    # type_of_user=self.cleaned_data.get('variations'),
+            )
+
+                if commit:
+                    tutor.save()
+                print("Tutor object created: ", tutor)
+                return tutor
+    
+
+class LessonForm(forms.ModelForm):
+    "Form for lessons"
+    class Meta:
+        model = Lesson
+        fields = ['subject','frequency','term','duration']
 
 
 

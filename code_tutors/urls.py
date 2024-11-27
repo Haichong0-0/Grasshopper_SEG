@@ -19,11 +19,15 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from tutorials import views
+from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('dashboard/', views.dashboard, name='dashboard'),
+    # path('dashboard/', views.dashboard, name='dashboard'),
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('tutor-dashboard/', views.tutor_dashboard, name='tutor_dashboard'),
+    path('student-dashboard/', views.student_dashboard, name='student_dashboard'),
     path('log_in/', views.LogInView.as_view(), name='log_in'),
     path('log_out/', views.log_out, name='log_out'),
     path('password/', views.PasswordView.as_view(), name='password'),
@@ -31,7 +35,7 @@ urlpatterns = [
     path('sign_up/', views.SignUpView.as_view(), name='sign_up'),
     path('users/', views.UserListView.as_view(), name='user_list'),
 
-    path('tutor/dashboard', views.tutor_dashboard, name='tutor_dashboard'),
+
     path('tutor/schedule', views.tutor_schedule, name='tutor_schedule'),
     path('tutor/welcome', views.tutor_welcome, name='tutor_welcome'),
     path('tutor/messages', views.tutor_messages, name='tutor_messages'),
@@ -49,9 +53,11 @@ urlpatterns = [
     path('student/schedule', views.admin_students, name='student_messages'),
     path('student/payments', views.admin_lessons, name='student_payment'),
     path('student/messages', views.admin_invoices, name='student_messages'),
+  
+    path('requestlesson/', lesson_create_view, name='lesson_create'),
+    path('student_dashboard/', student_dashboard, name='student_dashboard'),
+    path('invoices/', student_invoices, name='invoices'),
+    path('student_schedule/', student_schedule, name='student_schedule')
 
 
-
-
-]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

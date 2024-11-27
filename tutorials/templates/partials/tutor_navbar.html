@@ -19,6 +19,8 @@
           </li>
           <li class="nav-item">
             <a class="nav-link {% if request.path == '/tutor/messages' %}active{% endif %}" href="{% url 'tutor_messages' %}">Messages</a>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/tutor/payment' %}active{% endif %}" href="{% url 'tutor_payment' %}">Payment</a>
           </li>
         </ul>
   </div>
