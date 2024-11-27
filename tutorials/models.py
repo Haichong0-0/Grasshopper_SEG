@@ -56,9 +56,8 @@ class Admin(User):
     type_of_user = 'admin'
 
     def save(self, *args, **kwargs):
-        self.user.is_staff = True
-        self.user.use_superuser = True
-        self.user.save()
+        self.is_staff = True
+        self.use_superuser = True
         super().save(*args, **kwargs)
     
     def __str__(self):

@@ -108,7 +108,8 @@ class Command(BaseCommand):
 
     def create_admins(self):
         for data in admin_fixtures:
-            self.try_create_user(data)
+            self.try_create_admin(data)
+        print(f"Admin seeding complete.      ")
 
 
     def try_create_tutor(self, user):
@@ -125,13 +126,13 @@ class Command(BaseCommand):
 
     def try_create_admin(self, data):
         try:
-            return self.create_admins(data)
+            return self.generate_admin(data)
         except Exception as e:
             print(f"Error creating admin: {e}")
             return None
 
     def generate_tutor(self, user):
-        subject = choice([subject[0] for subject in Tutor.SUBJECTS])
+        subject = choice([ subject[0] for subject in Tutor.SUBJECTS])
         un = user.username
         mail = user.email
         pw = user.password
