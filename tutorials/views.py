@@ -187,24 +187,46 @@ def tutor_dashboard(request):
     
     return render(request, 'tutor_dashboard.html', context)
 
+
+
 #@login_required
-def tutor_lessons(request):
-    """lessons page for tutors"""
+def tutor_schedule(request):
+    """schedule page for tutors"""
 
     context = {
 
     }
 
-    return render(request, 'tutor_lessons.html', context)
-
+    return render(request, 'tutor_schedule.html', context)
 
 #@login_required
-def tutor_calendar(request):
-    """calendar page for tutors"""
+def tutor_messages(request):
+    """messages page for tutors"""
 
     context = {
 
     }
 
-    return render(request, 'tutor_calendar.html', context)
+    return render(request, 'tutor_messages.html', context)
+
+
+def tutor_welcome(request):
+    """welcome page for tutors"""
+
+    context = {
+
+    }
+
+    return render(request, 'tutor_welcome.html', context)
+
+
+def tutor_payment(request):
+    """payment page for tutors"""
+
+    context = {
+
+    }
+
+    return render(request, 'tutor_payment.html', context)
+
 
