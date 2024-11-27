@@ -218,15 +218,18 @@ class UserListView(ListView):
     
 #     return render(request, 'tutor_dashboard.html', context)
 
+
+
 #@login_required
-def tutor_lessons(request):
-    """lessons page for tutors"""
+def tutor_schedule(request):
+    """schedule page for tutors"""
 
     context = {
 
     }
+    return render(request, 'tutor_schedule.html', context)
 
-    return render(request, 'tutor_lessons.html', context)
+
 
 class SignUpView(LoginProhibitedMixin, FormView): 
     """Display the sign-up screen and handle sign-ups."""
@@ -285,32 +288,8 @@ class SignUpView(LoginProhibitedMixin, FormView):
             print('after get_success_url, else statement')
             return reverse('home')
 
-#@login_required
-def tutor_schedule(request):
-    """schedule page for tutors"""
+    
 
-    context = {
 
-    }
-
-    return render(request, 'tutor_schedule.html', context)
-
-def tutor_payment(request):
-    """payment page for tutors"""
-
-    context = {
-
-    }
-
-    return render(request, 'tutor_payment.html', context)
-
-def tutor_welcome(request):
-    """welcome page for tutors"""
-
-    context = {
-
-    }
-
-    return render(request, 'tutor_welcome.html', context)
 
 
