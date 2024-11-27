@@ -3,6 +3,8 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 from .models import User, Tutor, Student
+from django.contrib.auth.hashers import make_password
+
 
 ###################################################
 from .models import Lesson
@@ -14,14 +16,18 @@ class LogInForm(forms.Form):
     username = forms.CharField(label="Username")
     password = forms.CharField(label="Password", widget=forms.PasswordInput())
 
-    def get_user(self):
+    def get_user(self, request):
         """Returns authenticated user if possible."""
 
         user = None
         if self.is_valid():
+            print("inside get_user().")
             username = self.cleaned_data.get('username')
             password = self.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
+            print("get_user(): ", username, password)
+
+            user = authenticate(request=request, username=username, password=password)
+            print(user)
         return user
 
 
@@ -142,7 +148,7 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
                 first_name=self.cleaned_data.get('first_name'),
                 last_name=self.cleaned_data.get('last_name'),
                 email=self.cleaned_data.get('email'),
-                password=self.cleaned_data.get('new_password'),
+                password=make_password(self.cleaned_data.get('new_password')),
                 type_of_user= 'student'
                 # type_of_user=self.cleaned_data.get('variations'),
             )
@@ -160,7 +166,7 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
                     first_name=self.cleaned_data.get('first_name'),
                     last_name=self.cleaned_data.get('last_name'),
                     email=self.cleaned_data.get('email'),
-                    password=self.cleaned_data.get('new_password'),     
+                    password=make_password(self.cleaned_data.get('new_password')),     
                 type_of_user= 'tutor',
                     # type_of_user=self.cleaned_data.get('variations'),
             )

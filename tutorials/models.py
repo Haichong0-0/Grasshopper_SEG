@@ -51,18 +51,18 @@ class User(AbstractUser):
         
         return self.gravatar(size=60)
 
-class Admin(User):
+class Admin(User): # Deyu
 
     type_of_user = 'admin'
 
-    def save(self, *args, **kwargs):
-        self.user.is_staff = True
-        self.user.use_superuser = True
-        self.user.save()
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.is_staff = True
+    #     self.use_superuser = True
+    #     super().save(*args, **kwargs)
     
     def __str__(self):
-        return (f"Admin: {self.user.full_name()}")
+        # return (f"Admin: {self.user.full_name()}")
+        return f"Admin: {self.get_full_name()}"
 
 
 class Tutor(User):  
@@ -105,7 +105,7 @@ class Tutor(User):
 
 
 
-class Student(User): #Arjun #Deyu
+class Student(User):
 
     type_of_user = 'student'
     
