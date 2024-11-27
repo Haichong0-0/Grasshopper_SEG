@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'admin_welcome' %}">
+        Home (Admin)
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="container">
+        <ul class="nav nav-tabs nav-justified">
+            <li class="nav-item">
+              <a class="nav-link {% if request.path == '/tutor/dashboard' %}active{% endif %}" href="{% url 'tutor_dashboard' %}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.path == '/tutor/lessons' %}active{% endif %}" href="{% url 'tutor_lessons' %}">Tutors</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.path == '/tutor/schedule' %}active{% endif %}" href="{% url 'tutor_schedule' %}">Students</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.path == '/tutor/payment' %}active{% endif %}" href="{% url 'tutor_payment' %}">Lessons</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.path == '/tutor/messages' %}active{% endif %}" href="{% url 'tutor_messages' %}">Invoices</a>
+            </li>
+          </ul>
+    </div>
+     <!-- NEED TO MAKE THIS IF user authenticated STATEMENT-->
+      {% include 'partials/menu.html' %} 
+    </div>
+  </nav>
+  
+  
+   <!--{%if user.is_authenticated %}-->
+      <!--- {% endif %} -->

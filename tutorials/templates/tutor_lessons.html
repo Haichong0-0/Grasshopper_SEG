@@ -18,27 +18,19 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for lesson in lessons %}
                     <tr>
-                        <th scope="row">John</th>
-                        <td>12345</td>
-                        <td>Java</td>
-                        <td>15/10/2024</td>
-                        <td>abc</td>
+                        <th scope="row">{{ lesson.student.username }}</th> <!-- need to change-->>
+                        <td>{{ lesson.student.id }}</td>
+                        <td>{{ lesson.subject }}</td>
+                        <td>{{ lesson.lesson_date }}</td>
+                        <td>{{ lesson.notes }}</td>
                     </tr>
+                    {% empty %}
                     <tr>
-                        <th scope="row">Jane</th>
-                        <td>654321</td>
-                        <td>Python</td>
-                        <td>21/09/2024</td>
-                        <td>def</td>
+                        <td colspan="5" class="text-center">No upcoming lessons</td>
                     </tr>
-                    <tr>
-                        <th scope="row">Larry</th>
-                        <td>67890</td>
-                        <td>Django</td>
-                        <td>01/12/2024</td>
-                        <td>ghi</td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

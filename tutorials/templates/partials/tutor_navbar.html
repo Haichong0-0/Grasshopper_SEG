@@ -12,11 +12,13 @@
             <a class="nav-link {% if request.path == '/tutor/dashboard' %}active{% endif %}" href="{% url 'tutor_dashboard' %}">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {% if request.path == '/tutor/lessons' %}active{% endif %}" href="{% url 'tutor_lessons' %}">Lessons</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link {% if request.path == '/tutor/schedule' %}active{% endif %}" href="{% url 'tutor_schedule' %}">Schedule</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/tutor/payment' %}active{% endif %}" href="{% url 'tutor_payment' %}">Payment</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/tutor/messages' %}active{% endif %}" href="{% url 'tutor_messages' %}">Messages</a>
           <li class="nav-item">
             <a class="nav-link {% if request.path == '/tutor/payment' %}active{% endif %}" href="{% url 'tutor_payment' %}">Payment</a>
           </li>
