@@ -14,21 +14,12 @@ admin_fixtures = [
     {'username': '@admin', 'email': 'admin.admin@example.org', 'first_name': 'Admin', 'last_name': 'Admin'},
     {'username': '@SteveJobs', 'email': 'Steve.Jobs@example.org', 'first_name': 'Steve', 'last_name': 'Jobs'},
 ]
-""" 
-tutor_fixtures = [
-    {'username': '@tutor', 'email': 'tutor@example.org', 'first_name': 'Tutor', 'last_name': 'Tutor'},
-]
-lesson_fixtures = [
-    {Student:'@johndoe','tutor':'@tutor','lesson_time':'2021-01-01 12:00:00','lesson_duration':60},
-
-] """
-
 
 class Command(BaseCommand):
     """Build automation command to seed the database."""
 
-    TUTOR_COUNT = 50
-    STUDENT_COUNT = 200
+    TUTOR_COUNT = 10
+    STUDENT_COUNT = 10
     ADMIN_COUNT = 10
     DEFAULT_PASSWORD = 'Password123'
     help = 'Seeds the database with sample data'
@@ -107,9 +98,14 @@ class Command(BaseCommand):
         print("Tutor seeding complete.      ")
 
     def create_admins(self):
-        for data in admin_fixtures:
-            self.try_create_user(data)
-
+        admin_count = Admin.objects.count()
+        while admin_count < self.ADMIN_COUNT:
+            print(f"Seeding Tutor {admin_count}/{self.ADMIN_COUNT}", end='\r')
+            user = self.generate_user()
+            if user:
+                self.try_create_admin(user)
+            admin_count = Admin.objects.count()
+        print("Admin seeding complete.      ")
 
     def try_create_tutor(self, user):
         try:
@@ -123,12 +119,11 @@ class Command(BaseCommand):
         except Exception as e:
             print(f"Error creating students: {e}")
 
-    def try_create_admin(self, data):
+    def try_create_admin(self, user):
         try:
-            return self.create_admins(data)
+            return self.generate_admin(user)
         except Exception as e:
             print(f"Error creating admin: {e}")
-            return None
 
     def generate_tutor(self, user):
         subject = choice([subject[0] for subject in Tutor.SUBJECTS])
@@ -146,17 +141,25 @@ class Command(BaseCommand):
             last_name=lastn,
             subject=subject,
             bio=self.faker.text(),
+            type_of_user = 'tutor'
         )
 
-    def generate_admin(self, data):
-        admin = Admin.objects.create_user(
-            username=data['username'],
-            email=data['email'],
-            password=Command.DEFAULT_PASSWORD,
-            first_name=data['first_name'],
-            last_name=data['last_name'],
+    def generate_admin(self, user):
+        un = user.username
+        mail = user.email
+        pw = user.password
+        fn = user.first_name
+        lastn = user.last_name
+        user.delete()
+        Admin.objects.create(
+            username=un,
+            email=mail,
+            password=pw,
+            first_name=fn,
+            last_name=lastn,
+            type_of_user = 'admin'
         )
-        return admin
+       
     
     def generate_student(self, user):
         proficiency_level = choice([Student.BEGINNER, Student.NOVICE, Student.INTERMEDIATE, Student.ADVANCED, Student.MASTERY])
@@ -186,6 +189,7 @@ class Command(BaseCommand):
             current_term_end_date=None,
             current_term_tutor=None,
             current_term_lesson_time=None,
+            type_of_user = 'student'
         )
 
     
