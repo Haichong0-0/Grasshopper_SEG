@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from tutorials.models import User, Tutor, Student, Admin
+from tutorials.models import User, Tutor, Student, Admin, Lesson,TutorAvailability
 import pytz
 from faker import Faker
 from random import choice
@@ -20,13 +20,53 @@ tutor_fixtures = [
     {'username': '@jeroenkeppens', 'email': 'jeroen.keppens@example.org', 'first_name': 'Jeroen', 'last_name': 'Keppens', 'subject': 'python'},
 ]
 
+tutor_availability_fixtures = [
+    {'tutor':'@tutor', 'day':'monday', 'starttime':'10:00', 'endtime':'12:00'},
+    {'tutor':'@tutor', 'day':'tuesday', 'starttime':'15:00', 'endtime':'17:00'},
+    {'tutor':'@tutor', 'day':'wednesday', 'starttime':'10:00', 'endtime':'12:00'},
+    {'tutor':'@tutor', 'day':'thursday', 'starttime':'15:00', 'endtime':'17:00'},
+    {'tutor':'@tutor', 'day':'friday', 'starttime':'10:00', 'endtime':'12:00'},
+    {'tutor':'@tutor', 'day':'saturday', 'starttime':'15:00', 'endtime':'17:00'},
+    {'tutor':'@tutor', 'day':'sunday', 'starttime':'10:00', 'endtime':'12:00'},
+    {'tutor':'@jeroenkeppens', 'day':'monday', 'starttime':'10:00', 'endtime':'12:00'},
+    {'tutor':'@jeroenkeppens', 'day':'tuesday', 'starttime':'15:00', 'endtime':'17:00'},
+    {'tutor':'@jeroenkeppens', 'day':'wednesday', 'starttime':'10:00', 'endtime':'12:00'},
+    {'tutor':'@jeroenkeppens', 'day':'thursday', 'starttime':'15:00', 'endtime':'17:00'},
+    {'tutor':'@jeroenkeppens', 'day':'friday', 'starttime':'10:00', 'endtime':'12:00'},
+    {'tutor':'@jeroenkeppens', 'day':'saturday', 'starttime':'15:00', 'endtime':'17:00'},
+    {'tutor':'@jeroenkeppens', 'day':'sunday', 'starttime':'10:00', 'endtime':'12:00'},
+]
+
+
 student_fixtures = [
     {'username': '@student', 'email': 'student@example.org', 'first_name': 'Student', 'last_name': 'Student', 'proficiency_level': 'beginner'},
 ]
 
 
 lesson_fixtures = [
-    {Student:'@johndoe','tutor':'@tutor','lesson_time':'2021-01-01 12:00:00','lesson_duration':60},
+    {'student':'@student',
+     'tutor':'@tutor',
+     'subject':'ruby_on_rails',
+     'frequency':'weekly',
+     'terms':'September-Christmas',
+     'duration':60,
+    'day_of_week':'monday',
+    'start_time':'10:00',
+    'status':'confirmed',
+    'price':390.00,
+    'paid':True,
+     },
+     {'student':'@student',
+      'tutor':'@tutor',
+      'subject':'python',
+      'frequency':'fortnightly',
+      'terms':'January-Easter',
+      'duration':70,
+      'day_of_week':'tuesday',
+      'start_time':'15:00',
+      'status':'pending',
+      'price':220.00,
+      'paid':False,},
 
 ] 
 
@@ -37,8 +77,8 @@ class Command(BaseCommand):
     """Build automation command to seed the database."""
 
     TUTOR_COUNT = 5
-    STUDENT_COUNT = 20
-    ADMIN_COUNT = 10
+    STUDENT_COUNT = 2
+    ADMIN_COUNT = 1
     DEFAULT_PASSWORD = 'Password123'
     help = 'Seeds the database with sample data'
 
@@ -49,8 +89,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         #self.create_users()
         self.create_tutors()
+        self.generate_tutor_availability()
         self.create_admins()
         self.create_students()
+        self.generate_lesson_fixtures()
         
         self.users = User.objects.all()
 
@@ -99,6 +141,7 @@ class Command(BaseCommand):
 
     def create_students(self):
         student_count = Student.objects.count()
+        self.create_student_fixtures()
         while student_count < self.STUDENT_COUNT:
             print(f"Seeding Student {student_count}/{self.STUDENT_COUNT}", end='\r')
             data = self.generate_user()
@@ -106,6 +149,10 @@ class Command(BaseCommand):
                 self.try_create_student(data)
             student_count = Student.objects.count()
         print("student seeding complete.      ")
+
+    def create_student_fixtures(self):
+        for data in student_fixtures:
+            self.try_create_student(data)
 
     def create_tutors(self):
         tutor_count = Tutor.objects.count()
@@ -134,9 +181,9 @@ class Command(BaseCommand):
         except Exception as e:
             print(f"Error creating tutor: {e}")
 
-    def try_create_student(self, user):
+    def try_create_student(self, data):
         try:
-            self.generate_student(user)
+            self.generate_student(data)
         except Exception as e:
             print(f"Error creating students: {e}")
 
@@ -195,6 +242,48 @@ class Command(BaseCommand):
             current_term_lesson_time=None,
         )
 
+    def generate_lesson_fixtures(self):
+        for data in lesson_fixtures:
+            self.try_create_lesson(data)
+
+    def generate_tutor_availability(self):
+        for data in tutor_availability_fixtures:
+            self.create_tutor_availability(data)
+
+    def try_create_lesson(self, data):
+        try:
+            return self.create_lesson(data)
+        except Exception as e:
+            print(f"Error creating lesson: {e}")
+            return None
+        
+    def create_lesson(self, data):
+        student = Student.objects.get(username=data['student'])
+        tutor = Tutor.objects.get(username=data['tutor'])
+        lesson = Lesson.objects.create(
+            student=student,
+            tutor=tutor,
+            subject=data['subject'],
+            frequency=data['frequency'],
+            term=data['terms'],
+            duration=data['duration'],
+            day_of_week=data['day_of_week'],
+            start_time=data['start_time'],
+            status=data['status'],
+            price_per_term=data['price'],
+            invoice_paid=data['paid'],
+        )
+        return lesson
+
+    def create_tutor_availability(self, data):
+        tutor = Tutor.objects.get(username=data['tutor'])
+        tutor_availability = TutorAvailability.objects.create(
+            tutor=tutor,
+            day=data['day'],
+            starttime=data['starttime'],
+            endtime=data['endtime'],
+        )
+        return tutor_availability
     
 
 def create_username(first_name, last_name):

@@ -61,7 +61,7 @@ class Admin(User):
         super().save(*args, **kwargs)
     
     def __str__(self):
-        return (f"Admin: {self.user.full_name()}")
+        return (f"Admin: {self.get_full_name()}")
 
 
 class Tutor(User):  
@@ -93,7 +93,6 @@ class Tutor(User):
 
 
     subject = models.CharField(max_length=100, blank=False, choices=SUBJECTS,default="Python")
-    timings = models.CharField(max_length=255, blank=True)
     bio = models.CharField(max_length=520, blank=True, null=True)
 
     def setTimings(self, timings_list):
@@ -141,9 +140,18 @@ class Student(User): #Arjun #Deyu
     current_term_tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='student_with_current_term_tutor')
     current_term_lesson_time = models.TimeField(null=True, blank=True)
 
-class TutorAvailability():  # George
-    tutorNo = models.ForeignKey(Tutor, on_delete=models.CASCADE)
-    day = models.CharField(max_length=10, blank=False)
+class TutorAvailability(models.Model):  # George
+    DAYS = [
+        ('monday', 'Monday'),
+        ('tuesday', 'Tuesday'),
+        ('wednesday', 'Wednesday'),
+        ('thursday', 'Thursday'),
+        ('friday', 'Friday'),
+        ('saturday', 'Saturday'),
+        ('sunday', 'Sunday'),
+    ]
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
+    day = models.CharField(max_length=10, blank=False, choices=DAYS)
     starttime = models.TimeField(blank=False)
     endtime = models.TimeField(blank=False)
 
@@ -185,7 +193,7 @@ class Lesson(models.Model): #Fatimah
 
     TERMS = [
         ('September-Christmas', 'September-Christmas'),
-        ('January-Easter term','January-Easter' ),
+        ('January-Easter','January-Easter' ),
         ('May-July','May-July')
     ]
 
