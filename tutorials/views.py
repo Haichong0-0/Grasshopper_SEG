@@ -199,16 +199,16 @@ class UserListView(ListView):
 
 
 
-# #@login_required
-# def tutor_dashboard(request):
-#     """display tutor dashboard if user is a tutor"""
+@login_required
+def tutor_dashboard(request):
+    """display tutor dashboard if user is a tutor"""
     
-#     context = {
-#         #'full_name': request.user.full_name(),
-#         #'gravatar': request.user.gravatar(),
-#     }
+    context = {
+        'full_name': request.user.full_name(),
+        'gravatar': request.user.gravatar(),
+   }
     
-#     return render(request, 'tutor_dashboard.html', context)
+    return render(request, 'tutor_dashboard.html', context)
 
 
 
