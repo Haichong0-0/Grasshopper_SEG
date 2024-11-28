@@ -112,10 +112,16 @@ class LogInView(LoginProhibitedMixin, View):
 
         form = LogInForm(request.POST)
         self.next = request.POST.get('next') or settings.REDIRECT_URL_WHEN_LOGGED_IN
-        user = form.get_user()
+        user = form.get_user(request)
+        print("after post(): ", user)
 
         if user is not None:
-            login(request, user)
+            try:
+                login(request, user)
+            
+            except Exception as e:
+                print("error occured at login: ",e)
+
             if user.type_of_user=="student":  
                 print(self.next)
                 return redirect(reverse('student_dashboard'))
@@ -124,6 +130,8 @@ class LogInView(LoginProhibitedMixin, View):
             elif user.type_of_user=="admin":  
                 return redirect(reverse('admin_dashboard'))
         
+        else: 
+            print("login_view, user is None: ", user)
         messages.add_message(request, messages.ERROR, "The credentials provided were invalid!")
         return self.render()
 
