@@ -43,7 +43,7 @@ def tutor_dashboard(request):
     current_user = request.user
     if (current_user.type_of_user == 'tutor'):
         print("current_user(tutor_dashboard): ", current_user)
-        return render(request, 'tutor_dashboard.html', {'user': current_user})
+        return render(request, 'tutor_dashboard/tutor_dashboard.html', {'user': current_user})
     else:
         return render(request, 'access_denied.html', {'user': current_user})
 
@@ -207,16 +207,17 @@ class UserListView(ListView):
 
 
 
-# #@login_required
-# def tutor_dashboard(request):
-#     """display tutor dashboard if user is a tutor"""
+"""@login_required
+def tutor_dashboard(request):
+    display tutor dashboard if user is a tutor
     
-#     context = {
-#         #'full_name': request.user.full_name(),
-#         #'gravatar': request.user.gravatar(),
-#     }
+    context = {
+        'full_name': request.user.full_name(),
+        'gravatar': request.user.gravatar(),
+    }
     
-#     return render(request, 'tutor_dashboard.html', context)
+    return render(request, 'tutor_dashboard.html', context)
+"""
 
 #@login_required
 def tutor_lessons(request):
@@ -293,7 +294,7 @@ def tutor_schedule(request):
 
     }
 
-    return render(request, 'tutor_schedule.html', context)
+    return render(request, 'tutor_dashboard/tutor_schedule.html', context)
 
 def tutor_payment(request):
     """payment page for tutors"""
@@ -302,7 +303,7 @@ def tutor_payment(request):
 
     }
 
-    return render(request, 'tutor_payment.html', context)
+    return render(request, 'tutor_dashboard/tutor_payment.html', context)
 
 def tutor_welcome(request):
     """welcome page for tutors"""
@@ -311,6 +312,6 @@ def tutor_welcome(request):
 
     }
 
-    return render(request, 'tutor_welcome.html', context)
+    return render(request, 'tutor_dashboard/tutor_welcome.html', context)
 
 

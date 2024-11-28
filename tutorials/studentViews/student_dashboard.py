@@ -44,6 +44,10 @@ def student_invoices(request):
     }
     return render(request, 'student_dashboard_templates/student_invoices.html', context)
 
+@login_required
+def student_welcome(request):
+    return render(request, 'student_dashboard_templates/student_welcome.html')
+
 
 @login_required
 def student_schedule(request):
