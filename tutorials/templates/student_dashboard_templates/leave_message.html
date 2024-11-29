@@ -1,0 +1,9 @@
+{% extends 'student_dashboard_templates/student_base.html' %}
+{% block content %}
+<h3>Leave a Message</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Send</button>
+</form>
+{% endblock %}

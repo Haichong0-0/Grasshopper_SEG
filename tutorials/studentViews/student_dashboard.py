@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from tutorials.forms import LessonForm
+from tutorials.forms import LessonForm, MessageForm
 from tutorials.models import Lesson, Invoice, Student
 from django.contrib.auth.decorators import login_required 
 

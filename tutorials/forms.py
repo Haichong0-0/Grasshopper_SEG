@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from .models import User, Tutor, Student
+from .models import User, Tutor, Student, Message
 from django.contrib.auth.hashers import make_password
 
 
@@ -182,6 +182,11 @@ class LessonForm(forms.ModelForm):
     class Meta:
         model = Lesson
         fields = ['subject','frequency','term','duration']
+
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['subject', 'content']
 
 
 
