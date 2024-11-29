@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from tutorials.models import User, Tutor, Student, Admin, Lesson,TutorAvailability
+from tutorials.models import *
 import pytz
 from faker import Faker
 from random import choice
@@ -53,8 +53,8 @@ lesson_fixtures = [
     'day_of_week':'monday',
     'start_time':'10:00',
     'status':'confirmed',
-    'price':390.00,
     'paid':True,
+    'invoice': 0,
      },
      {'student':'@student',
       'tutor':'@tutor',
@@ -65,10 +65,23 @@ lesson_fixtures = [
       'day_of_week':'tuesday',
       'start_time':'15:00',
       'status':'pending',
-      'price':220.00,
-      'paid':False,},
+      'paid':False,
+      'invoice': 1,},
 
 ] 
+
+
+invoice_fixtures = [
+    {'tutor' : '@tutor',
+    'student' : '@student',
+    'no_of_classes' : 10,
+    'price_per_class' : 60,},
+
+    {'student':'@student',
+      'tutor':'@tutor',
+      'no_of_classes' : 6,
+      'price_per_class' : 75,},
+]
 
 
 
@@ -256,8 +269,28 @@ class Command(BaseCommand):
         except Exception as e:
             print(f"Error creating lesson: {e}")
             return None
-        
+    
+    def try_create_invoice(self, data):
+        try:
+            return self.create_invoice(data)
+        except Exception as e:
+            print(f"Error creating invoice: {e}")
+            return None
+    
+    def create_invoice(self, data):
+        tutor = Tutor.objects.get(username=data['tutor'])
+        student = Student.objects.get(username=data['student'])
+        invoice = Invoice.objects.create(
+            tutor=tutor,
+            student=student,
+            no_of_classes=data['no_of_classes'],
+            price_per_class=data['price_per_class'],
+        )
+        invoice.sum()
+        return invoice
+
     def create_lesson(self, data):
+        invoice = self.try_create_invoice(invoice_fixtures[data['invoice']])
         student = Student.objects.get(username=data['student'])
         tutor = Tutor.objects.get(username=data['tutor'])
         lesson = Lesson.objects.create(
@@ -270,7 +303,7 @@ class Command(BaseCommand):
             day_of_week=data['day_of_week'],
             start_time=data['start_time'],
             status=data['status'],
-            price_per_term=data['price'],
+            invoice=invoice,
             invoice_paid=data['paid'],
         )
         return lesson
@@ -291,3 +324,5 @@ def create_username(first_name, last_name):
 
 def create_email(first_name, last_name):
     return first_name + '.' + last_name + '@example.org'
+
+

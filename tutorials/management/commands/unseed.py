@@ -13,4 +13,5 @@ class Command(BaseCommand):
         Admin.objects.all().delete()
         Lesson.objects.all().delete()  
         TutorAvailability.objects.all().delete()
+        Invoice.objects.all().delete()
         User.objects.filter(is_staff=False).delete()

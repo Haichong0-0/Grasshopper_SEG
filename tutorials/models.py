@@ -27,6 +27,29 @@ class User(AbstractUser):
         ('student', 'Student'),
     )
 
+    SUBJECTS = [
+        ('ruby_on_rails', 'Ruby on Rails'),
+        ('python', 'Python'),
+        ('javascript', 'Javascript'),
+        ('c_plus_plus', 'C++'),
+        ('c_sharp', 'C#'),
+        ('react', 'React'),
+        ('angular', 'Angular'),
+        ('vue_js', 'Vue.js'),
+        ('node_js', 'Node.js'),
+        ('express_js', 'Express.js'),
+        ('django', 'Django'),
+        ('flask', 'Flask'),
+        ('spring', 'Spring'),
+        ('hibernate', 'Hibernate'),
+        ('jpa', 'JPA'),
+        ('sql', 'SQL'),
+        ('mongodb', 'MongoDB'),
+        ('postgresql', 'PostgreSQL'),
+        ('mysql', 'MySQL'),
+        ('git', 'Git'),
+    ]
+
     type_of_user = models.CharField(max_length=20, choices=USER_TYPES, default='student')
 
     class Meta:
@@ -68,31 +91,10 @@ class Tutor(User):
 
     type_of_user = 'tutor'
     
-    SUBJECTS = [ # All of the subjects that a Tutor is available to teach
-        ('ruby_on_rails', 'Ruby on Rails'),
-        ('python', 'Python'),
-        ('javascript', 'Javascript'),
-        ('c_plus_plus', 'C++'),
-        ('c_sharp', 'C#'),
-        ('react', 'React'),
-        ('angular', 'Angular'),
-        ('vue_js', 'Vue.js'),
-        ('node_js', 'Node.js'),
-        ('express_js', 'Express.js'),
-        ('django', 'Django'),
-        ('flask', 'Flask'),
-        ('spring', 'Spring'),
-        ('hibernate', 'Hibernate'),
-        ('jpa', 'JPA'),
-        ('sql', 'SQL'),
-        ('mongodb', 'MongoDB'),
-        ('postgresql', 'PostgreSQL'),
-        ('mysql', 'MySQL'),
-        ('git', 'Git'),
-    ]
+    
 
 
-    subject = models.CharField(max_length=100, blank=False, choices=SUBJECTS,default="Python")
+    subject = models.CharField(max_length=100, blank=False, choices=User.SUBJECTS,default="Python")
     bio = models.CharField(max_length=520, blank=True, null=True)
 
     def setTimings(self, timings_list):
@@ -131,7 +133,7 @@ class Student(User): #Arjun #Deyu
     phone = models.CharField(max_length=12, default='07777777777')
 
 
-    preferred_language = models.CharField(max_length=50, default="Python")
+    preferred_language = models.CharField(max_length=50, default="Python", choices=User.SUBJECTS)
     preferred_tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='student_preferring_tutor')
     preferred_lesson_duration = models.IntegerField(default=60)
     preferred_lesson_frequency = models.CharField(max_length=20, choices=[('weekly', 'Weekly'), ('fortnightly', 'Fortnightly')], default="('weekly', 'Weekly')")
@@ -154,6 +156,18 @@ class TutorAvailability(models.Model):  # George
     day = models.CharField(max_length=10, blank=False, choices=DAYS)
     starttime = models.TimeField(blank=False)
     endtime = models.TimeField(blank=False)
+
+class Invoice(models.Model):  # George
+    orderNo = models.AutoField(primary_key=True)
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE,)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    no_of_classes = models.IntegerField(blank=False)
+    price_per_class = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
+    sum = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
+
+    def sum(self):
+        self.sum = self.no_of_classes * self.price_per_class
+        return self.sum
 
 class Lesson(models.Model): #Fatimah
 
@@ -228,7 +242,7 @@ class Lesson(models.Model): #Fatimah
 
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='lessons')
     tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='lessons')
-    subject = models.CharField(max_length=100, choices=SUBJECTS)
+    subject = models.CharField(max_length=100, choices=SUBJECTS,default="Python")
     frequency = models.CharField(max_length=20, choices=FREQUENCY_CHOICES)
     term = models.CharField(max_length=50, choices=TERMS)
     duration = models.IntegerField(choices=DURATION_CHOICES, default=60)
@@ -238,15 +252,8 @@ class Lesson(models.Model): #Fatimah
     location = models.CharField(max_length=100, default="Online") 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     invoice_paid = models.BooleanField(default=False)
-    price_per_term = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
+    invoice = models.ForeignKey(Invoice, null = True,on_delete=models.CASCADE)
 
 
-class Invoice(models.Model):  # George
-    orderNo = models.AutoField(primary_key=True)
-    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    topic = models.CharField(max_length=100, blank=False)
-    no_of_classes = models.IntegerField(blank=False)
-    price_per_class = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
-    sum = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
+
  
