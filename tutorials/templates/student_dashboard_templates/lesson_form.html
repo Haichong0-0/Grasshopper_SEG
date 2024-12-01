@@ -1,6 +1,5 @@
 {% extends 'student_dashboard_templates/student_base.html' %}
 
-
 {% block content %}
 <head>
     <meta charset="UTF-8">
@@ -26,6 +25,14 @@
         </div>
         {% endif %}
 
+        <!-- Display the term warning message (if any) -->
+        {% if term_warning %}
+        <div class="alert alert-warning">
+            <strong>Attention!</strong> {{ term_warning }}
+        </div>
+        {% endif %}
+
+
         <form method="POST">
             {% csrf_token %}
             
@@ -33,7 +40,7 @@
             <div class="mb-3">
                 <label for="id_subject" class="form-label">Subject</label>
                 <select name="subject" class="form-control" id="id_subject">
-                <option value="" disabled selected>Please select the subject</option>
+                    <option value="" disabled selected>Please select the subject</option>
                     {% for value, display in form.subject.field.choices %}
                         <option value="{{ value }}" {% if value == form.subject.value %}selected{% endif %}>{{ display }}</option>
                     {% endfor %}
@@ -53,18 +60,23 @@
                 <div class="form-text">How often would you like to schedule the lesson?</div>
             </div>
             
-
             <!-- Term Field (Dropdown) -->
             <div class="mb-3">
                 <label for="id_term" class="form-label">Term</label>
-                <select name="term" class="form-control" id="id_term">
+                <select name="term" class="form-control" id="id_term" {% if term_warning %}disabled{% endif %}>
                     <option value="" disabled {% if not form.term.value %}selected{% endif %}>Please select the term</option>
                     {% for value, display in form.term.field.choices %}
                         <option value="{{ value }}" {% if value == form.term.value %}selected{% endif %}>{{ display }}</option>
                     {% endfor %}
                 </select>
                 <div class="form-text">Select the term for the lesson.</div>
+
+                <!-- Add a hidden input field that will store the value of the term -->
+                {% if term_warning %}
+                <input type="hidden" name="term" value="{{ form.term.value }}">
+                {% endif %}
             </div>
+
 
             <!-- Duration Field (Dropdown) -->
             <div class="mb-3">
@@ -77,12 +89,19 @@
                 </select>
                 <div class="form-text">Select the duration for the lesson.</div>
             </div>
-
-            <button type="submit" class="btn btn-primary">Submit Lesson Request</button>
+            
+            <!-- Submit Button with dynamic color -->
+            {% if term_warning %}
+            <!-- "Submit Anyway" button if it's a late request -->
+            <button type="submit" name="submit_anyway" class="btn {{ button_class }}">{{ submit }} </button>
+            {% else %}
+            <!-- Regular Submit button if no warning -->
+            <button type="submit" class="btn {{ button_class }}">{{ submit }}</button>
+            {% endif %}
         </form>
 
-          <!-- Back to Dashboard Button with Icon -->
-          <a href="{% url 'student_dashboard' %}" class="btn btn-secondary mt-3">
+        <!-- Back to Dashboard Button with Icon -->
+        <a href="{% url 'student_dashboard' %}" class="btn btn-secondary mt-3">
             <i class="fas fa-arrow-left"></i> Back to Dashboard
         </a>
 

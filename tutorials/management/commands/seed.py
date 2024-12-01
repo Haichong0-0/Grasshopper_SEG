@@ -211,7 +211,7 @@ class Command(BaseCommand):
         subject = choice([ subject[0] for subject in Tutor.SUBJECTS])
         if(len(data)>4):
             subject = data['subject']
-        Tutor.objects.create(
+        tutor = Tutor.objects.create(
             username=data['username'],
             email=data['email'],
             password=Command.DEFAULT_PASSWORD,
@@ -219,7 +219,10 @@ class Command(BaseCommand):
             last_name=data['last_name'],
             subject=subject,
             bio=self.faker.text(),
+            type_of_user = 'tutor'
         )
+        tutor.set_password(Command.DEFAULT_PASSWORD)  # This hashes the password
+        tutor.save()
 
     def generate_admin(self, data):
         admin = Admin.objects.create_user(
@@ -228,6 +231,7 @@ class Command(BaseCommand):
             password=Command.DEFAULT_PASSWORD,
             first_name=data['first_name'],
             last_name=data['last_name'],
+            type_of_user = 'admin'
         )
         return admin
     
@@ -253,7 +257,10 @@ class Command(BaseCommand):
             current_term_end_date=None,
             current_term_tutor=None,
             current_term_lesson_time=None,
+            type_of_user = 'student'
         )
+        student.set_password(Command.DEFAULT_PASSWORD)  # This hashes the password
+        student.save()
 
     def generate_lesson_fixtures(self):
         for data in lesson_fixtures:

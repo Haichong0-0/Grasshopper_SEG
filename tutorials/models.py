@@ -215,7 +215,8 @@ class Lesson(models.Model): #Fatimah
     STATUS_CHOICES = [
         ('Rejected', 'Rejected'),
         ('pending', 'Pending'),
-        ('confirmed', 'Confirmed')
+        ('confirmed', 'Confirmed'),
+        ('late', 'Late')
     ]
 
     TIME_CHOICES = [

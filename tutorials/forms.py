@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 from .models import User, Tutor, Student
 from django.contrib.auth.hashers import make_password
+from datetime import date, timedelta
+
 
 
 ###################################################
@@ -25,7 +27,7 @@ class LogInForm(forms.Form):
             username = self.cleaned_data.get('username')
             password = self.cleaned_data.get('password')
             print("get_user(): ", username, password)
-
+            
             user = authenticate(request=request, username=username, password=password)
             print(user)
         return user
@@ -182,7 +184,6 @@ class LessonForm(forms.ModelForm):
     class Meta:
         model = Lesson
         fields = ['subject','frequency','term','duration']
-
 
 
 '''class AdminForm(forms.ModelForm):
