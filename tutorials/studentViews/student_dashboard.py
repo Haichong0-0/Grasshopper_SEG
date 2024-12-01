@@ -65,3 +65,4 @@ def student_schedule(request):
         'pending_lessons': pending_lessons,
         'rejected_lessons': rejected_lessons,
     })
+
