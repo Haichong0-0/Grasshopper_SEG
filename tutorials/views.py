@@ -10,7 +10,7 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
-from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm
+from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm, MessageForm
 from tutorials.helpers import login_prohibited
 from tutorials.models import User
 
@@ -313,5 +313,19 @@ def tutor_welcome(request):
     }
 
     return render(request, 'tutor_dashboard/tutor_welcome.html', context)
+
+
+def leave_message(request):
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.student = request.user.student
+            message.save()
+            return redirect('student_dashboard')
+
+    else:
+        form = MessageForm()
+        return render(request, 'student_dashboard_templates/leave_message.html', {'form': form})
 
 
