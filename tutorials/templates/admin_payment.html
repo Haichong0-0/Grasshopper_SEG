@@ -1,3 +1,6 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+
 <!doctype html>
 <html lang="en">
 
@@ -136,7 +139,7 @@
                                 <th>Order No.</th>
                                 <th>Tutor</th>
                                 <th>Student</th>
-                                <th>Topic</th>
+                                <th>Subject</th>
                                 <th>No. of Classes</th>
                                 <th>Price per Class</th>
                                 <th>Sum</th>
@@ -144,17 +147,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for lesson in pending_lessons %}
-                            <form method="post" action="{% url 'confirm_class' lesson_id=lesson.lesson_id %}"> {% csrf_token %}
+                            {% for Invoice in pending_lessons %}
                             <tr>  
-                                <td>{{ lesson.subject }}</td>
                                 <td>{{ Invoice.orderNo }}</td>
-                                <td>{{ Invoice.tutor }}</td>
-                                <td>{{ Invoice.student }}</td>
+                                <td>{{ Invoice.tutor.first_name }} {{ Invoice.tutor.last_name }}</td>
+                                <td>{{ Invoice.student.first_name }} {{ Invoice.student.last_name }}</td>
                                 <td>{{ Invoice.topic }}</td>
-                                <td>{{ Inovice.no_of_classes }}</td>
+                                <td>{{ Invoice.no_of_classes }}</td>
                                 <td>{{ Invoice.price_per_class }}</td>
-                                <td>{{ Invoice.sum }}</td>
+                                <td>{{ Invoice.total_sum }}</td>
                                 <td>
                             </tr>
                             {% empty %}
@@ -167,65 +168,6 @@
         </div>
     </div>
 
-    <!-- Content Area -->
-        <div class="table-responsive"> 
-            <div class="table-container">
-                <h4>Outstanding payments</h4>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Order No.</th>
-                                <th>Tutor</th>
-                                <th>Student</th>
-                                <th>Topic</th>
-                                <th>No. of Classes</th>
-                                <th>Price per Class</th>
-                                <th>Sum</th>
-                                <th> </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for lesson in pending_lessons %}
-                            <form method="post" action="{% url 'confirm_class' lesson_id=lesson.lesson_id %}"> {% csrf_token %}
-                            <tr>
-                                
-                                <td>{{ lesson.subject }}</td>
-                                <td>
-                                    <select id="dropdown" name="options">
-                                        {% for tutor in available_tutors %}
-                                        {% if tutor.subject == lesson.subject %}
-                                        <option value="{{ tutor.id }}">{{ tutor.first_name }} {{ tutor.last_name }}</option>
-                                        <input type="hidden" name="tutor" value="{{ tutor.id }}">
-                                        {% endif %}
-                                        {% endfor %}
-                                    </select>
-                                </td>  
-                                <td>{{ Invoice.orderNo }}</td>
-                                <td>{{ Invoice.tutor }}</td>
-                                <td>{{ Invoice.student }}</td>
-                                <td>{{ Invoice.topic }}</td>
-                                <td>{{ Inovice.no_of_classes }}</td>
-                                <td>{{ Invoice.price_per_class }}</td>
-                                <td>{{ Invoice.sum }}</td>
-                                <td>
-                                    
-                                        <button type="submit" class="btn btn-success">Accept</button>
-                                    </form>
-                                </td>
-                                <td><button type="button" class="btn btn-danger">Reject</button></td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="9" class="empty-message">No outstanding payments.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-    </div>
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -233,3 +175,5 @@
 </body>
 
 </html>
+
+{% endblock %}

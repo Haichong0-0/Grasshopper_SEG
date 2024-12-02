@@ -18,7 +18,7 @@ admin_fixtures = [
 class Command(BaseCommand):
     """Build automation command to seed the database."""
 
-    TUTOR_COUNT = 10
+    TUTOR_COUNT = 100
     STUDENT_COUNT = 10
     ADMIN_COUNT = 10
     DEFAULT_PASSWORD = 'Password123'

@@ -1,3 +1,6 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+
 <!doctype html>
 <html lang="en">
 
@@ -126,61 +129,24 @@
 
     <!-- Content Area -->
     <div class="content-area">
-        <h3>Payments</h3>
+        <h3>Lesson requests</h3>
         <div class="table-responsive"> 
             <div class="table-container">
-                <h4>payments</h4>
+                <h4>Pending Requests</h4>
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Order No.</th>
+                                <th>Subject</th>
                                 <th>Tutor</th>
-                                <th>Student</th>
-                                <th>Topic</th>
-                                <th>No. of Classes</th>
-                                <th>Price per Class</th>
-                                <th>Sum</th>
-                                <th> </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for lesson in pending_lessons %}
-                            <form method="post" action="{% url 'confirm_class' lesson_id=lesson.lesson_id %}"> {% csrf_token %}
-                            <tr>  
-                                <td>{{ lesson.subject }}</td>
-                                <td>{{ Invoice.orderNo }}</td>
-                                <td>{{ Invoice.tutor }}</td>
-                                <td>{{ Invoice.student }}</td>
-                                <td>{{ Invoice.topic }}</td>
-                                <td>{{ Inovice.no_of_classes }}</td>
-                                <td>{{ Invoice.price_per_class }}</td>
-                                <td>{{ Invoice.sum }}</td>
-                                <td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="9" class="empty-message">No payments.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Content Area -->
-        <div class="table-responsive"> 
-            <div class="table-container">
-                <h4>Outstanding payments</h4>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Order No.</th>
-                                <th>Tutor</th>
-                                <th>Student</th>
-                                <th>Topic</th>
-                                <th>No. of Classes</th>
-                                <th>Price per Class</th>
-                                <th>Sum</th>
+                                <th>Frequency</th>
+                                <th>Start Date</th>
+                                <th>Day of Week</th>
+                                <th>Start Time</th>
+                                <th>No of Classes</th>
+                                <th>Status</th>
+                                <th>Term</th>
+                                <th>Payment</th>
+                                <th>Status</th>
                                 <th> </th>
                             </tr>
                         </thead>
@@ -200,13 +166,14 @@
                                         {% endfor %}
                                     </select>
                                 </td>  
-                                <td>{{ Invoice.orderNo }}</td>
-                                <td>{{ Invoice.tutor }}</td>
-                                <td>{{ Invoice.student }}</td>
-                                <td>{{ Invoice.topic }}</td>
-                                <td>{{ Inovice.no_of_classes }}</td>
-                                <td>{{ Invoice.price_per_class }}</td>
-                                <td>{{ Invoice.sum }}</td>
+                                <td>{{ lesson.frequency }}</td>
+                                <td>{{ lesson.start_date }}</td>
+                                <td>{{ lesson.day_of_week }}</td>
+                                <td>{{ lesson.start_time }}</td>
+                                <td>{{ lesson.duration }}</td>
+                                <td>{{ lesson.status }}</td>
+                                <td>{{ lesson.term }}</td>
+                                <td>{{ lesson.invoice_paid }}</td>
                                 <td>
                                     
                                         <button type="submit" class="btn btn-success">Accept</button>
@@ -216,13 +183,101 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="9" class="empty-message">No outstanding payments.</td>
+                                <td colspan="9" class="empty-message">You have no pending lessons.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
             </table>
         </div>
     </div>
+
+        <!-- Confirmed Lessons -->
+        <div class="table-responsive">
+            <div class="table-container">
+                <h4>Confirmed Lessons</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Tutor</th>
+                            <th>Frequency</th>
+                            <th>Start Date</th>
+                            <th>Day of Week</th>
+                            <th>Start Time</th>
+                            <th>Status</th>
+                            <th>Term</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lesson in confirmed_lessons %}
+                        <tr>
+                            <td>{{ lesson.subject }}</td>
+                            <td>{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }}</td>
+                            <td>{{ lesson.frequency }}</td>
+                            <td>{{ lesson.start_date }}</td>
+                            <td>{{ lesson.day_of_week }}</td>
+                            <td>{{ lesson.start_time }}</td>
+                            <td>{{ lesson.status }}</td>
+                            <td>{{ lesson.term }}</td>
+                            <td>{{ lesson.location }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="empty-message">You have no confirmed lessons.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Rejected Lessons -->
+        <div class="table-container">
+         <div class="table-responsive">
+            <!-- <div class="table-container"> -->
+                <h4>Rejected Lessons</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Tutor</th>
+                            <th>Frequency</th>
+                            <th>Start Date</th>
+                            <th>Day of Week</th>
+                            <th>Start Time</th>
+                            <th>Status</th>
+                            <th>Term</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lesson in rejected_lessons %}
+                        <tr>
+                            <td>{{ lesson.subject }}</td>
+                            <td>{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }}</td>
+                            <td>{{ lesson.frequency }}</td>
+                            <td>{{ lesson.start_date }}</td>
+                            <td>{{ lesson.day_of_week }}</td>
+                            <td>{{ lesson.start_time }}</td>
+                            <td>{{ lesson.status }}</td>
+                            <td>{{ lesson.term }}</td>
+                            <td>{{ lesson.location }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="empty-message">You have no rejected lessons.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody> 
+                </table>
+            </div>
+        </div>
+
+        <!-- Back to Dashboard Button -->
+     <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary mt-3">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
 </div>
 
     </div>
@@ -233,3 +288,5 @@
 </body>
 
 </html>
+
+{% endblock %}

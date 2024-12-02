@@ -22,10 +22,20 @@ from tutorials import views
 from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     # path('dashboard/', views.dashboard, name='dashboard'),
+    path('admin/welcome', views.admin_welcome, name='admin_welcome'),
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    # path('admin/lessons', views.admin_lessons, name='admin_lessons'),
+    path('admin/dashboard', views.admin_dashboard, name='admin_dashboard'),
+    path('admin/lessons', views.admin_lessons, name='admin_lessons'),
+    path('admin/schedule', views.admin_schedule, name='admin_schedule'),
+    path('admin/messages', views.admin_messages, name='admin_messages'),
+    path('admin/payment', views.admin_payment, name='admin_payment'),
+    # path('custom_admin/lessons', views.admin_lessons, name='admin_lessons'),
+
+
     path('tutor-dashboard/', views.tutor_dashboard, name='tutor_dashboard'),
     path('student-dashboard/', views.student_dashboard, name='student_dashboard'),
     path('log_in/', views.LogInView.as_view(), name='log_in'),
@@ -42,6 +52,9 @@ urlpatterns = [
     path('requestlesson/', lesson_create_view, name='lesson_create'),
     path('student_dashboard/', student_dashboard, name='student_dashboard'),
     path('invoices/', student_invoices, name='invoices'),
-    path('student_schedule/', student_schedule, name='student_schedule')
+    path('student_schedule/', student_schedule, name='student_schedule'),
+
+    path('lesson/<int:lesson_id>/confirm_class/', views.ConfirmClassView.as_view(), name='confirm_class'),
+    
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

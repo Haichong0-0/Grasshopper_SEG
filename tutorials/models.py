@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from libgravatar import Gravatar
 
+
 class User(AbstractUser):
     """Model used for user authentication, and team member related information."""
 
@@ -51,14 +52,14 @@ class User(AbstractUser):
         
         return self.gravatar(size=60)
 
-class Admin(User): # Deyu
+class Admin(User): 
 
     type_of_user = 'admin'
 
-    # def save(self, *args, **kwargs):
-    #     self.is_staff = True
-    #     self.use_superuser = True
-    #     super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        self.is_staff = True
+        self.superuser = True
+        super().save(*args, **kwargs)
     
     def __str__(self):
         # return (f"Admin: {self.user.full_name()}")
@@ -66,7 +67,7 @@ class Admin(User): # Deyu
 
 
 class Tutor(User):  
-
+    
     type_of_user = 'tutor'
     
     SUBJECTS = [ # All of the subjects that a Tutor is available to teach
@@ -91,7 +92,6 @@ class Tutor(User):
         ('mysql', 'MySQL'),
         ('git', 'Git'),
     ]
-
 
     subject = models.CharField(max_length=100, blank=False, choices=SUBJECTS,default="Python")
     timings = models.CharField(max_length=255, blank=True)
@@ -142,13 +142,14 @@ class Student(User):
     current_term_tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='student_with_current_term_tutor')
     current_term_lesson_time = models.TimeField(null=True, blank=True)
 
-class TutorAvailability():  # George
+class TutorAvailability():  
     tutorNo = models.ForeignKey(Tutor, on_delete=models.CASCADE)
     day = models.CharField(max_length=10, blank=False)
     starttime = models.TimeField(blank=False)
     endtime = models.TimeField(blank=False)
 
-class Lesson(models.Model): #Fatimah
+class Lesson(models.Model): 
+
 
     SUBJECTS = [
         ('ruby_on_rails', 'Ruby on Rails'),
@@ -179,9 +180,9 @@ class Lesson(models.Model): #Fatimah
         ('every other week', 'Every other week')
     ]
     
-    DURATION_CHOICES = [
+    DURATION_CHOICES = [        # add later
         (60, '1 hour'),
-        (120, '2 hours'),
+        (120, '2 hours')
     ]
 
     TERMS = [
@@ -219,8 +220,9 @@ class Lesson(models.Model): #Fatimah
         ('sunday', 'Sunday'),
     ]
 
+    lesson_id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='lessons')
-    tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='lessons')
+    tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, related_name='lessons')
     subject = models.CharField(max_length=100, choices=SUBJECTS)
     frequency = models.CharField(max_length=20, choices=FREQUENCY_CHOICES)
     term = models.CharField(max_length=50, choices=TERMS)
@@ -231,15 +233,17 @@ class Lesson(models.Model): #Fatimah
     location = models.CharField(max_length=100, default="Online") 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     invoice_paid = models.BooleanField(default=False)
+    price_per_class = models.DecimalField(max_digits=10, decimal_places=2, blank=False, default=20)
     price_per_term = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
+    invoice_paid = models.BooleanField(default=False)
 
 
-class Invoice(models.Model):  # George
+class Invoice(models.Model): 
     orderNo = models.AutoField(primary_key=True)
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     topic = models.CharField(max_length=100, blank=False)
     no_of_classes = models.IntegerField(blank=False)
     price_per_class = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
-    sum = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
+    total_sum = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
  

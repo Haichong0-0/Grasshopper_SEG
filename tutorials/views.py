@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ImproperlyConfigured
 from django.forms import BaseModelForm
@@ -12,8 +12,12 @@ from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
 from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm
 from tutorials.helpers import login_prohibited
-from tutorials.models import User
-
+from tutorials.models import User, Lesson, Tutor, Student, Invoice
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serialiser import LessonSerializer
+# from .utilities import sendEmails
 
 #############################################################
 '''from .models import Admin, Tutor, Student, Lesson, Invoice
@@ -205,7 +209,17 @@ class UserListView(ListView):
         return User.objects.all()
 
 
+def is_admin(user):
+    return user.is_staff 
 
+@login_required
+@user_passes_test(is_admin)
+def admin_lessons(request):
+    """lessons page for admins"""
+
+    context = {}
+
+    return render(request, 'admin_lessons.html', context)
 
 # #@login_required
 # def tutor_dashboard(request):
@@ -285,25 +299,18 @@ class SignUpView(LoginProhibitedMixin, FormView):
             print('after get_success_url, else statement')
             return reverse('home')
 
-#@login_required
-def tutor_schedule(request):
-    """schedule page for tutors"""
+@login_required
+@user_passes_test(is_admin)
+def admin_welcome(request):
+    """welcome page for admins"""
 
     context = {
 
     }
 
-    return render(request, 'tutor_schedule.html', context)
+    return render(request, 'admin_welcome.html', context)
 
-def tutor_payment(request):
-    """payment page for tutors"""
-
-    context = {
-
-    }
-
-    return render(request, 'tutor_payment.html', context)
-
+@login_required
 def tutor_welcome(request):
     """welcome page for tutors"""
 
@@ -313,4 +320,158 @@ def tutor_welcome(request):
 
     return render(request, 'tutor_welcome.html', context)
 
+def get_lesson_data():
+    context = {}
 
+    confirmed_lessons = Lesson.objects.filter(status='Confirmed').order_by('start_date','start_time')
+    pending_lessons = Lesson.objects.filter(status='Pending').order_by('start_date','start_time')
+    print("pending lessons: ", pending_lessons)
+    rejected_lessons = Lesson.objects.filter(status='Rejected').order_by('start_date','start_time')
+
+    for lesson in pending_lessons:
+        lesson.duration = lesson.duration // 60      # Convert duration to hours
+    context["confirmed_lessons"] = confirmed_lessons
+    context["pending_lessons"] = pending_lessons        # same computational power
+    context["rejected_lessons"] = rejected_lessons
+    context["available_tutors"] = Tutor.objects.all()
+
+    return context
+
+@login_required
+@user_passes_test(is_admin)
+def admin_schedule(request):
+    """schedule page for tutors"""
+
+    # context = { }
+
+    if request.user.is_authenticated and hasattr(request.user, 'admin'):
+        context = get_lesson_data()
+    #     pending_lessons = Lesson.objects.filter(status='Pending').order_by('start_date','start_time')
+
+    #     context["confirmed_lessons"] = Lesson.objects.filter(status='confirmed').order_by('start_date','start_time')
+    #     context["pending_lessons"] = pending_lessons        # do the same for others, same computational power
+    #     context["rejected_lessons"] = Lesson.objects.filter(status='Rejected').order_by('start_date','start_time')
+    #     context["available_tutors"] = Tutor.objects.all()
+        
+    # else:
+    #     context["confirmed_lessons"] = []
+    #     context["pending_lessons"] = []
+    #     context["rejected_lessons"] = []
+    #     context["available_tutors"] = []
+
+    return render(request, 'admin_schedule.html', context)
+
+@login_required
+def tutor_schedule(request):
+    """schedule page for tutors"""
+
+    context = {
+
+    }
+
+    return render(request, 'tutor_schedule.html', context)
+
+@login_required
+@user_passes_test(is_admin)
+def admin_payment(request):
+    """payment page for admin"""
+
+    context = {
+
+    }
+
+    invoice_detail = Invoice.objects.all().order_by('-orderNo')
+    context["pending_lessons"] = invoice_detail 
+    # context["available_tutors"] = Tutor.objects.all()
+
+    return render(request, 'admin_payment.html', context)
+
+@login_required
+def tutor_payment(request):
+    """payment page for tutors"""
+
+    if hasattr(request.user, 'tutor'):  # Ensure the user is a tutor
+        invoices = Invoice.objects.filter(tutor=request.user.tutor).order_by('-orderNo')
+    else:
+        invoices = []  # Return an empty queryset if the user is not a tutor
+
+    context = {
+        'invoices': invoices,
+    }
+
+    return render(request, 'tutor_payment.html', context)
+
+@login_required
+def student_payment(request):
+    """payment page for admin"""
+
+    if hasattr(request.user, 'student'):  # Ensure the user is a student
+        invoices = Invoice.objects.filter(student=request.user.student).order_by('-orderNo')
+    else:
+        invoices = []  # Return an empty queryset if the user is not a student
+
+    context = {
+        'invoices': invoices,
+    }
+
+    return render(request, 'student_payment.html', context)
+
+@login_required
+@user_passes_test(is_admin)
+def admin_messages(request):
+    """payment page for admin"""
+
+    context = {
+
+    }
+
+    return render(request, 'admin_payment.html', context)
+
+class ConfirmClassView(APIView):
+    
+    def post(self, request, lesson_id):
+        request_data = request.data
+        print('received the request with data', request.POST)       # testing
+        
+        serializer = LessonSerializer(data=request_data)
+        if serializer.is_valid():
+            print('valid data: success')
+            lesson_obj = Lesson.objects.get(lesson_id=lesson_id)
+            # print('lesson object: ', lesson_obj.values())
+            if(request.POST.get("tutor")):
+                lesson_obj.tutor_id = request.POST.get("tutor")
+                lesson_obj.status = "Confirmed"
+                lesson_obj.save()
+
+            
+            no_of_classes = lesson_obj.duration//60
+            print("no_of_classes: ", type(no_of_classes), no_of_classes)
+            print("lesson_obj.price_per_class: ", type(lesson_obj.price_per_class), lesson_obj.price_per_class)
+            
+
+            total = no_of_classes * lesson_obj.price_per_class
+            print(f"Total: {total}, type: {type(total)}")
+
+        try:
+            Invoice.objects.create(                
+                # print(f"tutor ID from request: {request.POST.get('tutor')}"),
+                tutor=Tutor.objects.get(id=request.POST.get("tutor")),
+                student=Student.objects.get(id=lesson_obj.student_id),
+                topic=lesson_obj.subject,
+                no_of_classes=no_of_classes,
+                price_per_class=lesson_obj.price_per_class,
+                total_sum=total
+            )
+        except Exception as e:
+            print(f"Error creating invoice: {e}")
+            # return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return redirect("admin_schedule")
+
+
+            # return Response({"message": f"Lesson id {lesson_id} confirmed successfully."}, status=status.HTTP_200_OK)
+            return redirect("admin_schedule")
+
+        else:
+            # return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+            return redirect("admin_schedule")
+    

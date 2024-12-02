@@ -1,0 +1,15 @@
+.nav-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile */
+    white-space: nowrap;
+  }
+  
+  .nav-tabs::-webkit-scrollbar {
+    height: 4px; /* Small scrollbar height */
+  }
+  
+  .nav-tabs::-webkit-scrollbar-thumb {
+    background-color: #6c757d; /* Matches the navbar color */
+    border-radius: 10px; /* Rounded edges */
+  }
+  
