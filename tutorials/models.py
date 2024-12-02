@@ -142,11 +142,34 @@ class Student(User):
     current_term_tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='student_with_current_term_tutor')
     current_term_lesson_time = models.TimeField(null=True, blank=True)
 
-class TutorAvailability():  # George
-    tutorNo = models.ForeignKey(Tutor, on_delete=models.CASCADE)
-    day = models.CharField(max_length=10, blank=False)
+class TutorAvailability(models.Model):  # George
+    DAYS = [
+        ('monday', 'Monday'),
+        ('tuesday', 'Tuesday'),
+        ('wednesday', 'Wednesday'),
+        ('thursday', 'Thursday'),
+        ('friday', 'Friday'),
+        ('saturday', 'Saturday'),
+        ('sunday', 'Sunday'),
+    ]
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
+    day = models.CharField(max_length=10, blank=False, choices=DAYS)
     starttime = models.TimeField(blank=False)
     endtime = models.TimeField(blank=False)
+
+class Invoice(models.Model):  # George
+    orderNo = models.AutoField(primary_key=True)
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    topic = models.CharField(max_length=100, blank=True)
+    no_of_classes = models.IntegerField(blank=False)
+    price_per_class = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
+    sum = models.DecimalField(max_digits=10, decimal_places=2, blank=False, default=0)
+    
+    def sum(self):
+        self.sum = self.no_of_classes * self.price_per_class
+        return self.sum
+
 
 class Lesson(models.Model): #Fatimah
 
@@ -232,17 +255,8 @@ class Lesson(models.Model): #Fatimah
     location = models.CharField(max_length=100, default="Online") 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     invoice_paid = models.BooleanField(default=False)
-    price_per_term = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
+    invoice = models.ForeignKey(Invoice, null = True,on_delete=models.CASCADE)
 
-
-class Invoice(models.Model):  # George
-    orderNo = models.AutoField(primary_key=True)
-    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    topic = models.CharField(max_length=100, blank=False)
-    no_of_classes = models.IntegerField(blank=False)
-    price_per_class = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
-    sum = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
 
 class Message(models.Model): #Arjan
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='messages')
