@@ -16,8 +16,8 @@ admin_fixtures = [
 ]
 
 tutor_fixtures = [
-    {'username': '@tutor', 'email': 'tutor@example.org', 'first_name': 'Tutor', 'last_name': 'Tutor', 'subject': 'ruby_on_rails'},
-    {'username': '@jeroenkeppens', 'email': 'jeroen.keppens@example.org', 'first_name': 'Jeroen', 'last_name': 'Keppens', 'subject': 'python'},
+    {'username': '@tutor', 'email': 'tutor@example.org', 'first_name': 'Tutor', 'last_name': 'Tutor'},
+    {'username': '@jeroenkeppens', 'email': 'jeroen.keppens@example.org', 'first_name': 'Jeroen', 'last_name': 'Keppens'},
 ]
 
 tutor_availability_fixtures = [
@@ -37,9 +37,12 @@ tutor_availability_fixtures = [
     {'tutor':'@jeroenkeppens', 'day':'sunday', 'starttime':'10:00', 'endtime':'12:00'},
 ]
 
+subject_fixtures = [
+    {'user':'@tutor','subject':'ruby_on_rails','proficiency':'Intermediate'},
+]
 
 student_fixtures = [
-    {'username': '@student', 'email': 'student@example.org', 'first_name': 'Student', 'last_name': 'Student', 'proficiency_level': 'beginner'},
+    {'username': '@student', 'email': 'student@example.org', 'first_name': 'Student', 'last_name': 'Student'},
 ]
 
 
@@ -53,7 +56,6 @@ lesson_fixtures = [
     'day_of_week':'monday',
     'start_time':'10:00',
     'status':'confirmed',
-    'paid':True,
     'invoice': 0,
      },
      {'student':'@student',
@@ -65,22 +67,17 @@ lesson_fixtures = [
       'day_of_week':'tuesday',
       'start_time':'15:00',
       'status':'pending',
-      'paid':False,
       'invoice': 1,},
 
 ] 
 
 
 invoice_fixtures = [
-    {'tutor' : '@tutor',
-    'student' : '@student',
-    'no_of_classes' : 10,
-    'price_per_class' : 60,},
+    {   'no_of_classes' : 10,
+        'price_per_class' : 60,},
 
-    {'student':'@student',
-      'tutor':'@tutor',
-      'no_of_classes' : 6,
-      'price_per_class' : 75,},
+    {   'no_of_classes' : 6,
+        'price_per_class' : 75,},
 ]
 
 
@@ -92,7 +89,7 @@ class Command(BaseCommand):
     TUTOR_COUNT = 5
     STUDENT_COUNT = 2
     ADMIN_COUNT = 1
-    DEFAULT_PASSWORD = 'Password123'
+    DEFAULT_PASSWORD = 'Password!123'
     help = 'Seeds the database with sample data'
 
     def __init__(self):
@@ -208,16 +205,12 @@ class Command(BaseCommand):
             return None
 
     def generate_tutor(self, data):
-        subject = choice([ subject[0] for subject in Tutor.SUBJECTS])
-        if(len(data)>4):
-            subject = data['subject']
         tutor = Tutor.objects.create(
             username=data['username'],
             email=data['email'],
             password=Command.DEFAULT_PASSWORD,
             first_name=data['first_name'],
             last_name=data['last_name'],
-            subject=subject,
             bio=self.faker.text(),
             type_of_user = 'tutor'
         )
@@ -236,10 +229,11 @@ class Command(BaseCommand):
         return admin
     
     def generate_student(self, data):
-        proficiency_level = choice([Student.BEGINNER, Student.NOVICE, Student.INTERMEDIATE, Student.ADVANCED, Student.MASTERY])
+        """ proficiency_level = choice([Student.BEGINNER, Student.NOVICE, Student.INTERMEDIATE, Student.ADVANCED, Student.MASTERY])
         preferred_language = choice(["Python", "Java", "JavaScript", "C++", "Ruby"])
         preferred_frequency = choice(['weekly', 'fortnightly'])
-        preferred_tutor = None
+        preferred_tutor = None """
+
         phone = "07777777777" 
         student = Student.objects.create(
             username=data['username'],
@@ -247,17 +241,7 @@ class Command(BaseCommand):
             password=Command.DEFAULT_PASSWORD,
             first_name=data['first_name'],
             last_name=data['last_name'],
-            proficiency_level=proficiency_level,
             phone=phone,
-            preferred_language=preferred_language,
-            preferred_tutor=preferred_tutor,
-            preferred_lesson_duration=60,
-            preferred_lesson_frequency=preferred_frequency,
-            current_term_start_date=None,
-            current_term_end_date=None,
-            current_term_tutor=None,
-            current_term_lesson_time=None,
-            type_of_user = 'student'
         )
         student.set_password(Command.DEFAULT_PASSWORD)  # This hashes the password
         student.save()
@@ -285,15 +269,12 @@ class Command(BaseCommand):
             return None
     
     def create_invoice(self, data):
-        tutor = Tutor.objects.get(username=data['tutor'])
-        student = Student.objects.get(username=data['student'])
+        
         invoice = Invoice.objects.create(
-            tutor=tutor,
-            student=student,
             no_of_classes=data['no_of_classes'],
             price_per_class=data['price_per_class'],
         )
-        invoice.sum()
+        invoice.calc_sum()
         return invoice
 
     def create_lesson(self, data):
@@ -310,8 +291,7 @@ class Command(BaseCommand):
             day_of_week=data['day_of_week'],
             start_time=data['start_time'],
             status=data['status'],
-            invoice=invoice,
-            invoice_paid=data['paid'],
+            invoiceNo=invoice,
         )
         return lesson
 
