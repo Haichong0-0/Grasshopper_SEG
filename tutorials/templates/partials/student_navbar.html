@@ -22,11 +22,12 @@
             </li>
           </ul>
     </div>
-     <!-- NEED TO MAKE THIS IF user authenticated STATEMENT-->
+    {%if user.is_authenticated %}
       {% include 'partials/menu.html' %} 
+      {% endif %} 
     </div>
   </nav>
   
   
-   <!--{%if user.is_authenticated %}-->
-      <!--- {% endif %} -->
+
+    
