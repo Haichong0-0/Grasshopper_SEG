@@ -99,11 +99,11 @@ def student_welcome(request):
 @login_required
 def student_schedule(request):
     if request.user.is_authenticated and hasattr(request.user, 'student'):
-        confirmed_lessons = Lesson.objects.filter(student=request.user, status='Confirmed').order_by('start_date','start_time')
+        confirmed_lessons = Lesson.objects.filter(student=request.user, status='Confirmed').order_by('start_time')
         pending_lessons = Lesson.objects.filter(
             Q(student=request.user) & (Q(status='Pending') | Q(status='Late'))
-        ).order_by('start_date', 'start_time')
-        rejected_lessons = Lesson.objects.filter(student=request.user, status='Rejected').order_by('start_date','start_time')
+        ).order_by('start_time')
+        rejected_lessons = Lesson.objects.filter(student=request.user, status='Rejected').order_by('start_time')
     else:
         confirmed_lessons = []
         pending_lessons = []
