@@ -8,7 +8,7 @@
     </h2>
     <div class="container mt-5">
         <div class="container my-5">
-            <div class="row">
+            <div class="row justify-content-center">
                 <!-- student list -->
                 <div class="col-lg-8">
                     <div class="table-responsive">
@@ -24,17 +24,23 @@
                                 </tr>
                             </thead>
                             <tbody>
-                {% for invoice in invoices %}
-                <tr>
-                    <td>{{ invoice.orderNo }}</td>
-                    <td>{{ invoice.topic }}</td>
-                    <td>{{ invoice.no_of_classes }}</td>
-                    <td>{{ invoice.price_per_class }}</td>
-                    <td>{{ invoice.sum }}</td>
-                    <td>{{ invoice.get_status_display }}</td> <!-- This uses the choices display -->
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                                {% for invoice in invoices %}
+                                <tr>
+                                    <td>{{ invoice.orderNo }}</td>
+                                    <td>{{ invoice.topic }}</td>
+                                    <td>{{ invoice.no_of_classes }}</td>
+                                    <td>{{ invoice.price_per_class }}</td>
+                                    <td>{{ invoice.sum }}</td>
+                                    <td>{{ invoice.get_status_display }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 {% endblock %}
+
