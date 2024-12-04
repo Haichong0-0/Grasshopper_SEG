@@ -2,8 +2,10 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from .models import User, Tutor, Student
+from .models import User, Tutor, Student, Message
 from django.contrib.auth.hashers import make_password
+from datetime import date, timedelta
+
 
 
 ###################################################
@@ -25,7 +27,7 @@ class LogInForm(forms.Form):
             username = self.cleaned_data.get('username')
             password = self.cleaned_data.get('password')
             print("get_user(): ", username, password)
-
+            
             user = authenticate(request=request, username=username, password=password)
             print(user)
         return user
@@ -181,8 +183,18 @@ class LessonForm(forms.ModelForm):
     "Form for lessons"
     class Meta:
         model = Lesson
-        fields = ['subject','frequency','term','duration']
-
+        fields = ['subject','frequency','term','start_time', 'duration']
+    AVAILABLE_HOURS = [(f'{hour}:00', f'{hour}:00') for hour in range(9, 18)]
+    start_time = forms.ChoiceField(
+        choices=AVAILABLE_HOURS,
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=True,
+    )
+        
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['subject', 'content']
 
 
 '''class AdminForm(forms.ModelForm):

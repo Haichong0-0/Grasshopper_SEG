@@ -10,7 +10,7 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
-from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm
+from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm, MessageForm
 from tutorials.helpers import login_prohibited
 from tutorials.models import User, Lesson, Tutor, Student, Invoice
 from rest_framework import status
@@ -47,7 +47,7 @@ def tutor_dashboard(request):
     current_user = request.user
     if (current_user.type_of_user == 'tutor'):
         print("current_user(tutor_dashboard): ", current_user)
-        return render(request, 'tutor_dashboard.html', {'user': current_user})
+        return render(request, 'tutor_dashboard/tutor_dashboard.html', {'user': current_user})
     else:
         return render(request, 'access_denied.html', {'user': current_user})
 
@@ -221,16 +221,17 @@ def admin_lessons(request):
 
     return render(request, 'admin_lessons.html', context)
 
-# #@login_required
-# def tutor_dashboard(request):
-#     """display tutor dashboard if user is a tutor"""
+"""@login_required
+def tutor_dashboard(request):
+    display tutor dashboard if user is a tutor
     
-#     context = {
-#         #'full_name': request.user.full_name(),
-#         #'gravatar': request.user.gravatar(),
-#     }
+    context = {
+        'full_name': request.user.full_name(),
+        'gravatar': request.user.gravatar(),
+    }
     
-#     return render(request, 'tutor_dashboard.html', context)
+    return render(request, 'tutor_dashboard.html', context)
+"""
 
 #@login_required
 def tutor_lessons(request):
@@ -265,10 +266,10 @@ class SignUpView(LoginProhibitedMixin, FormView):
         variation = self.request.GET.get('variation')
 
         if variation == 'student':
-            context['message'] = "Student sign up"
+            context['message'] = "Student Sign-Up Form"
             # context['message'] = "Student sign up"
         elif variation == 'tutor':
-            context['message'] = "Tutor sign up"
+            context['message'] = "Tutor Sign-Up Form"
             # context['message'] = "Tutor sign up"
 
         context['user_type'] = variation
@@ -308,9 +309,19 @@ def admin_welcome(request):
 
     }
 
-    return render(request, 'admin_welcome.html', context)
+    return render(request, 'tutor_dashboard/tutor_schedule.html', context)
 
-@login_required
+# from fix-login-feature branch, delete later if not in use
+# def tutor_payment(request):
+#     """payment page for tutors"""
+
+#     context = {
+
+#     }
+
+#     return render(request, 'tutor_dashboard/tutor_payment.html', context)
+
+# @login_required
 def tutor_welcome(request):
     """welcome page for tutors"""
 
@@ -318,15 +329,29 @@ def tutor_welcome(request):
 
     }
 
-    return render(request, 'tutor_welcome.html', context)
+    return render(request, 'tutor_dashboard/tutor_welcome.html', context)
+
+
+def leave_message(request):
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.student = request.user.student
+            message.save()
+            return redirect('student_dashboard')
+
+    else:
+        form = MessageForm()
+        return render(request, 'student_dashboard_templates/leave_message.html', {'form': form})
 
 def get_lesson_data():
     context = {}
 
-    confirmed_lessons = Lesson.objects.filter(status='Confirmed').order_by('start_date','start_time')
-    pending_lessons = Lesson.objects.filter(status='Pending').order_by('start_date','start_time')
+    confirmed_lessons = Lesson.objects.filter(status='Confirmed').order_by('-start_time')
+    pending_lessons = Lesson.objects.filter(status='Pending').order_by('-start_time')
     print("pending lessons: ", pending_lessons)
-    rejected_lessons = Lesson.objects.filter(status='Rejected').order_by('start_date','start_time')
+    rejected_lessons = Lesson.objects.filter(status='Rejected').order_by('-start_time')
 
     for lesson in pending_lessons:
         lesson.duration = lesson.duration // 60      # Convert duration to hours
@@ -386,18 +411,28 @@ def admin_payment(request):
 
     return render(request, 'admin_payment.html', context)
 
+# @login_required
+# def tutor_payment(request):
+#     """payment page for tutors"""
+
+#     if hasattr(request.user, 'tutor'):  # Ensure the user is a tutor
+#         invoices = Invoice.objects.filter(tutor=request.user.tutor).order_by('-orderNo')
+#     else:
+#         invoices = []  # Return an empty queryset if the user is not a tutor
+
+#     context = {
+#         'invoices': invoices,
+#     }
+
+#     return render(request, 'tutor_payment.html', context)
+
 @login_required
 def tutor_payment(request):
     """payment page for tutors"""
 
-    if hasattr(request.user, 'tutor'):  # Ensure the user is a tutor
-        invoices = Invoice.objects.filter(tutor=request.user.tutor).order_by('-orderNo')
-    else:
-        invoices = []  # Return an empty queryset if the user is not a tutor
+    invoices = []  # Return an empty queryset if the user is not a tutor
 
-    context = {
-        'invoices': invoices,
-    }
+    context = {}
 
     return render(request, 'tutor_payment.html', context)
 
@@ -437,6 +472,18 @@ class ConfirmClassView(APIView):
         if serializer.is_valid():
             print('valid data: success')
             lesson_obj = Lesson.objects.get(lesson_id=lesson_id)
+            # price_per_class = Invoice.objects.price_per_class
+
+
+            invoice = Invoice.objects.filter(orderNo=lesson_obj.invoiceNo).first() 
+            if not invoice:
+                # return Response({"error": "Invoice not found"}, status=404)
+                return redirect("admin_schedule")
+
+            price_per_class = invoice.price_per_class  
+            print(f"Price per class: {price_per_class}")
+
+
             # print('lesson object: ', lesson_obj.values())
             if(request.POST.get("tutor")):
                 lesson_obj.tutor_id = request.POST.get("tutor")
@@ -446,11 +493,12 @@ class ConfirmClassView(APIView):
             
             no_of_classes = lesson_obj.duration//60
             print("no_of_classes: ", type(no_of_classes), no_of_classes)
-            print("lesson_obj.price_per_class: ", type(lesson_obj.price_per_class), lesson_obj.price_per_class)
+            # print("lesson_obj.price_per_class: ", type(lesson_obj.price_per_class), lesson_obj.price_per_class)
             
 
-            total = no_of_classes * lesson_obj.price_per_class
-            print(f"Total: {total}, type: {type(total)}")
+            # total = no_of_classes * lesson_obj.price_per_class
+            total = no_of_classes * price_per_class
+            # print(f"Total: {total}, type: {type(total)}")
 
         try:
             Invoice.objects.create(                
@@ -459,7 +507,7 @@ class ConfirmClassView(APIView):
                 student=Student.objects.get(id=lesson_obj.student_id),
                 topic=lesson_obj.subject,
                 no_of_classes=no_of_classes,
-                price_per_class=lesson_obj.price_per_class,
+                price_per_class=price_per_class,
                 total_sum=total
             )
         except Exception as e:

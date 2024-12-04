@@ -1,0 +1,12 @@
+{% extends 'student_dashboard_templates/student_base.html' %}
+{% block content %}
+<h3 class="text-center">Leave a Message</h3>
+<div class="container d-flex justify-content-center align-items-center" style="height: 80vh;">
+    <form method="post" style="width: 100%; max-width: 600px;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+</div>
+{% endblock %}
+

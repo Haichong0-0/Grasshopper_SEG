@@ -1,0 +1,31 @@
+{% extends 'student_dashboard_templates/student_base.html' %}
+{% block content %}
+<div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <style>
+        .welcome-section {
+            height: 100vh; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right, #007bff, #6f42c1); 
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <div class="container">
+            <h1 class="display-3 mb-4">Welcome to Code Tutors!</h1>
+            <p class="lead mb-4">We are excited to have you here. Explore our services and get started today.</p>
+            <a href="{% url 'student_dashboard' %}" class="btn btn-lg btn-light">Get Started</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

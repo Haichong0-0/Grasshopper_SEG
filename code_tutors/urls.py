@@ -19,7 +19,9 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from tutorials import views
-from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule
+from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule, student_welcome
+from tutorials.tutorViews.tutor_dashboard import tutor_schedule, tutor_lessons, tutor_payments
+from tutorials.views import leave_message
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -49,7 +51,7 @@ urlpatterns = [
     path('tutor/lessons', views.tutor_lessons, name='tutor_lessons'),
     path('tutor/schedule', views.tutor_schedule, name='tutor_schedule'),
     path('tutor/payment', views.tutor_payment, name='tutor_payment'),
-    path('requestlesson/', lesson_create_view, name='lesson_create'),
+    path('requestlesson/', lesson_create_view, name='lesson_create'), 
     path('student_dashboard/', student_dashboard, name='student_dashboard'),
     path('invoices/', student_invoices, name='invoices'),
     path('student_schedule/', student_schedule, name='student_schedule'),
@@ -58,5 +60,8 @@ urlpatterns = [
     path('lesson/<int:lesson_id>/reject_class/', views.RejectClassView.as_view(), name='reject_class'),
 
     
+    path('student_welcome/', student_welcome, name='student_welcome'),
+    path('leave-message/', leave_message, name='leave_message'),
+
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

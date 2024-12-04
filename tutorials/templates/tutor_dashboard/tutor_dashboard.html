@@ -1,4 +1,4 @@
-{% extends 'tutor_base.html' %}
+{% extends 'tutor_dashboard/tutor_base.html' %}
 
 {% block title %}
     <title>Tutor Dashboard - Task Manager</title>
@@ -14,11 +14,22 @@
                 <div class="card text-white bg-primary mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Upcoming Lessons</h5>
-                        <p class="card-text">You have x upcoming lessons this week.</p>
-                        <a href="{% url 'admin_lessons'%}" class="btn btn-light" disabled>View Lessons</a>  <!-- Placeholder button -->
+                        <p class="card-text">You have {{ upcoming_lessons_count }} upcoming lessons this week.</p>
+                        <a href="{% url 'tutor_schedule' %}" class="btn btn-light" {% if upcoming_lessons_count == 0 %}disabled{% endif %}>View Lessons</a>
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-6">
+            <div class="card text-white bg-dark mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">View Invoices</h5>
+                    <p class="card-text">Access your payment statements.</p>
+                    <a href="{% url 'invoices' %}" class="btn btn-light">View Payments</a>
+                </div>
+            </div>
+        </div>
+        </div>        
             <div class="col-md-6">
                 <div class="card text-white bg-success mb-3">
                     <div class="card-body">
