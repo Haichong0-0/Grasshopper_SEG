@@ -4,52 +4,70 @@
     <title>Student Dashboard - Task Manager</title>
 {% endblock %}
 
-
 {% block content %}
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Welcome to your Dashboard, {{ request.user.username }}</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Welcome to your Dashboard, {{ request.user.username }}</h1>
 
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="card text-white bg-primary mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Upcoming Lessons</h5>
-                        <p class="card-text">You have {{ upcoming_lessons_count }} upcoming lessons this week.</p>
-                        <a href="{% url 'student_schedule' %}" class="btn btn-light" {% if upcoming_lessons_count == 0 %}disabled{% endif %}>View Lessons</a>
-                    </div>
-                </div>
-            </div>
-        </div>        
-            <div class="col-md-6">
-                <div class="card text-white bg-success mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Profile</h5>
-                        <p class="card-text">Update your profile information.</p>
-                        <a href="{% url 'profile' %}" class="btn btn-light" disabled>Edit Profile</a>  <!-- Placeholder button -->
-                    </div>
+    <div class="row mb-4">
+
+        <div class="col-md-6">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Upcoming Lessons</h5>
+                    <p class="card-text">You have {{ upcoming_lessons_count }} upcoming lessons this week.</p>
+                    <a href="{% url 'student_schedule' %}" class="btn btn-light" {% if upcoming_lessons_count == 0 %}disabled{% endif %}>View Lessons</a>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5>Recent Activity</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <strong>October 15, 2024:</strong> Scheduled a new lesson with John Doe (Java).
-                            </li>
-                            <li class="list-group-item">
-                                <strong>October 12, 2024:</strong> Responded to a message from Jane Smith.
-                            </li>
-                            <li class="list-group-item">
-                                <strong>October 10, 2024:</strong> Completed a lesson with Larry Brown (Python).
-                            </li>
-                        </ul>
-                    </div>
+
+
+        <div class="col-md-6">
+            <div class="card text-white bg-dark mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">View Invoices</h5>
+                    <p class="card-text">Access your payment invoices.</p>
+                    <a href="{% url 'invoices' %}" class="btn btn-light">View Payments</a>
                 </div>
             </div>
         </div>
- {% endblock %}
+    </div>
+
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Profile</h5>
+                    <p class="card-text">Update your profile information.</p>
+                    <a href="{% url 'profile' %}" class="btn btn-light" disabled>Edit Profile</a> <!-- Placeholder button -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <strong>October 15, 2024:</strong> Scheduled a new lesson with John Doe (Java).
+                        </li>
+                        <li class="list-group-item">
+                            <strong>October 12, 2024:</strong> Responded to a message from Jane Smith.
+                        </li>
+                        <li class="list-group-item">
+                            <strong>October 10, 2024:</strong> Completed a lesson with Larry Brown (Python).
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
