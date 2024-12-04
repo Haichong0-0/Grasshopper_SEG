@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-</head>
+
 <body>
     <div class="container mt-5">
         <h2 class="mb-4">Create a New Lesson</h2>
@@ -25,17 +25,15 @@
         </div>
         {% endif %}
 
-        <!-- Display the term warning message (if any) -->
         {% if term_warning %}
         <div class="alert alert-warning">
             <strong>Attention!</strong> {{ term_warning }}
         </div>
         {% endif %}
 
-
         <form method="POST">
             {% csrf_token %}
-            
+
             <!-- Subject Field -->
             <div class="mb-3">
                 <label for="id_subject" class="form-label">Subject</label>
@@ -71,12 +69,23 @@
                 </select>
                 <div class="form-text">Select the term for the lesson.</div>
 
-                <!-- Add a hidden input field that will store the value of the term -->
                 {% if term_warning %}
                 <input type="hidden" name="term" value="{{ form.term.value }}">
                 {% endif %}
             </div>
 
+            <!-- Start Time Field (Using the List of Hours) -->
+            <div class="mb-3">
+                <label for="id_start_time" class="form-label">Start Time</label>
+                <select name="start_time" class="form-control" id="id_start_time">
+                    <option value="" disabled {% if not form.start_time.value %}selected{% endif %}>Please select the start time</option>
+                    {% for value, display in form.start_time.field.choices %}
+                        <option value="{{ value }}" {% if value == form.start_time.value %}selected{% endif %}>{{ display }}</option>
+                    {% endfor %}
+                </select>
+                <div class="form-text">Please specify the start time for your lesson.</div>
+            </div>
+      
 
             <!-- Duration Field (Dropdown) -->
             <div class="mb-3">
@@ -89,13 +98,11 @@
                 </select>
                 <div class="form-text">Select the duration for the lesson.</div>
             </div>
-            
-            <!-- Submit Button with dynamic color -->
+
+            <!-- Submit Button -->
             {% if term_warning %}
-            <!-- "Submit Anyway" button if it's a late request -->
             <button type="submit" name="submit_anyway" class="btn {{ button_class }}">{{ submit }} </button>
             {% else %}
-            <!-- Regular Submit button if no warning -->
             <button type="submit" class="btn {{ button_class }}">{{ submit }}</button>
             {% endif %}
         </form>
@@ -104,7 +111,6 @@
         <a href="{% url 'student_dashboard' %}" class="btn btn-secondary mt-3">
             <i class="fas fa-arrow-left"></i> Back to Dashboard
         </a>
-
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
