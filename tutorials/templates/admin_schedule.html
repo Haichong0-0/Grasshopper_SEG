@@ -173,13 +173,19 @@
                                 <td>{{ lesson.term }}</td>
                                 <td>{{ lesson.invoice_paid }}</td>
                                 <td>
-                                    
-                                        <button type="submit" class="btn btn-success">Accept</button>
-                                    </form>
+                                    <button type="submit" class="btn btn-success">Accept</button>
                                 </td>
-                                <td><button type="button" class="btn btn-danger">Reject</button></td>
                             </tr>
-                            {% empty %}
+                        </form>
+                        <form method="post" action="{% url 'reject_class' lesson_id=lesson.lesson_id %}">
+                            {% csrf_token %}
+                            <tr>
+                                <td colspan="11" class="text-end">
+                                    <button type="submit" class="btn btn-danger">Reject</button>
+                                </td>
+                            </tr>
+                        </form>
+                        {% empty %}
                             <tr>
                                 <td colspan="9" class="empty-message">You have no pending lessons.</td>
                             </tr>

@@ -474,4 +474,32 @@ class ConfirmClassView(APIView):
         else:
             # return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
             return redirect("admin_schedule")
+
+
+class RejectClassView(APIView):
+    
+    def post(self, request, lesson_id):
+        request_data = request.data
+        print('RejectClassView', request.POST)       # testing
+        
+        serializer = LessonSerializer(data=request_data)
+        if serializer.is_valid():
+            print('RejectClassView valid data: success')
+            lesson_obj = Lesson.objects.get(lesson_id=lesson_id)
+            # print('lesson object: ', lesson_obj.values())
+            # if(request.POST.get("tutor")):
+            print("inside if-statement.")
+            # lesson_obj.tutor_id = request.POST.get("tutor")
+            lesson_obj.status = "Rejected"
+            lesson_obj.save()
+
+            return redirect("admin_schedule")
+
+
+            # return Response({"message": f"Lesson id {lesson_id} confirmed successfully."}, status=status.HTTP_200_OK)
+            return redirect("admin_schedule")
+
+        else:
+            # return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+            return redirect("admin_schedule")
     
