@@ -1,80 +1,151 @@
 {% extends 'base_content.html' %}
 {% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-up Page</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Mina:wght@400;700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Prata&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: "Mina", sans-serif;
+            color: black;
+            background: linear-gradient(to right, #007bff, #6f42c1);
+        }
+
+        .message {
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 1rem; 
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 600px; 
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="submit"] {
+            margin-top: -5rem;
+            width: 100%;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
 <div class="container">
-  <div class="row">
-    <div class="col-12">
-      <h1>{{ message }}</h1>
-      <form action="{% url 'sign_up' %}" method="post">
-        {% csrf_token %}
+    <div class="content">
+        <h1 class="message">{{ message }}</h1>
+        <div class="form-container">
+            <form action="{% url 'sign_up' %}" method="post">
+                {% csrf_token %}
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                        <li>{{ field }}: {{ errors|join:", " }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                <div class="form-group row">
+                    <label for="{{ form.first_name.id_for_label }}" class="col-sm-3 col-form-label">{{ form.first_name.label }}</label>
+                    <div class="col-sm-9">
+                        {{ form.first_name }}
+                    </div>
+                </div>
 
-      <!-- Display form errors -->
-      {% if form.errors %}
-      <div class="alert alert-danger">
-          <ul>
-              {% for field, errors in form.errors.items %}
-                  <li>{{ field }}: {{ errors|join:", " }}</li>
-              {% endfor %}
-          </ul>
-      </div>
-      {% endif %}
+                <div class="form-group row">
+                    <label for="{{ form.last_name.id_for_label }}" class="col-sm-3 col-form-label">{{ form.last_name.label }}</label>
+                    <div class="col-sm-9">
+                        {{ form.last_name }}
+                    </div>
+                </div>
 
-        <!-- Common fields for both students and tutors -->
-        <div class="mb-3">
-          {{ form.first_name.label_tag }}
-          {{ form.first_name }}
+                <div class="form-group row">
+                    <label for="{{ form.username.id_for_label }}" class="col-sm-3 col-form-label">{{ form.username.label }}</label>
+                    <div class="col-sm-9">
+                        {{ form.username }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="{{ form.email.id_for_label }}" class="col-sm-3 col-form-label">{{ form.email.label }}</label>
+                    <div class="col-sm-9">
+                        {{ form.email }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="{{ form.new_password.id_for_label }}" class="col-sm-3 col-form-label">{{ form.new_password.label }}</label>
+                    <div class="col-sm-9">
+                        {{ form.new_password }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="{{ form.password_confirmation.id_for_label }}" class="col-sm-3 col-form-label">{{ form.password_confirmation.label }}</label>
+                    <div class="col-sm-9">
+                        {{ form.password_confirmation }}
+                    </div>
+                </div>
+                {% if user_type == 'student' %}
+                <div class="form-group row">
+                    <label for="{{ form.date_of_birth.id_for_label }}" class="col-sm-3 col-form-label">{{ form.date_of_birth.label }}</label>
+                    <div class="col-sm-9">
+                        {{ form.date_of_birth }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="{{ form.subjects.id_for_label }}" class="col-sm-3 col-form-label">{{ form.subjects.label }}</label>
+                    <div class="col-sm-9">
+                        {{ form.subjects }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="{{ form.proficiency_level.id_for_label }}" class="col-sm-3 col-form-label">{{ form.proficiency_level.label }}</label>
+                    <div class="col-sm-9">
+                        {{ form.proficiency_level }}
+                    </div>
+                </div>
+                <input type="hidden" name="variations" value="student">
+                {% endif %}
+                {% if user_type == 'tutor' %}
+                <div class="form-group row">
+                    <label for="{{ form.subjects.id_for_label }}" class="col-sm-3 col-form-label">{{ form.subjects.label }}</label>
+                    <div class="col-sm-9">
+                        {{ form.subjects }}
+                    </div>
+                </div>
+                <input type="hidden" name="variations" value="tutor">
+                {% endif %}
+                <input type="submit" value="Sign Up" class="btn btn-primary">
+            </form>
         </div>
-        <div class="mb-3">
-          {{ form.last_name.label_tag }}
-          {{ form.last_name }}
-        </div>
-        <div class="mb-3">
-          {{ form.username.label_tag }}
-          {{ form.username }}
-        </div>
-        <div class="mb-3">
-          {{ form.email.label_tag }}
-          {{ form.email }}
-        </div>
-
-          <!-- Password fields -->
-        <div class="mb-3">
-          {{ form.new_password.label_tag }}
-          {{ form.new_password }}
-        </div>
-        <div class="mb-3">
-          {{ form.password_confirmation.label_tag }}
-          {{ form.password_confirmation }}
-        </div>
-
-        <!-- Conditional fields for student only -->
-        {% if user_type == 'student' %}
-          <div class="mb-3">
-            {{ form.date_of_birth.label_tag }}
-            {{ form.date_of_birth }}
-          </div>
-          <div class="mb-3">
-            {{ form.subjects.label_tag }}
-            {{ form.subjects }}
-          </div>
-          <div class="mb-3">
-            {{ form.proficiency_level.label_tag }}
-            {{ form.proficiency_level }}
-          </div>
-          <input type="hidden" name="variations" value="student">
-        {% endif %}
-
-        <!-- Conditional fields for tutor only -->
-        {% if user_type == 'tutor' %}
-          <div class="mb-3">
-            {{ form.subjects.label_tag }}
-            {{ form.subjects }}
-          </div>
-          <input type="hidden" name="variations" value="tutor">
-        {% endif %}
-
-        <input type="submit" value="Sign up" class="btn btn-primary">
-      </form>
     </div>
-  </div>
 </div>
+</body>
 {% endblock %}

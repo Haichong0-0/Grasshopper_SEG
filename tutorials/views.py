@@ -252,10 +252,10 @@ class SignUpView(LoginProhibitedMixin, FormView):
         variation = self.request.GET.get('variation')
 
         if variation == 'student':
-            context['message'] = "Student sign up"
+            context['message'] = "Student Sign-Up Form"
             # context['message'] = "Student sign up"
         elif variation == 'tutor':
-            context['message'] = "Tutor sign up"
+            context['message'] = "Tutor Sign-Up Form"
             # context['message'] = "Tutor sign up"
 
         context['user_type'] = variation

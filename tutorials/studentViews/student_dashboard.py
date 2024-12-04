@@ -17,9 +17,10 @@ def student_dashboard(request):
 
 @login_required
 def lesson_create_view(request):
-    term_warning = None 
+    term_warning = None
     submit = 'Submit Lesson Request'
     button_class = 'btn-primary'
+    hours = [str(hour) for hour in range(9, 18)]
     if request.method == 'POST':
         form = LessonForm(request.POST)
         
@@ -35,8 +36,13 @@ def lesson_create_view(request):
 
             if Lesson.objects.filter(student=student, subject=lesson.subject).exists():
                 form.add_error('subject', 'You already have requested a lesson for this subject.')
-                return render(request, 'student_dashboard_templates/lesson_form.html', {'form': form, 'term_warning': term_warning
-                                                                                        ,'submit' : submit,'button_class': button_class})
+                return render(request, 'student_dashboard_templates/lesson_form.html', {
+                    'form': form,
+                    'term_warning': term_warning,
+                    'submit': submit,
+                    'button_class': button_class,
+                    'hours': hours,
+                })
 
             term_dates = {
                 'September-Christmas': datetime(2024, 9, 2),
@@ -47,7 +53,7 @@ def lesson_create_view(request):
             if 'submit_anyway' in request.POST:
                 lesson.status = 'Late'
                 lesson.save()
-                return redirect('student_schedule') 
+                return redirect('student_schedule')
                 
 
             selected_term = lesson.term 
@@ -67,10 +73,11 @@ def lesson_create_view(request):
                     button_class = 'btn-danger'
 
                     return render(request, 'student_dashboard_templates/lesson_form.html', {
-                        'form': form,
+                        'form': form, 
                         'term_warning': term_warning,
-                        'submit' : submit,
-                        'button_class': button_class
+                        'submit': submit,
+                        'button_class': button_class,
+                        'hours': hours, 
                     })
         
             lesson.save()
@@ -79,7 +86,13 @@ def lesson_create_view(request):
     else:
         form = LessonForm() 
     
-    return render(request, 'student_dashboard_templates/lesson_form.html', {'form': form, 'term_warning': term_warning, 'submit': submit, 'button_class': button_class})
+    return render(request, 'student_dashboard_templates/lesson_form.html', {
+        'form': form, 
+        'term_warning': term_warning, 
+        'submit': submit, 
+        'button_class': button_class, 
+        'hours': hours, 
+    })
 
 @login_required
 def student_invoices(request):
