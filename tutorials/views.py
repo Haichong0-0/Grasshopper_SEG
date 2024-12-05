@@ -12,7 +12,7 @@ from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
 from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm, MessageForm
 from tutorials.helpers import login_prohibited
-from tutorials.models import User, Lesson, Tutor, Student, Invoice
+from tutorials.models import User, Lesson, Tutor, Student, Invoice, TutorAvailability, Subjects
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -345,6 +345,30 @@ def leave_message(request):
         form = MessageForm()
         return render(request, 'student_dashboard_templates/leave_message.html', {'form': form})
 
+def get_tutor(time, day, subject):
+
+
+    print(time, day, subject.capitalize())
+    available_tutors = set()
+
+    availables = TutorAvailability.objects.filter(
+        day = day,
+        starttime__lte=time,
+        endtime__gte=time
+    )
+
+    print(availables)
+    for available in availables:
+        tutor = available.tutor
+        # print(available.)
+
+        if Subjects.objects.filter(user=tutor, subject_name=subject.capitalize()).exists():
+            print("inside if-statement 888", tutor.first_name)
+            available_tutors.add(tutor)
+    print("available_tutors: ", available_tutors)
+    return list(available_tutors)
+
+
 def get_lesson_data():
     context = {}
 
@@ -355,10 +379,15 @@ def get_lesson_data():
 
     for lesson in pending_lessons:
         lesson.duration = lesson.duration // 60      # Convert duration to hours
+        print("subject: ", lesson.start_time, lesson.day_of_week, lesson.subject,)
+        lesson.available_tutors=get_tutor(time=lesson.start_time, day=lesson.day_of_week, subject=lesson.subject)
+
+
     context["confirmed_lessons"] = confirmed_lessons
-    context["pending_lessons"] = pending_lessons        # same computational power
+    context["pending_lessons"] = pending_lessons       
     context["rejected_lessons"] = rejected_lessons
-    context["available_tutors"] = Tutor.objects.all()
+    # context["available_tutors"] = TutorAvailability.objects.all()
+    
 
     return context
 

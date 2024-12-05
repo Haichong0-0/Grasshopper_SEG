@@ -157,10 +157,8 @@
                                     <td>{{ lesson.subject }}</td>
                                     <td>
                                         <select id="dropdown" name="tutor"> <!-- Change 'options' to 'tutor' -->
-                                            {% for tutor in available_tutors %}
-                                            {% if tutor.subject == lesson.subject %}
+                                            {% for tutor in lesson.available_tutors %}
                                             <option value="{{ tutor.id }}">{{ tutor.first_name }} {{ tutor.last_name }}</option>
-                                            {% endif %}
                                             {% endfor %}
                                         </select>
                                     </td>                                

@@ -94,36 +94,37 @@ class Tutor(User):
     bio = models.CharField(max_length=520, blank=True, null=True)
     subject = models.CharField(max_length=100, blank=False, choices=SUBJECTS,default="Python")
 
-class Subjects(models.Model):  # George
+class Subjects(models.Model):  
 
-    SUBJECTS = [ # All of the subjects that a Tutor is available to teach
-        ('ruby_on_rails', 'Ruby on Rails'),
-        ('python', 'Python'),
-        ('javascript', 'Javascript'),
-        ('c_plus_plus', 'C++'),
-        ('c_sharp', 'C#'),
-        ('react', 'React'),
-        ('angular', 'Angular'),
-        ('vue_js', 'Vue.js'),
-        ('node_js', 'Node.js'),
-        ('express_js', 'Express.js'),
-        ('django', 'Django'),
-        ('flask', 'Flask'),
-        ('spring', 'Spring'),
-        ('hibernate', 'Hibernate'),
-        ('jpa', 'JPA'),
-        ('sql', 'SQL'),
-        ('mongodb', 'MongoDB'),
-        ('postgresql', 'PostgreSQL'),
-        ('mysql', 'MySQL'),
-        ('git', 'Git'),
-    ]
+    # SUBJECTS = [ # All of the subjects that a Tutor is available to teach
+    #     ('ruby_on_rails', 'Ruby on Rails'),
+    #     ('python', 'Python'),
+    #     ('javascript', 'Javascript'),
+    #     ('c_plus_plus', 'C++'),
+    #     ('c_sharp', 'C#'),
+    #     ('react', 'React'),
+    #     ('angular', 'Angular'),
+    #     ('vue_js', 'Vue.js'),
+    #     ('node_js', 'Node.js'),
+    #     ('express_js', 'Express.js'),
+    #     ('django', 'Django'),
+    #     ('flask', 'Flask'),
+    #     ('spring', 'Spring'),
+    #     ('hibernate', 'Hibernate'),
+    #     ('jpa', 'JPA'),
+    #     ('sql', 'SQL'),
+    #     ('mongodb', 'MongoDB'),
+    #     ('postgresql', 'PostgreSQL'),
+    #     ('mysql', 'MySQL'),
+    #     ('git', 'Git'),
+    # ]
 
     # subject = models.CharField(max_length=100, blank=False, choices=SUBJECTS,default="Python")
     subject_name = models.CharField(max_length=100, unique=True)  
 
     timings = models.CharField(max_length=255, blank=True)
     bio = models.CharField(max_length=520, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def setTimings(self, timings_list):
         self.Timings = ','.join(timings_list)
@@ -167,7 +168,7 @@ class Student(User):
     type_of_user = 'student'
     phone = models.CharField(max_length=12, default='07777777777')
 
-class TutorAvailability(models.Model):  # George
+class TutorAvailability(models.Model):   
     DAYS = [
         ('monday', 'Monday'),
         ('tuesday', 'Tuesday'),
@@ -182,7 +183,7 @@ class TutorAvailability(models.Model):  # George
     starttime = models.TimeField(blank=False)
     endtime = models.TimeField(blank=False)
 
-class Invoice(models.Model):  # George
+class Invoice(models.Model):   
     orderNo = models.AutoField(primary_key=True)
     
     no_of_classes = models.IntegerField(blank=False)
@@ -196,7 +197,7 @@ class Invoice(models.Model):  # George
 
 
 
-class Lesson(models.Model): #Fatimah
+class Lesson(models.Model):  
 
     SUBJECTS = [
         ('ruby_on_rails', 'Ruby on Rails'),
@@ -262,6 +263,8 @@ class Lesson(models.Model): #Fatimah
     tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='lessons')
     day_of_week = models.CharField(max_length=10, choices=DAYS)
     start_time = models.TimeField()
+    # end_time = models.TimeField()
+
     
     duration = models.IntegerField(choices=DURATION_CHOICES, default=60)
     frequency = models.CharField(max_length=20, choices=FREQUENCY_CHOICES)
