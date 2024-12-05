@@ -216,7 +216,6 @@ class Lesson(models.Model): #Fatimah
     tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='lessons')
     day_of_week = models.CharField(max_length=10, choices=DAYS)
     start_time = models.TimeField()
-    
     duration = models.IntegerField(choices=DURATION_CHOICES, default=60)
     frequency = models.CharField(max_length=20, choices=FREQUENCY_CHOICES)
     term = models.CharField(max_length=50, choices=TERMS)
