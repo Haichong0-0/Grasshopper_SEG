@@ -120,7 +120,7 @@ class Subjects(models.Model):  # George
     subject = models.CharField(max_length=100, choices=SUBJECTS)
     proficiency = models.CharField(max_length=12, choices=PROFICIENCY_LEVEL_CHOICES, default=INTERMEDIATE)
 
-class Student(User):
+class Student(User): #Arjan
     type_of_user = 'student'
     phone = models.CharField(max_length=12, default='07777777777')
 
