@@ -85,6 +85,18 @@
                 </select>
                 <div class="form-text">Please specify the start time for your lesson.</div>
             </div>
+
+            <!-- Day of Week Field (Dropdown) -->
+        <div class="mb-3">
+            <label for="id_day_of_week" class="form-label">Day of the Week</label>
+            <select name="day_of_week" class="form-control" id="id_day_of_week">
+                <option value="" disabled {% if not form.day_of_week.value %}selected{% endif %}>Please select the day</option>
+                {% for value, display in form.day_of_week.field.choices %}
+                    <option value="{{ value }}" {% if value == form.day_of_week.value %}selected{% endif %}>{{ display }}</option>
+                {% endfor %}
+            </select>
+            <div class="form-text">Select the day of the week for your lesson.</div>
+        </div>
       
 
             <!-- Duration Field (Dropdown) -->

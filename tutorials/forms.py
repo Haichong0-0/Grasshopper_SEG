@@ -183,7 +183,7 @@ class LessonForm(forms.ModelForm):
     "Form for lessons"
     class Meta:
         model = Lesson
-        fields = ['subject','frequency','term','start_time', 'duration']
+        fields = ['subject','frequency','term','start_time', 'day_of_week', 'duration']
     AVAILABLE_HOURS = [(f'{hour}:00', f'{hour}:00') for hour in range(9, 18)]
     start_time = forms.ChoiceField(
         choices=AVAILABLE_HOURS,
