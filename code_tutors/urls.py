@@ -63,5 +63,8 @@ urlpatterns = [
     path('student_welcome/', student_welcome, name='student_welcome'),
     path('leave-message/', leave_message, name='leave_message'),
 
+path('admin/messages/update/<int:message_id>/', views.update_message_status, name='update_message_status'),
+
+
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

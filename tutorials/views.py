@@ -6,13 +6,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ImproperlyConfigured
 from django.forms import BaseModelForm
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
 from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm, MessageForm
 from tutorials.helpers import login_prohibited
-from tutorials.models import User, Lesson, Tutor, Student, Invoice, TutorAvailability, Subjects
+from tutorials.models import User, Lesson, Tutor, Student, Invoice, TutorAvailability, Subjects, Message
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -483,13 +483,31 @@ def student_payment(request):
 @login_required
 @user_passes_test(is_admin)
 def admin_messages(request):
-    """payment page for admin"""
+    messages = Message.objects.all().order_by('-created_at')
 
     context = {
-
+       'messages': messages,
     }
 
-    return render(request, 'admin_payment.html', context)
+    return render(request, 'admin_messages.html', context)
+
+
+@login_required
+@user_passes_test(is_admin)
+def update_message_status(request, message_id):
+    """Update the status of a message."""
+    message = get_object_or_404(Message, id=message_id)
+
+    if request.method == "POST":
+        new_status = request.POST.get('status')
+        if new_status in ['pending', 'resolved']:
+            message.status = new_status
+            message.admin = request.user.admin
+            message.save()
+            return redirect('admin_messages')
+
+    return redirect('admin_messages')
+
 
 class ConfirmClassView(APIView):
     
@@ -579,4 +597,6 @@ class RejectClassView(APIView):
         else:
             # return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
             return redirect("admin_schedule")
+
+
     
