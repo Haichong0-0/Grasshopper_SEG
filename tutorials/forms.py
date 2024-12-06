@@ -192,6 +192,7 @@ class LessonForm(forms.ModelForm):
     )
         
 class MessageForm(forms.ModelForm):
+    tutor_name = forms.CharField(max_length=255, required=True, label="Tutor Name")
     class Meta:
         model = Message
         fields = ['subject', 'content']

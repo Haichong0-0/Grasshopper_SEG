@@ -2,14 +2,30 @@
 {% block content %}
 <body style="background-color: #000435; color: white;"></body>
 <div class="container mt-3">
-<h1 class="text-center">Leave a Message</h1>
-<div class="container d-flex justify-content-center align-items-center" style="height: 80vh;">
-    <form method="post" style="width: 100%; max-width: 600px;">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Send</button>
-    </form>
-</div>
+    <h1 class="text-center">Leave a Message</h1>
+    <div class="container d-flex justify-content-center align-items-center" style="height: 80vh;">
+        <form method="post" style="width: 100%; max-width: 600px;">
+            {% csrf_token %}
+
+            <div class="mb-5">
+                {{ form.tutor_name.label_tag }}
+                {{ form.tutor_name }}
+            </div>
+
+            <div class="mb-5">
+                {{ form.subject.label_tag }}
+                {{ form.subject }}
+            </div>
+
+            <div class="mb-5">
+                {{ form.content.label_tag }}
+                {{ form.content }}
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Send</button>
+        </form>
+    </div>
 </div>
 {% endblock %}
+
 

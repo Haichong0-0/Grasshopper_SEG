@@ -321,11 +321,12 @@ def leave_message(request):
         if form.is_valid():
             message = form.save(commit=False)
             message.student = request.user.student
+            message.tutor_name = form.cleaned_data['tutor_name']  # Handle tutor_name input
             message.save()
             return redirect('student_dashboard')
-
     else:
         form = MessageForm()
-        return render(request, 'student_dashboard_templates/leave_message.html', {'form': form})
+    return render(request, 'student_dashboard_templates/leave_message.html', {'form': form})
+
 
 
