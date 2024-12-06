@@ -3,6 +3,8 @@ from tutorials.models import *
 import pytz
 from faker import Faker
 from random import choice
+import random
+from tutorials.models import Subjects, Tutor # vincent: attempt to resolve available tutors not showing on admin lesson request page
 
 user_fixtures = [
     {'username': '@johndoe', 'email': 'john.doe@example.org', 'first_name': 'John', 'last_name': 'Doe'},
@@ -41,6 +43,12 @@ subject_fixtures = [
     {'user':'@tutor','subject':'ruby_on_rails','proficiency':'Intermediate'},
 ]
 
+subject_names = [
+    'Python', 'Django', 'React', 'JavaScript', 'SQL', 
+    'C++', 'C#', 'Node.js', 'Flask', 'Spring'
+]
+
+
 student_fixtures = [
     {'username': '@student', 'email': 'student@example.org', 'first_name': 'Student', 'last_name': 'Student'},
 ]
@@ -74,10 +82,10 @@ lesson_fixtures = [
 
 invoice_fixtures = [
     {   'no_of_classes' : 10,
-        'price_per_class' : 60,},
+        'price_per_class' : 20,},
 
     {   'no_of_classes' : 6,
-        'price_per_class' : 75,},
+        'price_per_class' : 20,},
 ]
 
 
@@ -87,9 +95,10 @@ class Command(BaseCommand):
     """Build automation command to seed the database."""
 
     TUTOR_COUNT = 100
-    STUDENT_COUNT = 10
+    STUDENT_COUNT = 50
+    SUBJECT_COUNT =10
     ADMIN_COUNT = 10
-    DEFAULT_PASSWORD = 'Password123'
+    DEFAULT_PASSWORD = 'Password123!!'
     help = 'Seeds the database with sample data'
 
     def __init__(self):
@@ -98,6 +107,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         #self.create_users()
+        # self.create_subjects()    # vincent: attempt to resolve available tutors not showing on admin lesson request page
         self.create_tutors()
         self.generate_tutor_availability()
         self.create_admins()
@@ -113,6 +123,10 @@ class Command(BaseCommand):
     def generate_user_fixtures(self):
         for data in user_fixtures:
             self.try_create_user(data)
+    
+    def create_subject_fixtures(self):
+        for subject_name in subject_names:
+            self.try_create_subject(subject_name)
 
     def generate_random_users(self):
         user_count = User.objects.count()
@@ -164,6 +178,62 @@ class Command(BaseCommand):
         for data in student_fixtures:
             self.try_create_student(data)
 
+    # vincent: attempt to resolve available tutors not showing on admin lesson request page
+    def create_subjects(self):
+        subject_count = Subjects.objects.count()
+        generated_subjects = 0
+
+        print("subject count.")
+        while subject_count < self.SUBJECT_COUNT:
+            print(f"Seeding Subject {subject_count + 1}/{self.SUBJECT_COUNT}", end='\r')
+
+            generated_subjects = random.randint(0, len(subject_names)-1)
+            subject_name = subject_names[generated_subjects]  
+            print("subject name: ", subject_name)
+            
+            self.try_create_subject({"subject_name": subject_name})
+        
+            subject_count = Subjects.objects.count()
+        
+        print("Subjects seeding complete.      ")
+
+
+    # # vincent: attempt to resolve available tutors not showing on admin lesson request page
+    # # create tutor with subject field that auto-populates the subjects (class) table
+    # # fail?
+    # def create_tutors(self):
+    #     tutor_count = Tutor.objects.count()
+    #     self.create_tutor_fixtures()
+    #     # new_tutor = self.try_create_tutor(data)
+
+        # # print("Subjects.objects.all(): ", Subjects.objects.all())
+        # available_subjects = list(Subjects.objects.all())
+        # if not available_subjects:
+        #     print("No subjects available in the database. Please add subjects first.")
+        #     return
+
+        # while tutor_count < self.TUTOR_COUNT:
+        #     print(f"Seeding Tutor {tutor_count}/{self.TUTOR_COUNT}", end='\r')
+        #     data = self.generate_user()
+        #     if data:
+        #         # self.try_create_tutor(data)
+        #         new_tutor = self.try_create_tutor(data)
+        #         if new_tutor:
+        #             # Randomly assign subjects to the tutor (e.g., 1–3 subjects)
+        #             # add print statement
+        #             subject_subset = random.sample(available_subjects, random.randint(1, 3))
+        #             new_tutor.subjects.add(*subject_subset)  # assign subjects to the tutor
+        #             print("new_tutor.subjects: ", new_tutor.subjects)
+        #             new_tutor.save()
+
+        #             # For each subject, add the tutor
+        #             for subject in subject_subset:
+        #                 subject.tutors.add(new_tutor)
+        #                 print("subject: ", subject.tutors)
+        #                 subject.save()
+        #     tutor_count = Tutor.objects.count()
+        # print("Tutor seeding complete.      ")
+
     def create_tutors(self):
         tutor_count = Tutor.objects.count()
         self.create_tutor_fixtures()
@@ -196,6 +266,12 @@ class Command(BaseCommand):
             self.generate_student(data)
         except Exception as e:
             print(f"Error creating students: {e}")
+
+    def try_create_subject(self, subject_name):
+        try:
+            self.generate_subject(subject_name)
+        except Exception as e:
+            print(f"Error creating subject: {e}")
 
     def try_create_admin(self, data):
         try:
@@ -246,9 +322,44 @@ class Command(BaseCommand):
         student.set_password(Command.DEFAULT_PASSWORD)  # This hashes the password
         student.save()
 
+    def generate_subject(self, data):
+
+        default_timings = "Monday-Friday, 9AM-5PM"
+        default_bio = f"{data['subject_name']} is a core subject offered by our selected tutors."
+
+        subject = Subjects.objects.create(
+            subject_name=data['subject_name'],
+            timings=data.get('timings', default_timings), 
+            bio=data.get('bio', default_bio),  
+            # user=data.get('user', None),  
+        )
+        subject.save()
+        return subject
+
     def generate_lesson_fixtures(self):
         for data in lesson_fixtures:
-            self.try_create_lesson(data)
+            try:
+                student = Student.objects.get(username=data['student'])  # Get Student instance
+                tutor = Tutor.objects.get(username=data['tutor'])  # Get Tutor instance
+                subject = Subjects.objects.get(subject_name=data['subject'])  # Get Subject instance
+                
+                invoice = self.try_create_invoice(invoice_fixtures[data['invoice']])
+                
+                Lesson.objects.create(
+                    student=student,
+                    tutor=tutor,
+                    subject=subject,
+                    frequency=data['frequency'],
+                    term=data['terms'],
+                    duration=data['duration'],
+                    day_of_week=data['day_of_week'],
+                    start_time=data['start_time'],
+                    status=data['status'],
+                    invoiceNo=invoice,
+                )
+            except Exception as e:
+                print(f"Error creating lesson: {e}")
+
 
     def generate_tutor_availability(self):
         for data in tutor_availability_fixtures:

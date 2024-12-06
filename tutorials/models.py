@@ -91,8 +91,13 @@ class Tutor(User):
     ]
 
     type_of_user = 'tutor'
-    bio = models.CharField(max_length=520, blank=True, null=True)
-    subject = models.CharField(max_length=100, blank=False, choices=SUBJECTS,default="Python")
+    bio = models.CharField(max_length=520, blank=True, null=True)   # optional
+    # subject = models.CharField(max_length=100, blank=False, choices=SUBJECTS,default="Python")
+    subjects = models.ManyToManyField('Subjects', related_name='tutors')    # multiple tutors can teach the same subject
+    
+    def __str__(self):
+        return f"Tutor: {self.username} ({self.id})"
+
 
 class Subjects(models.Model):  
 
@@ -120,11 +125,14 @@ class Subjects(models.Model):
     # ]
 
     # subject = models.CharField(max_length=100, blank=False, choices=SUBJECTS,default="Python")
-    subject_name = models.CharField(max_length=100, unique=True)  
+    subject_name = models.CharField(max_length=100, unique=True)    
 
     timings = models.CharField(max_length=255, blank=True)
     bio = models.CharField(max_length=520, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # tutor = models.ManyToManyField(User, on_delete=models.CASCADE)
+    # associated_tutors = models.ManyToManyField(Tutor, related_name='associated_subjects', blank=True)
+
 
     def setTimings(self, timings_list):
         self.Timings = ','.join(timings_list)
@@ -132,6 +140,8 @@ class Subjects(models.Model):
     def getTimings(self):
         return self.Timings.split(',')
 
+    def __str__(self):
+            return self.subject_name
 
 
 class Student(User):
@@ -256,7 +266,7 @@ class Lesson(models.Model):
         ('sunday', 'Sunday'),
     ]
 
-    #lesson_id = models.AutoField(primary_key=True)
+    lesson_id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='lessons')
     # tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, related_name='lessons')
     # subject = models.CharField(max_length=100, choices=SUBJECTS)
