@@ -4,6 +4,8 @@ from tutorials.models import Lesson, Invoice, Student
 from django.contrib.auth.decorators import login_required 
 from datetime import datetime, timedelta
 from django.db.models import Q
+from django.utils.timezone import now
+
 
 
 @login_required
@@ -43,6 +45,27 @@ def lesson_create_view(request):
                     'button_class': button_class,
                     'hours': hours,
                 })
+            
+             # Convert start time and calculate end time
+            lesson_start_time = datetime.combine(datetime.today(), lesson.start_time)
+            lesson_end_time = lesson_start_time + timedelta(minutes=int(lesson.duration))
+
+            # Check for scheduling conflicts
+            student_lessons = Lesson.objects.filter(student=student, day_of_week=lesson.day_of_week, term= lesson.term)
+            for existing_lesson in student_lessons:
+                existing_start_time = datetime.combine(datetime.today(), existing_lesson.start_time)
+                existing_end_time = existing_start_time + timedelta(minutes=int(existing_lesson.duration))
+                
+                if lesson_start_time < existing_end_time and lesson_end_time > existing_start_time:
+                    form.add_error('start_time', 'This lesson conflicts with another lesson in your schedule.')
+                    return render(request, 'student_dashboard_templates/lesson_form.html', {
+                        'form': form,
+                        'term_warning': term_warning,
+                        'submit': submit,
+                        'button_class': button_class,
+                        'hours': hours,
+                    })
+
 
             term_dates = {
                 'September-Christmas': datetime(2024, 9, 2),
