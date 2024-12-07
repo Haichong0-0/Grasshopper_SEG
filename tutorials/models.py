@@ -134,35 +134,35 @@ class Subjects(models.Model):
 
 
 
-class Student(User):
+# class Student(User):
 
-    type_of_user = 'student'
+#     type_of_user = 'student'
     
-    BEGINNER = 'Beginner'
-    NOVICE = 'Novice'
-    INTERMEDIATE = 'Intermediate'
-    ADVANCED = 'Advanced'
-    MASTERY = 'Mastery'
+#     BEGINNER = 'Beginner'
+#     NOVICE = 'Novice'
+#     INTERMEDIATE = 'Intermediate'
+#     ADVANCED = 'Advanced'
+#     MASTERY = 'Mastery'
     
-    PROFICIENCY_LEVEL_CHOICES = [
-        (BEGINNER, 'Beginner'),
-        (NOVICE, 'Novice'),
-        (INTERMEDIATE, 'Intermediate'),
-        (ADVANCED, 'Advanced'),
-        (MASTERY, 'Mastery'),
-    ]
-    proficiency_level = models.CharField(
-        max_length=12,
-        choices=PROFICIENCY_LEVEL_CHOICES,
-        default=INTERMEDIATE,
-        blank=True,
-        null=True
-    )
+#     PROFICIENCY_LEVEL_CHOICES = [
+#         (BEGINNER, 'Beginner'),
+#         (NOVICE, 'Novice'),
+#         (INTERMEDIATE, 'Intermediate'),
+#         (ADVANCED, 'Advanced'),
+#         (MASTERY, 'Mastery'),
+#     ]
+#     proficiency_level = models.CharField(
+#         max_length=12,
+#         choices=PROFICIENCY_LEVEL_CHOICES,
+#         default=INTERMEDIATE,
+#         blank=True,
+#         null=True
+#     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE,null = False)
-    # subject = models.CharField(max_length=100, choices=SUBJECTS, default="Python")
-    subjects = models.ManyToManyField(Subjects, blank=True)  # Students can choose multiple subjects
-    proficiency = models.CharField(max_length=12, choices=PROFICIENCY_LEVEL_CHOICES, default=INTERMEDIATE)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE,null = False)
+#     # subject = models.CharField(max_length=100, choices=SUBJECTS, default="Python")
+#     subjects = models.ManyToManyField(Subjects, blank=True)  # Students can choose multiple subjects
+#     proficiency = models.CharField(max_length=12, choices=PROFICIENCY_LEVEL_CHOICES, default=INTERMEDIATE)
 
 class Student(User):
     type_of_user = 'student'
@@ -256,7 +256,7 @@ class Lesson(models.Model):
         ('sunday', 'Sunday'),
     ]
 
-    #lesson_id = models.AutoField(primary_key=True)
+    lesson_id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='lessons')
     # tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, related_name='lessons')
     # subject = models.CharField(max_length=100, choices=SUBJECTS)
