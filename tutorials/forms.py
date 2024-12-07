@@ -5,12 +5,8 @@ from django.core.validators import RegexValidator
 from .models import User, Tutor, Student, Message
 from django.contrib.auth.hashers import make_password
 from datetime import date, timedelta
-
-
-
-###################################################
 from .models import Lesson
-###################################################
+
 
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
@@ -198,45 +194,6 @@ class MessageForm(forms.ModelForm):
         fields = ['subject', 'content']
 
 
-'''class AdminForm(forms.ModelForm):
-    """Form for admins"""
-
-    class Meta:
-
-        model = Admin
-        fields = '__all__'
-
-
-class TutorForm(forms.ModelForm):
-    "Form for tutors"
-
-    class Meta:
-
-        model = Tutor
-        fields = '__all__'
-
-
-class StudentForm(forms.ModelForm):
-    "Form for admins"
-
-    class Meta:
-
-        model = Student
-        fields = '__all__'
-
-
-class LessonForm(forms.ModelForm):
-    "Form for lessons"
-
-    class Meta:
-
-        model = Lesson
-        fields = '__all__'
-
-class InvoiceForm(forms.ModelForm):
-    "Form for invoices"
-
-    class Meta:
-
-        model = Invoice
-        fields = '__all__'''
+""""search form for search bar in dashboards"""
+class SearchForm(forms.ModelForm):
+    query = forms.CharField(max_length=100, required=False, label="Search Here")

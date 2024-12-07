@@ -19,8 +19,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from tutorials import views
-from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule, student_welcome
-from tutorials.tutorViews.tutor_dashboard import tutor_schedule, tutor_lessons, tutor_payments
+from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule, student_welcome, student_profile
+from tutorials.tutorViews.tutor_dashboard import tutor_schedule, tutor_lessons, tutor_payments, tutor_profile
 from tutorials.views import leave_message
 
 urlpatterns = [
@@ -47,6 +47,9 @@ urlpatterns = [
     path('student_schedule/', student_schedule, name='student_schedule'),
     path('student_welcome/', student_welcome, name='student_welcome'),
     path('leave-message/', leave_message, name='leave_message'),
+    path('student_profile/', student_profile, name='student_profile'),
+    path('tutor/profile', tutor_profile, name='tutor_profile'),
+
 
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

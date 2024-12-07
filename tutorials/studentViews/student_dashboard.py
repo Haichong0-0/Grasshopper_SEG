@@ -128,3 +128,10 @@ def student_schedule(request):
         'rejected_lessons': rejected_lessons,
     })
 
+@login_required
+def student_profile(request):
+    context = {
+        
+    }
+    return render(request, 'student_dashboard_templates/student_profile.html', context)
+

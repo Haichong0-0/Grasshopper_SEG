@@ -10,15 +10,10 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
-from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm, MessageForm
+from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm, MessageForm, SearchForm
 from tutorials.helpers import login_prohibited
 from tutorials.models import User
-
-
-#############################################################
-'''from .models import Admin, Tutor, Student, Lesson, Invoice
-from .forms import AdminForm, TutorForm, StudentForm, LessonForm, InvoiceForm'''
-
+from tutorials.models import Lesson, Student, Tutor
 from django.views.generic import CreateView, ListView, DeleteView
 
 
@@ -327,6 +322,11 @@ def leave_message(request):
     else:
         form = MessageForm()
     return render(request, 'student_dashboard_templates/leave_message.html', {'form': form})
+
+
+def search(request):
+    form = SearchForm(request.GET)
+
 
 
 

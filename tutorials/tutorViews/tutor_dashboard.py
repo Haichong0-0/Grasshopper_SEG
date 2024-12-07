@@ -61,3 +61,13 @@ def tutor_lessons(request):
     }
 
     return render(request, 'tutor_dashboard/tutor/lessons.html', context)
+
+
+@login_required
+def tutor_profile(request):
+    context = {
+        
+    }
+    return render(request, 'tutor_dashboard/tutor_profile.html', context)
+
+
