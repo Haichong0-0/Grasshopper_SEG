@@ -17,6 +17,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serialiser import LessonSerializer
+from tutorials.decorators import user_type_required
 # from .utilities import sendEmails
 
 #############################################################
@@ -40,27 +41,44 @@ def admin_dashboard(request):
     else:
         return render(request, 'access_denied.html', {'user': current_user})
 
+# @login_required
+# def tutor_dashboard(request):
+#     """Display the tutor's dashboard."""
+
+#     current_user = request.user
+#     if (current_user.type_of_user == 'tutor'):
+#         print("current_user(tutor_dashboard): ", current_user)
+#         return render(request, 'tutor_dashboard/tutor_dashboard.html', {'user': current_user})
+#     else:
+#         return render(request, 'access_denied.html', {'user': current_user})
+
+# @login_required
+# def student_dashboard(request):
+#     """Display the student's dashboard."""
+
+#     current_user = request.user
+#     if (current_user.type_of_user == 'student'):
+#         print("current_user(student_dashboard): ", current_user)
+#         return render(request, 'student_dashboard.html', {'user': current_user})
+#     else:
+#         return render(request, 'access_denied.html', {'user': current_user})
+    
 @login_required
+@user_type_required('tutor')
 def tutor_dashboard(request):
     """Display the tutor's dashboard."""
-
     current_user = request.user
-    if (current_user.type_of_user == 'tutor'):
-        print("current_user(tutor_dashboard): ", current_user)
-        return render(request, 'tutor_dashboard/tutor_dashboard.html', {'user': current_user})
-    else:
-        return render(request, 'access_denied.html', {'user': current_user})
+    print("current_user(tutor_dashboard): ", current_user)
+    return render(request, 'tutor_dashboard/tutor_dashboard.html', {'user': current_user})
+
 
 @login_required
+@user_type_required('student')
 def student_dashboard(request):
     """Display the student's dashboard."""
-
     current_user = request.user
-    if (current_user.type_of_user == 'student'):
-        print("current_user(student_dashboard): ", current_user)
-        return render(request, 'student_dashboard.html', {'user': current_user})
-    else:
-        return render(request, 'access_denied.html', {'user': current_user})
+    print("current_user(student_dashboard): ", current_user)
+    return render(request, 'student_dashboard/student_dashboard.html', {'user': current_user})
 
 
 @login_prohibited
@@ -330,20 +348,7 @@ def tutor_welcome(request):
     }
 
     return render(request, 'tutor_dashboard/tutor_welcome.html', context)
-
-
-def leave_message(request):
-    if request.method == 'POST':
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            message = form.save(commit=False)
-            message.student = request.user.student
-            message.save()
-            return redirect('student_dashboard')
-
-    else:
-        form = MessageForm()
-        return render(request, 'student_dashboard_templates/leave_message.html', {'form': form})
+    
 
 def get_tutor(time, day, subject):
 
@@ -466,6 +471,7 @@ def tutor_payment(request):
     return render(request, 'tutor_payment.html', context)
 
 @login_required
+@user_type_required('student')
 def student_payment(request):
     """payment page for admin"""
 

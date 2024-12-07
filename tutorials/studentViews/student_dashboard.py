@@ -4,11 +4,11 @@ from tutorials.models import Lesson, Invoice, Student
 from django.contrib.auth.decorators import login_required 
 from datetime import datetime, timedelta
 from django.db.models import Q
-from django.utils.timezone import now
-
+from tutorials.decorators import user_type_required
 
 
 @login_required
+@user_type_required('student')
 def student_dashboard(request):
 
     context = {
@@ -18,6 +18,7 @@ def student_dashboard(request):
     return render(request, 'student_dashboard_templates/student_dashboard_in.html', context)
 
 @login_required
+@user_type_required('student')
 def lesson_create_view(request):
     term_warning = None
     submit = 'Submit Lesson Request'
@@ -46,11 +47,9 @@ def lesson_create_view(request):
                     'hours': hours,
                 })
             
-             # Convert start time and calculate end time
             lesson_start_time = datetime.combine(datetime.today(), lesson.start_time)
             lesson_end_time = lesson_start_time + timedelta(minutes=int(lesson.duration))
 
-            # Check for scheduling conflicts
             student_lessons = Lesson.objects.filter(student=student, day_of_week=lesson.day_of_week, term= lesson.term)
             for existing_lesson in student_lessons:
                 existing_start_time = datetime.combine(datetime.today(), existing_lesson.start_time)
@@ -118,6 +117,7 @@ def lesson_create_view(request):
     })
 
 @login_required
+@user_type_required('student')
 def student_invoices(request):
 
     invoices = Invoice.objects.all()
@@ -128,11 +128,13 @@ def student_invoices(request):
     return render(request, 'student_dashboard_templates/student_invoices.html', context)
 
 @login_required
+@user_type_required('student')
 def student_welcome(request):
     return render(request, 'student_dashboard_templates/student_welcome.html')
 
 
 @login_required
+@user_type_required('student')
 def student_schedule(request):
     if request.user.is_authenticated and hasattr(request.user, 'student'):
         confirmed_lessons = Lesson.objects.filter(student=request.user, status='Confirmed').order_by('start_time')
@@ -151,3 +153,18 @@ def student_schedule(request):
         'rejected_lessons': rejected_lessons,
     })
 
+@login_required
+@user_type_required('student')
+def leave_message(request):
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.student = request.user.student
+            message.save()
+            return redirect('student_dashboard')
+
+    else:
+        form = MessageForm()
+        return render(request, 'student_dashboard_templates/leave_message.html', {'form': form})
+    
