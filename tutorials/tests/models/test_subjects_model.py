@@ -7,7 +7,6 @@ from tutorials.models import Subjects
 class SubjectsModelTest(TestCase):
 
     def setUp(self):
-        # Create a user instance
         self.user = get_user_model().objects.create_user(
             username="rapiduser",
             password="password123",
@@ -15,7 +14,6 @@ class SubjectsModelTest(TestCase):
         )
 
     def test_subject_creation(self):
-        # Create a subject instance with a valid user
         subject = Subjects.objects.create(
             user=self.user,
             subject='python',
@@ -50,6 +48,7 @@ class SubjectsModelTest(TestCase):
                 proficiency='invalid_proficiency'
             )
             subject.full_clean()
+
     def test_subject_foreign_key(self):
         with self.assertRaises(IntegrityError):
             Subjects.objects.create(
