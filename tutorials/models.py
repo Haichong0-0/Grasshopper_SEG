@@ -256,7 +256,7 @@ class Lesson(models.Model):
         ('sunday', 'Sunday'),
     ]
 
-    lesson_id = models.AutoField(primary_key=True)
+    #lesson_id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='lessons')
     # tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, related_name='lessons')
     # subject = models.CharField(max_length=100, choices=SUBJECTS)
