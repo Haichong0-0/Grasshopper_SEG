@@ -167,4 +167,13 @@ def leave_message(request):
     else:
         form = MessageForm()
         return render(request, 'student_dashboard_templates/leave_message.html', {'form': form})
+
+
+@login_required
+def student_profile(request):
+    context = {
+
+    }
+    return render(request, 'student_dashboard_templates/student_profile.html', context)
+    
     

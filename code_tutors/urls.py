@@ -19,8 +19,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from tutorials import views
-from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule, student_welcome, leave_message
-from tutorials.tutorViews.tutor_dashboard import tutor_schedule, tutor_lessons, tutor_payments
+from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule, student_welcome, leave_message, student_profile
+from tutorials.tutorViews.tutor_dashboard import tutor_schedule, tutor_lessons, tutor_payments, tutor_profile
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -62,7 +62,13 @@ urlpatterns = [
     path('student_welcome/', student_welcome, name='student_welcome'),
     path('leave-message/', leave_message, name='leave_message'),
 
-path('admin/messages/update/<int:message_id>/', views.update_message_status, name='update_message_status'),
+    path('admin/messages/update/<int:message_id>/', views.update_message_status, name='update_message_status'),
+
+    path('tutor/profile', tutor_profile, name='tutor_profile'),
+    path('student_profile/', student_profile, name='student_profile'),
+
+
+
 
 
 ]
