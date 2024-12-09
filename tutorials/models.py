@@ -67,6 +67,7 @@ class Admin(User):
 
 
 class Tutor(User):  
+
     SUBJECTS = [ 
         ('ruby_on_rails', 'Ruby on Rails'),
         ('python', 'Python'),
@@ -75,15 +76,15 @@ class Tutor(User):
         ('c_sharp', 'C#'),
         ('react', 'React'),
         ('angular', 'Angular'),
-        ('vue_js', 'Vue.js'),
-        ('node_js', 'Node.js'),
-        ('express_js', 'Express.js'),
+        ('vue_js', 'Vue_js'),
+        ('node_js', 'Node_js'),
+        ('express_js', 'Express_js'),
         ('django', 'Django'),
         ('flask', 'Flask'),
         ('spring', 'Spring'),
         ('hibernate', 'Hibernate'),
         ('jpa', 'JPA'),
-        ('sql', 'SQL'),
+        ('sql', 'Sql'),
         ('mongodb', 'MongoDB'),
         ('postgresql', 'PostgreSQL'),
         ('mysql', 'MySQL'),
@@ -92,7 +93,6 @@ class Tutor(User):
 
     type_of_user = 'tutor'
     bio = models.CharField(max_length=520, blank=True, null=True)   # optional
-    # subject = models.CharField(max_length=100, blank=False, choices=SUBJECTS,default="Python")
     subjects = models.ManyToManyField('Subjects', related_name='tutors')    # multiple tutors can teach the same subject
     
     def __str__(self):
@@ -101,37 +101,13 @@ class Tutor(User):
 
 class Subjects(models.Model):  
 
-    # SUBJECTS = [ # All of the subjects that a Tutor is available to teach
-    #     ('ruby_on_rails', 'Ruby on Rails'),
-    #     ('python', 'Python'),
-    #     ('javascript', 'Javascript'),
-    #     ('c_plus_plus', 'C++'),
-    #     ('c_sharp', 'C#'),
-    #     ('react', 'React'),
-    #     ('angular', 'Angular'),
-    #     ('vue_js', 'Vue.js'),
-    #     ('node_js', 'Node.js'),
-    #     ('express_js', 'Express.js'),
-    #     ('django', 'Django'),
-    #     ('flask', 'Flask'),
-    #     ('spring', 'Spring'),
-    #     ('hibernate', 'Hibernate'),
-    #     ('jpa', 'JPA'),
-    #     ('sql', 'SQL'),
-    #     ('mongodb', 'MongoDB'),
-    #     ('postgresql', 'PostgreSQL'),
-    #     ('mysql', 'MySQL'),
-    #     ('git', 'Git'),
-    # ]
-
-    # subject = models.CharField(max_length=100, blank=False, choices=SUBJECTS,default="Python")
     subject_name = models.CharField(max_length=100, unique=True)    
 
     timings = models.CharField(max_length=255, blank=True)
     bio = models.CharField(max_length=520, blank=True, null=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # tutor = models.ManyToManyField(User, on_delete=models.CASCADE)
-    # associated_tutors = models.ManyToManyField(Tutor, related_name='associated_subjects', blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    tutor_list = models.JSONField(default=list)
+
 
 
     def setTimings(self, timings_list):
@@ -170,7 +146,6 @@ class Student(User):
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE,null = False)
-    # subject = models.CharField(max_length=100, choices=SUBJECTS, default="Python")
     subjects = models.ManyToManyField(Subjects, blank=True)  # Students can choose multiple subjects
     proficiency = models.CharField(max_length=12, choices=PROFICIENCY_LEVEL_CHOICES, default=INTERMEDIATE)
 
@@ -180,6 +155,7 @@ class Student(User):
 
 class TutorAvailability(models.Model):   
     DAYS = [
+        ('all', 'All'),  # Special value for availability on all days
         ('monday', 'Monday'),
         ('tuesday', 'Tuesday'),
         ('wednesday', 'Wednesday'),
@@ -203,8 +179,6 @@ class Invoice(models.Model):
     def calc_sum(self):
         self.totalsum = self.no_of_classes * self.price_per_class
         return self.totalsum
-
-
 
 
 class Lesson(models.Model):  
@@ -268,12 +242,11 @@ class Lesson(models.Model):
 
     lesson_id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='lessons')
-    # tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, related_name='lessons')
-    # subject = models.CharField(max_length=100, choices=SUBJECTS)
-    tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='lessons')
+    tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='lessons') 
     day_of_week = models.CharField(max_length=10, choices=DAYS)
     start_time = models.TimeField()
-    # end_time = models.TimeField()
+    
+    
 
     
     duration = models.IntegerField(choices=DURATION_CHOICES, default=60)
@@ -284,11 +257,6 @@ class Lesson(models.Model):
     
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     invoiceNo = models.ForeignKey(Invoice, null = True,on_delete=models.CASCADE)
-#     invoice_paid = models.BooleanField(default=False)
-    # price_per_class = models.DecimalField(max_digits=10, decimal_places=2, blank=False, default=20)
-#     price_per_term = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
-#     invoice_paid = models.BooleanField(default=False)
-
 
 # class Invoice(models.Model): 
 #     orderNo = models.AutoField(primary_key=True)

@@ -4,6 +4,7 @@ from tutorials.models import Lesson, Invoice, Student
 from django.contrib.auth.decorators import login_required 
 from datetime import datetime, timedelta
 from django.db.models import Q
+from tutorials.models import Tutor, Subjects
 
 
 @login_required
@@ -33,9 +34,24 @@ def lesson_create_view(request):
                 return redirect('some_error_page')
             
             lesson.student = student
+            tutors = Tutor.objects.all()
+
+            print("lesson.subject: ", lesson.subject)
+            try:
+                subject = Subjects.objects.get(subject_name=lesson.subject)
+                print("lesson.subject: ", lesson.subject)
+                tutors = tutors.filter(subjects=subject)
+            except Subjects.DoesNotExist:
+                form.add_error('subject', 'No tutors available for this subject.')
+                tutors = Tutor.objects.none()
+
+            lesson.tutor_list = tutors 
+
+                                    
 
             if Lesson.objects.filter(student=student, subject=lesson.subject).exists():
                 form.add_error('subject', 'You already have requested a lesson for this subject.')
+                # print("Lesson's tutor before: ", lesson.tutor.username)
                 return render(request, 'student_dashboard_templates/lesson_form.html', {
                     'form': form,
                     'term_warning': term_warning,

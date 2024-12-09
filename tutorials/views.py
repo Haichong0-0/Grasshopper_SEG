@@ -17,7 +17,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serialiser import LessonSerializer
-# from .utilities import sendEmails
+from datetime import datetime, date, timedelta
+
 
 #############################################################
 '''from .models import Admin, Tutor, Student, Lesson, Invoice
@@ -252,11 +253,9 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
     
     def get_form_kwargs(self):
-        # Pass the 'variation' parameter as 'user_type' to the form.
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request  # Pass the request object
-        # has an option of seeing a variation of the sign-up page, student or tutor
-        # kwargs['user_type'] = self.request.GET.get('variation') 
+
         print('coming from get_form_kwargs: ', kwargs)  # Deyu: for testing
         return kwargs
 
@@ -267,10 +266,8 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
         if variation == 'student':
             context['message'] = "Student Sign-Up Form"
-            # context['message'] = "Student sign up"
         elif variation == 'tutor':
             context['message'] = "Tutor Sign-Up Form"
-            # context['message'] = "Tutor sign up"
 
         context['user_type'] = variation
         return context
@@ -311,15 +308,6 @@ def admin_welcome(request):
 
     return render(request, 'tutor_dashboard/tutor_schedule.html', context)
 
-# from fix-login-feature branch, delete later if not in use
-# def tutor_payment(request):
-#     """payment page for tutors"""
-
-#     context = {
-
-#     }
-
-#     return render(request, 'tutor_dashboard/tutor_payment.html', context)
 
 # @login_required
 def tutor_welcome(request):
@@ -345,27 +333,23 @@ def leave_message(request):
         form = MessageForm()
         return render(request, 'student_dashboard_templates/leave_message.html', {'form': form})
 
+
+
+
+
+
 def get_tutor(time, day, subject):
 
 
     print(time, day, subject.capitalize())
     available_tutors = set()
 
-    availables = TutorAvailability.objects.filter(
-        day = day,
-        starttime__lte=time,
-        endtime__gte=time
-    )
+    print("tutor_list 999", Subjects.objects.get(subject_name=subject.capitalize()).tutor_list)
+    tutor_list = Subjects.objects.get(subject_name=subject.capitalize()).tutor_list
 
-    print(availables)
-    for available in availables:
-        tutor = available.tutor
-        # print(available.)
-
-        if Subjects.objects.filter(user=tutor, subject_name=subject.capitalize()).exists():
-            print("inside if-statement 888", tutor.first_name)
-            available_tutors.add(tutor)
-    print("available_tutors: ", available_tutors)
+    for tutor in tutor_list:
+        available_tutors.add(Tutor.objects.get(username=tutor))
+    
     return list(available_tutors)
 
 
@@ -381,6 +365,8 @@ def get_lesson_data():
         lesson.duration = lesson.duration // 60      # Convert duration to hours
         print("subject: ", lesson.start_time, lesson.day_of_week, lesson.subject,)
         lesson.available_tutors=get_tutor(time=lesson.start_time, day=lesson.day_of_week, subject=lesson.subject)
+        # lesson.available_tutors=Tutor.objects.all()
+        print("lesson.available_tutors: ", lesson.available_tutors)
 
 
     context["confirmed_lessons"] = confirmed_lessons
@@ -396,22 +382,10 @@ def get_lesson_data():
 def admin_schedule(request):
     """schedule page for tutors"""
 
-    # context = { }
 
     if request.user.is_authenticated and hasattr(request.user, 'admin'):
         context = get_lesson_data()
-    #     pending_lessons = Lesson.objects.filter(status='Pending').order_by('start_date','start_time')
 
-    #     context["confirmed_lessons"] = Lesson.objects.filter(status='confirmed').order_by('start_date','start_time')
-    #     context["pending_lessons"] = pending_lessons        # do the same for others, same computational power
-    #     context["rejected_lessons"] = Lesson.objects.filter(status='Rejected').order_by('start_date','start_time')
-    #     context["available_tutors"] = Tutor.objects.all()
-        
-    # else:
-    #     context["confirmed_lessons"] = []
-    #     context["pending_lessons"] = []
-    #     context["rejected_lessons"] = []
-    #     context["available_tutors"] = []
 
     return render(request, 'admin_schedule.html', context)
 
@@ -440,20 +414,6 @@ def admin_payment(request):
 
     return render(request, 'admin_payment.html', context)
 
-# @login_required
-# def tutor_payment(request):
-#     """payment page for tutors"""
-
-#     if hasattr(request.user, 'tutor'):  # Ensure the user is a tutor
-#         invoices = Invoice.objects.filter(tutor=request.user.tutor).order_by('-orderNo')
-#     else:
-#         invoices = []  # Return an empty queryset if the user is not a tutor
-
-#     context = {
-#         'invoices': invoices,
-#     }
-
-#     return render(request, 'tutor_payment.html', context)
 
 @login_required
 def tutor_payment(request):
@@ -491,6 +451,7 @@ def admin_messages(request):
 
     return render(request, 'admin_payment.html', context)
 
+# working, without the tutoravailability function
 class ConfirmClassView(APIView):
     
     def post(self, request, lesson_id):
@@ -506,32 +467,28 @@ class ConfirmClassView(APIView):
 
             invoice = Invoice.objects.filter(orderNo=lesson_obj.invoiceNo).first() 
             if not invoice:
-                # return Response({"error": "Invoice not found"}, status=404)
                 return redirect("admin_schedule")
 
             price_per_class = invoice.price_per_class  
             print(f"Price per class: {price_per_class}")
 
 
-            # print('lesson object: ', lesson_obj.values())
             if(request.POST.get("tutor")):
-                lesson_obj.tutor_id = request.POST.get("tutor")
+                tutor = Tutor.objects.get(id=request.POST.get("tutor"))  # Fetch the Tutor object
+                lesson_obj.tutor = tutor  # Assign the Tutor object
+
                 lesson_obj.status = "Confirmed"
                 lesson_obj.save()
 
             
             no_of_classes = lesson_obj.duration//60
             print("no_of_classes: ", type(no_of_classes), no_of_classes)
-            # print("lesson_obj.price_per_class: ", type(lesson_obj.price_per_class), lesson_obj.price_per_class)
             
 
-            # total = no_of_classes * lesson_obj.price_per_class
             total = no_of_classes * price_per_class
-            # print(f"Total: {total}, type: {type(total)}")
 
         try:
             Invoice.objects.create(                
-                # print(f"tutor ID from request: {request.POST.get('tutor')}"),
                 tutor=Tutor.objects.get(id=request.POST.get("tutor")),
                 student=Student.objects.get(id=lesson_obj.student_id),
                 topic=lesson_obj.subject,
@@ -541,15 +498,9 @@ class ConfirmClassView(APIView):
             )
         except Exception as e:
             print(f"Error creating invoice: {e}")
-            # return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-            return redirect("admin_schedule")
-
-
-            # return Response({"message": f"Lesson id {lesson_id} confirmed successfully."}, status=status.HTTP_200_OK)
             return redirect("admin_schedule")
 
         else:
-            # return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
             return redirect("admin_schedule")
 
 
@@ -563,20 +514,13 @@ class RejectClassView(APIView):
         if serializer.is_valid():
             print('RejectClassView valid data: success')
             lesson_obj = Lesson.objects.get(lesson_id=lesson_id)
-            # print('lesson object: ', lesson_obj.values())
-            # if(request.POST.get("tutor")):
+
             print("inside if-statement.")
-            # lesson_obj.tutor_id = request.POST.get("tutor")
             lesson_obj.status = "Rejected"
             lesson_obj.save()
 
             return redirect("admin_schedule")
 
-
-            # return Response({"message": f"Lesson id {lesson_id} confirmed successfully."}, status=status.HTTP_200_OK)
-            return redirect("admin_schedule")
-
         else:
-            # return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
             return redirect("admin_schedule")
     
