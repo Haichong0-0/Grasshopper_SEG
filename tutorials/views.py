@@ -18,6 +18,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serialiser import LessonSerializer
 from datetime import datetime, date, timedelta
+from django.db.models import Q
 
 
 #############################################################
@@ -357,16 +358,33 @@ def get_lesson_data():
     context = {}
 
     confirmed_lessons = Lesson.objects.filter(status='Confirmed').order_by('-start_time')
-    pending_lessons = Lesson.objects.filter(status='Pending').order_by('-start_time')
-    print("pending lessons: ", pending_lessons)
+    pending_lessons = Lesson.objects.filter(Q(status='Pending') | Q(status='Late')).order_by('-start_time')
     rejected_lessons = Lesson.objects.filter(status='Rejected').order_by('-start_time')
 
     for lesson in pending_lessons:
         lesson.duration = lesson.duration // 60      # Convert duration to hours
         print("subject: ", lesson.start_time, lesson.day_of_week, lesson.subject,)
         lesson.available_tutors=get_tutor(time=lesson.start_time, day=lesson.day_of_week, subject=lesson.subject)
-        # lesson.available_tutors=Tutor.objects.all()
-        print("lesson.available_tutors: ", lesson.available_tutors)
+   
+        lesson_start_time = datetime.combine(datetime.today(), lesson.start_time)
+        lesson_end_time = lesson_start_time + timedelta(minutes=int(lesson.duration))
+
+        filtered_tutors = []
+        for tutor in lesson.available_tutors:
+            try:
+                un = tutor.username
+                tutor = Tutor.objects.get(username=un)
+                if not TutorAvailability.objects.filter(
+                    tutor=tutor,
+                    day=lesson.day_of_week,
+                    starttime__lt=lesson_end_time.time(), 
+                    endtime__gt=lesson_start_time.time()
+                ).exists():
+                    filtered_tutors.append(tutor)
+            except Tutor.DoesNotExist:
+                print(f"Tutor with username '{un}' does not exist.")
+
+        lesson.available_tutors = filtered_tutors
 
 
     context["confirmed_lessons"] = confirmed_lessons
