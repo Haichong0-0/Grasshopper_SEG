@@ -22,12 +22,10 @@ from django.views.generic import CreateView, ListView, DeleteView
 @login_required
 def admin_dashboard(request):
     """Display the admin's dashboard."""
-
     current_user = request.user
-    if (current_user.type_of_user == 'admin'):
 
-        print("current_user(admin_dashboard): ", current_user.type_of_user)
-        return render(request, 'admin_dashboard.html', {'user': current_user})
+    if current_user.type_of_user == 'admin':  # Check if the user is an admin
+        return render(request, 'admin_dashboard/admin_dashboard.html', {'user': current_user})
     else:
         return render(request, 'access_denied.html', {'user': current_user})
 
