@@ -1,50 +1,44 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
+<style>
+  .nav-link.active {
+      background-color: #ffffff; 
+  }
+
+  .navbar-toggler {
+      color: #ffffff;
+  }
+
+  .nav-link {
+      color: #ffffff; 
+  }
+</style>
+<nav class="navbar navbar-expand-lg" style="background-color: #000435;">
+  <div class="container">
     <a class="navbar-brand" href="{% url 'admin_welcome' %}">
       Management (Admin)
     </a>
-
-    <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button> -->
-
-    <!-- Navbar Toggler for Mobile View -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-target="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    
-    <!-- <div class="container">
-      <ul class="nav nav-tabs nav-justified"> -->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <!-- Nav Tabs -->
-          <!-- <ul class="nav nav-tabs nav-justified w-100">     -->
-            <ul class="nav nav-tabs justify-content-between w-100 flex-nowrap" style="white-space: nowrap; overflow-x: auto; flex-wrap: nowrap;">
-            <li class="nav-item">
-            <a class="nav-link {% if request.path == '/admin/dashboard' %}active{% endif %}" href="{% url 'admin_dashboard' %}">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if request.path == '/admin/lessons' %}active{% endif %}" href="{% url 'admin_lessons' %}">Lessons</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if request.path == '/admin/schedule' %}active{% endif %}" href="{% url 'admin_schedule' %}">Schedule</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if request.path == '/admin/messages' %}active{% endif %}" href="{% url 'admin_messages' %}">messages</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if request.path == '/admin/payment' %}active{% endif %}" href="{% url 'admin_payment' %}">Payment</a>
-          </li>
+    <div class="container">
+      <ul class="nav nav-pills nav-justified">
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/admin/dashboard' %}active{% endif %}" href="{% url 'admin_dashboard' %}">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/admin/lessons' %}active{% endif %}" href="{% url 'admin_lessons' %}">Lessons</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/admin/schedule' %}active{% endif %}" href="{% url 'admin_schedule' %}">Schedule</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/admin/payment' %}active{% endif %}" href="{% url 'admin_payment' %}">Payment</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/users' %}active{% endif %}" href="{% url 'user_list' %}">Users</a>
+        </li>
         </ul>
-  </div>
-   <!-- NEED TO MAKE THIS IF user authenticated STATEMENT-->
-    {% include 'partials/menu.html' %} 
+    </div>
+      {% include 'partials/menu.html' %}
+    <!-- omitted if statement temporarily-->
   </div>
 </nav>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <!-- Navbar content here -->
-</nav>
-
-
- <!--{%if user.is_authenticated %}-->
-    <!--- {% endif %} -->

@@ -19,6 +19,7 @@ from rest_framework.response import Response
 from .serialiser import LessonSerializer
 from datetime import datetime, date, timedelta
 from django.db.models import Q
+from django.shortcuts import render, get_object_or_404
 
 
 #############################################################
@@ -201,13 +202,19 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 
 
-class UserListView(ListView):
+class UserListView(ListView): #need to make test
     model = User
     template_name = 'user_list.html'
     context_object_name = 'users'
 
     def get_queryset(self):
-        """Customize the queryset to fetch all users."""
+        query = self.request.GET.get('q', '')
+        if query:
+            return User.objects.filter(
+                Q(username__icontains=query) |
+                Q(first_name__icontains=query) |
+                Q(email__icontains=query)
+            )
         return User.objects.all()
 
 
@@ -307,7 +314,7 @@ def admin_welcome(request):
 
     }
 
-    return render(request, 'tutor_dashboard/tutor_schedule.html', context)
+    return render(request, 'admin_welcome.html', context)
 
 
 # @login_required
@@ -542,3 +549,9 @@ class RejectClassView(APIView):
         else:
             return redirect("admin_schedule")
     
+
+
+@login_required
+def user_profile(request, username):
+    user = get_object_or_404(User, username=username)
+    return render(request, 'user_profile.html', {'user': user})

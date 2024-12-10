@@ -1,32 +1,88 @@
-<!-- user_list.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'admin_base.html' %}
+
+{% block title %}
     <title>User List</title>
-</head>
-<body>
-    <h1>List of Users</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Gravatar</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td>{{ user.username }}</td>
-                <td>{{ user.full_name }}</td>
-                <td>{{ user.email }}</td>
-                <td><img src="{{ user.gravatar }}" alt="Gravatar" width="60" height="60"></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</body>
-</html>
+{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            color: white;
+            padding: 0; 
+            height: 100vh;  
+            background: #000435; 
+        }
+
+        .background {
+            min-height: 100%; 
+            background: #000435;
+            padding-bottom: 20px; 
+        }
+
+        .container {
+            max-width: 1200px; 
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .table-container {
+            max-height: calc(100vh - 200px);  
+            overflow-y: auto;  
+            margin-top: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #f4f4f4;
+        }
+
+        .table th, .table td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+
+    <body>
+    <div class="background">
+        <div class="container mt-5">
+            <h1 class="text-center mb-4">List of Code Tutor Users</h1>
+            <h2 class="text-left mb-4 text-primary" style="font-size: 1.45rem; font-weight: 500;">
+                <i class="bi bi-search" style="font-size: 1.4rem; margin-right: 10px;"></i> Search for a user by typing in their username, name, or email!
+            </h2>
+
+            <form method="get" action="" class="d-flex ms-auto" role="search" style="max-width: 400px;">
+                <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" style="padding-left: 15px; padding-right: 15px;" value="{{ query }}">
+                <button class="btn btn-outline-light" type="submit">Search</button>
+            </form>
+
+            <div class="table-container">
+                <table class="table table-bordered mt-4">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Gravatar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td><a href="{% url 'user_profile' user.username %}">{{ user.username }}</a></td>
+                                <td>{{ user.full_name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td><img src="{{ user.gravatar }}" alt="Gravatar" width="60" height="60"></td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4">No users found.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </body>
+{% endblock %}

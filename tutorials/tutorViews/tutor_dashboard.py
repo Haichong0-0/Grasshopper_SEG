@@ -40,8 +40,6 @@ def tutor_payments(request):
 
 
 
-
-
 @login_required
 def tutor_lessons(request):
     # get the current week dates (
@@ -61,3 +59,52 @@ def tutor_lessons(request):
     }
 
     return render(request, 'tutor_dashboard/tutor/lessons.html', context)
+
+
+@login_required
+def tutor_profile(request):
+    context = {
+
+    }
+    return render(request, 'tutor_dashboard/tutor_profile.html', context)
+
+
+@login_required
+def sort_lessons(request):
+    sort_by = request.GET.get('sort', 'date_asc')  # default 'date_asc' jic
+    if sort_by == 'date_asc':
+        lessons = Lesson.objects.all().order_by('start_time')  # ascend
+    elif sort_by == 'date_desc':
+        lessons = Lesson.objects.all().order_by('-start_time')  # descend
+    elif sort_by == 'subject_asc':
+        lessons = Lesson.objects.all().order_by('subject')  
+    elif sort_by == 'subject_desc':
+        lessons = Lesson.objects.all().order_by('-subject')  
+    elif sort_by == 'reset': 
+        lessons = Lesson.objects.all()  # maybe redundant
+    else:
+        lessons = Lesson.objects.all()  # no sorting
+    
+    return render(request, 'your_template.html', {'lessons': lessons})
+
+
+@login_required
+def sort_invoices(request):
+    sort_by = request.GET.get('sort', 'date_asc')  # default 'date_asc' jic
+    if sort_by == 'date_asc':
+        invoice = Lesson.objects.all().order_by('start_time')  # ascend
+    elif sort_by == 'date_desc':
+        invoice = Lesson.objects.all().order_by('-start_time')  # descend
+    elif sort_by == 'price_asc':
+        invoice = Invoice.objects.all().order_by('totalsum')   #?? maybe need to change to price_per_class 
+    elif sort_by == 'price_desc':
+        invoice = Invoice.objects.all().order_by('-totalsum') 
+    elif sort_by == 'reset': 
+        invoice = Invoice.objects.all()  # maybe redundant
+    else:
+        invoice = Invoice.objects.all()  # no sorting
+    
+    return render(request, 'your_invoice_template.html', {'invoices': invoice})
+
+
+    

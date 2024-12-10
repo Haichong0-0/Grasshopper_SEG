@@ -1,0 +1,54 @@
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.username }}'s Profile</title>
+    <style>
+        body {
+            color: white; 
+        }
+        .background {
+            height: 100vh; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000435; 
+        }
+        .card-header {
+            color: black
+        }
+        .gravatar-img {
+            width: 100px;     
+            height: 100px;    
+            object-fit: cover; 
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+    <div class="container mt-3">
+        <h1 class="text-center mb-4" style="color: white;">{{ user.username }}'s Public Profile</h1>
+        <div class="d-flex justify-content-center mt-4">
+            <div class="card text-bg-primary mb-3" style="width: 40rem; height: 30rem;">
+                <div class="card-body">
+                    <div class="container mt-5">
+                        <div class="form-group row mb-5 text-center">
+                            <img src="{{ user.gravatar }}" alt="Gravatar" class="gravatar-img">
+                        </div>
+                        <div class="form-group row mb-5">
+                            <p><strong>Username:</strong> {{ user.username }}</p>
+                        </div>
+                        <div class="form-group row mb-5">
+                            <p><strong>Languages:</strong> {{ user.languages }}</p>
+                        </div>
+                        <div class="form-group row mb-5">
+                            <p><strong>Availability:</strong> {{ user.availability }}</p>
+                        </div>  
+                    </div>                                        
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{% endblock %}
