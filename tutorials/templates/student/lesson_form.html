@@ -44,8 +44,6 @@
         <div class="col-md-6">
             <form method="POST" class="p-4 shadow rounded" style="background-color: #1a1a4d; color: white;">
                 {% csrf_token %}
-
-                <!-- Subject Field -->
                 <div class="mb-3">
                     <label for="id_subject" class="form-label">Subject</label>
                     <select name="subject" class="form-control" id="id_subject">
@@ -56,8 +54,6 @@
                     </select>
                     <div class="form-text">Please specify the subject for your lesson.</div>
                 </div>
-
-                <!-- Frequency Field (Dropdown) -->
                 <div class="mb-3">
                     <label for="id_frequency" class="form-label">Frequency</label>
                     <select name="frequency" class="form-control" id="id_frequency">
@@ -68,8 +64,6 @@
                     </select>
                     <div class="form-text">How often would you like to schedule the lesson?</div>
                 </div>
-                
-                <!-- Term Field (Dropdown) -->
                 <div class="mb-3">
                     <label for="id_term" class="form-label">Term</label>
                     <select name="term" class="form-control" id="id_term" {% if term_warning %}disabled{% endif %}>
@@ -84,8 +78,6 @@
                     <input type="hidden" name="term" value="{{ form.term.value }}">
                     {% endif %}
                 </div>
-
-                <!-- Start Time Field (Using the List of Hours) -->
                 <div class="mb-3">
                     <label for="id_start_time" class="form-label">Start Time</label>
                     <select name="start_time" class="form-control" id="id_start_time">
@@ -96,8 +88,6 @@
                     </select>
                     <div class="form-text">Please specify the start time for your lesson.</div>
                 </div>
-
-                <!-- Day of Week Field (Dropdown) -->
                 <div class="mb-3">
                     <label for="id_day_of_week" class="form-label">Day of the Week</label>
                     <select name="day_of_week" class="form-control" id="id_day_of_week">
@@ -108,8 +98,6 @@
                     </select>
                     <div class="form-text">Select the day of the week for your lesson.</div>
                 </div>
-
-                <!-- Duration Field (Dropdown) -->
                 <div class="mb-3">
                     <label for="id_duration" class="form-label">Duration</label>
                     <select name="duration" class="form-control" id="id_duration">
@@ -120,8 +108,6 @@
                     </select>
                     <div class="form-text">Select the duration for the lesson.</div>
                 </div>
-
-                <!-- Submit Button -->
                 {% if term_warning %}
                 <button type="submit" name="submit_anyway" class="btn btn-primary">{{ submit }}</button>
                 {% else %}

@@ -29,13 +29,11 @@ def tutor_payments(request):
     
     total_students = invoices.values('student').distinct().count()
     total_balance_due = sum(invoice.sum for invoice in invoices)
-   # next_payment_due =x invoices.order_by('due_date').first()  
 
     context = {
         'invoices': invoices,
         'total_students': total_students,
         'total_balance_due': total_balance_due,
-        #'next_payment_due': next_payment_due.student if next_payment_due else None,
     }
 
     return render(request, 'tutor/tutor_payment.html', context)
