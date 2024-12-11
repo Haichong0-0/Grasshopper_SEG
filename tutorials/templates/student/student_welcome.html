@@ -1,5 +1,4 @@
-{% extends 'tutor_dashboard/tutor_base.html' %}
-
+{% extends 'student/student_base.html' %}
 {% block content %}
 <div>
 <head>
@@ -12,7 +11,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(to right, #007bff, #6f42c1); /* Background gradient */
+            background: linear-gradient(to right, #007bff, #6f42c1); 
             color: white;
             text-align: center;
         }
@@ -25,7 +24,7 @@
         <div class="container">
             <h1 class="display-3 mb-4">Welcome to Code Tutors!</h1>
             <p class="lead mb-4">We are excited to have you here. Explore our services and get started today.</p>
-            <a href="{% url 'tutor_dashboard' %}" class="btn btn-lg btn-light">Get Started</a>
+            <a href="{% url 'student_dashboard' %}" class="btn btn-lg btn-light">Get Started</a>
         </div>
     </div>
 </div>

@@ -6,6 +6,9 @@ from datetime import datetime, timedelta
 from django.db.models import Q
 from tutorials.models import Tutor, Subjects
 
+    # vincent: TODO: add Docstrings for all classes and methods 
+    # vincent: TODO: Docstrings on multiple lines for better readibilty
+    # vincent: TODO: remove spacings within functions
 
 @login_required
 def student_dashboard(request):
@@ -14,7 +17,7 @@ def student_dashboard(request):
         'user': 'Student!',
     }
 
-    return render(request, 'student_dashboard_templates/student_dashboard_in.html', context)
+    return render(request, 'student/student_dashboard_in.html', context)
 
 @login_required
 def lesson_create_view(request):
@@ -52,7 +55,7 @@ def lesson_create_view(request):
             if Lesson.objects.filter(student=student, subject=lesson.subject).exists():
                 form.add_error('subject', 'You already have requested a lesson for this subject.')
                 # print("Lesson's tutor before: ", lesson.tutor.username)
-                return render(request, 'student_dashboard_templates/lesson_form.html', {
+                return render(request, 'student/lesson_form.html', {
                     'form': form,
                     'term_warning': term_warning,
                     'submit': submit,
@@ -88,7 +91,7 @@ def lesson_create_view(request):
                     submit = 'Submit Anyway'
                     button_class = 'btn-danger'
 
-                    return render(request, 'student_dashboard_templates/lesson_form.html', {
+                    return render(request, 'student/lesson_form.html', {
                         'form': form, 
                         'term_warning': term_warning,
                         'submit': submit,
@@ -102,7 +105,7 @@ def lesson_create_view(request):
     else:
         form = LessonForm() 
     
-    return render(request, 'student_dashboard_templates/lesson_form.html', {
+    return render(request, 'student/lesson_form.html', {
         'form': form, 
         'term_warning': term_warning, 
         'submit': submit, 
@@ -118,11 +121,11 @@ def student_invoices(request):
     context = {
         'invoices': invoices,
     }
-    return render(request, 'student_dashboard_templates/student_invoices.html', context)
+    return render(request, 'student/student_invoices.html', context)
 
 @login_required
 def student_welcome(request):
-    return render(request, 'student_dashboard_templates/student_welcome.html')
+    return render(request, 'student/student_welcome.html')
 
 
 @login_required
@@ -138,9 +141,8 @@ def student_schedule(request):
         pending_lessons = []
         rejected_lessons = []
 
-    return render(request, 'student_dashboard_templates/student_schedule.html', {
+    return render(request, 'student/student_schedule.html', {
         'confirmed_lessons': confirmed_lessons,
         'pending_lessons': pending_lessons,
         'rejected_lessons': rejected_lessons,
     })
-

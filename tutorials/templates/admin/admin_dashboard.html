@@ -1,4 +1,4 @@
-{% extends 'admin_base.html' %}
+{% extends 'admin/admin_base.html' %}
 
 {% block title %}
     <title>Admin Dashboard - Task Manager</title>
@@ -15,7 +15,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Upcoming Lessons</h5>
                         <p class="card-text">You have x upcoming lessons this week.</p>
-                        <a href="{% url 'admin_lessons'%}" class="btn btn-light" disabled>View Lessons</a>  <!-- Placeholder button -->
+                        <a href="{% url 'admin_lessons'%}" class="btn btn-light" disabled>View Lessons</a>  Placeholder button
                     </div>
                 </div>
             </div>

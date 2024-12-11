@@ -1,4 +1,4 @@
-{% extends 'admin_base.html' %}
+{% extends 'admin/admin_base.html' %}
 {% block content %}
 
 <!doctype html>
@@ -147,7 +147,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for Invoice in pending_lessons %}
+                            {% for Invoice in invoice_detail %}
                             <tr>  
                                 <td>{{ Invoice.orderNo }}</td>
                                 <td>{{ Invoice.tutor.first_name }} {{ Invoice.tutor.last_name }}</td>

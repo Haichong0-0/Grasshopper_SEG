@@ -32,53 +32,68 @@ from django.views.generic import CreateView, ListView, DeleteView
 
 @login_required
 def admin_dashboard(request):
-    """Display the admin's dashboard."""
+    """  
+    Display the admin's dashboard.
+    """
+    # vincent: Docstrings on 3 lines for better readibilty (remove these comments in final version)
+    # vincent: TODO: change all Docstrings to multiple lines
+    # vincent: TODO: remove spacings within functions
 
     current_user = request.user
     if (current_user.type_of_user == 'admin'):
 
         print("current_user(admin_dashboard): ", current_user.type_of_user)
-        return render(request, 'admin_dashboard.html', {'user': current_user})
+        return render(request, 'admin/admin_dashboard.html', {'user': current_user})
     else:
         return render(request, 'access_denied.html', {'user': current_user})
 
 @login_required
 def tutor_dashboard(request):
-    """Display the tutor's dashboard."""
+    """
+    Display the tutor's dashboard.
+    """
 
     current_user = request.user
     if (current_user.type_of_user == 'tutor'):
         print("current_user(tutor_dashboard): ", current_user)
-        return render(request, 'tutor_dashboard/tutor_dashboard.html', {'user': current_user})
+        return render(request, 'tutor/tutor_dashboard.html', {'user': current_user})
     else:
         return render(request, 'access_denied.html', {'user': current_user})
 
 @login_required
 def student_dashboard(request):
-    """Display the student's dashboard."""
+    """
+    Display the student's dashboard.
+    """
 
     current_user = request.user
     if (current_user.type_of_user == 'student'):
         print("current_user(student_dashboard): ", current_user)
-        return render(request, 'student_dashboard.html', {'user': current_user})
+        return render(request, 'student/student_dashboard.html', {'user': current_user})
     else:
         return render(request, 'access_denied.html', {'user': current_user})
 
 
 @login_prohibited
 def home(request):
-    """Display the application's start/home screen."""
-    print(request.user.is_authenticated) # for testing purposes
+    """
+    Display the application's start/home screen.
+    """
+    print(request.user.is_authenticated) # vincent: TODO: (remove this line in final version)for testing purposes
     return render(request, 'home.html')
 
 
 class LoginProhibitedMixin:
-    """Mixin that redirects when a user is logged in."""
+    """
+    Mixin that redirects when a user is logged in.
+    """
 
     redirect_when_logged_in_url = None
 
     def dispatch(self, *args, **kwargs):
-        """Redirect when logged in, or dispatch as normal otherwise."""
+        """
+        Redirect when logged in, or dispatch as normal otherwise.
+        """
         if self.request.user.is_authenticated:
             return self.handle_already_logged_in(*args, **kwargs)
         return super().dispatch(*args, **kwargs)
@@ -89,7 +104,9 @@ class LoginProhibitedMixin:
         return redirect(url)
 
     def get_redirect_when_logged_in_url(self):
-        """Returns the url to redirect to when not logged in."""
+        """
+        Returns the url to redirect to when not logged in.
+        """
         if self.redirect_when_logged_in_url is None:
             raise ImproperlyConfigured(
                 "LoginProhibitedMixin requires either a value for "
@@ -101,20 +118,26 @@ class LoginProhibitedMixin:
 
 
 class LogInView(LoginProhibitedMixin, View):
-    """Display login screen and handle user login."""
+    """
+    Display login screen and handle user login.
+    """
 
     http_method_names = ['get', 'post']
     redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
 
     def get(self, request):
-        """Display log in template."""
+        """
+        Display log in template.
+        """
 
         self.next = request.GET.get('next') or ''
         print("get(): ", self.next)
         return self.render()
 
     def post(self, request):
-        """Handle log in attempt."""
+        """
+        Handle log in attempt.
+        """
 
         form = LogInForm(request.POST)
         self.next = request.POST.get('next') or settings.REDIRECT_URL_WHEN_LOGGED_IN
@@ -142,63 +165,80 @@ class LogInView(LoginProhibitedMixin, View):
         return self.render()
 
     def render(self):
-        """Render log in template with blank log in form."""
+        """
+        Render log in template with blank log in form.
+        """
 
         form = LogInForm()
         return render(self.request, 'log_in.html', {'form': form, 'next': self.next})
 
 
 def log_out(request):
-    """Log out the current user"""
+    """
+    Log out the current user
+    """
 
     logout(request)
     return redirect('home')
 
 
 class PasswordView(LoginRequiredMixin, FormView):
-    """Display password change screen and handle password change requests."""
+    """
+    Display password change screen and handle password change requests.
+    """
 
     template_name = 'password.html'
     form_class = PasswordForm
 
     def get_form_kwargs(self, **kwargs):
-        """Pass the current user to the password change form."""
+        """
+        Pass the current user to the password change form.
+        """
 
         kwargs = super().get_form_kwargs(**kwargs)
         kwargs.update({'user': self.request.user})
         return kwargs
 
     def form_valid(self, form):
-        """Handle valid form by saving the new password."""
+        """
+        Handle valid form by saving the new password.
+        """
 
         form.save()
         login(self.request, self.request.user)
         return super().form_valid(form)
 
     def get_success_url(self):
-        """Redirect the user after successful password change."""
+        """
+        Redirect the user after successful password change.
+        """
 
         messages.add_message(self.request, messages.SUCCESS, "Password updated!")
         return reverse('dashboard')
 
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
-    """Display user profile editing screen, and handle profile modifications."""
+    """
+    Display user profile editing screen, and handle profile modifications.
+    """
 
     model = UserForm
     template_name = "profile.html"
     form_class = UserForm
 
     def get_object(self):
-        """Return the object (user) to be updated."""
+        """
+        Return the object (user) to be updated.
+        """
         user = self.request.user
         return user
 
     def get_success_url(self):
-        """Return redirect URL after successful update."""
+        """
+        Return redirect URL after successful update.
+        """
         messages.add_message(self.request, messages.SUCCESS, "Profile updated!")
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
-
 
 
 class UserListView(ListView):
@@ -207,7 +247,9 @@ class UserListView(ListView):
     context_object_name = 'users'
 
     def get_queryset(self):
-        """Customize the queryset to fetch all users."""
+        """
+        Customize the queryset to fetch all users.
+        """
         return User.objects.all()
 
 
@@ -217,11 +259,13 @@ def is_admin(user):
 @login_required
 @user_passes_test(is_admin)
 def admin_lessons(request):
-    """lessons page for admins"""
+    """
+    lessons page for admins
+    """
 
     context = {}
 
-    return render(request, 'admin_lessons.html', context)
+    return render(request, 'admin/admin_lessons.html', context)
 
 """@login_required
 def tutor_dashboard(request):
@@ -232,62 +276,76 @@ def tutor_dashboard(request):
         'gravatar': request.user.gravatar(),
     }
     
-    return render(request, 'tutor_dashboard.html', context)
+    return render(request, 'tutortutor_dashboard.html', context)
 """
 
 #@login_required
 def tutor_lessons(request):
-    """lessons page for tutors"""
+    """
+    lessons page for tutors
+    """
 
-    context = {
+    context = {}
 
-    }
-
-    return render(request, 'tutor_lessons.html', context)
+    return render(request, 'tutor/tutor_lessons.html', context)
 
 class SignUpView(LoginProhibitedMixin, FormView): 
-    """Display the sign-up screen and handle sign-ups."""
+    """
+    Display the sign-up screen and handle sign-ups.
+    """
 
     form_class = SignUpForm
     template_name = "sign_up.html"
     redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
 
     
-    def get_form_kwargs(self):
+    def get_form_kwargs(self)->dict:       
+        """
+        get all sign_up_form data in dictionary
+        """
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request  # Pass the request object
-
-        print('coming from get_form_kwargs: ', kwargs)  # Deyu: for testing
+        print('coming from get_form_kwargs: ', kwargs)  # vincent: TODO: instead of logging, print instead. log instead
         return kwargs
 
-    def get_context_data(self, **kwargs):
-        # Add a custom message based on the user_type
+    def get_context_data(self, **kwargs)->dict:
+        """
+        get context_data with sign_up_form
+        """
         context = super().get_context_data(**kwargs)
         variation = self.request.GET.get('variation')
-
+        # Add a custom message based on the user_type
         if variation == 'student':
             context['message'] = "Student Sign-Up Form"
         elif variation == 'tutor':
             context['message'] = "Tutor Sign-Up Form"
-
         context['user_type'] = variation
         return context
 
-    def form_valid(self, form):
+    def form_valid(self, form)-> HttpResponse:
+        """
+        Handle valid form submission.
+
+        This method saves the form, logs in the user associated with 
+        the form, and then calls the parent class's `form_valid` method.
+        """
         self.object = form.save()
         login(self.request, self.object)
         return super().form_valid(form)
     
-    def form_invalid(self, form):
-        """Log form errors for debugging."""
+    def form_invalid(self, form)-> HttpResponse:
+        """
+        Log form errors for debugging.
+        """
         print("Form errors:", form.errors)  # Log errors to console
         return super().form_invalid(form) 
 
-    def get_success_url(self):
-        """Redirect based on user type."""
-
+    def get_success_url(self)-> HttpResponse:
+        """                 # seperate this comment to 3 lines for readibility
+        Redirect user to their respective dashboard after sign up based on user type.
+        """
         user = self.request.user
-        if user.type_of_user=="admin":   # Admin user
+        if user.type_of_user=="admin":   
             return reverse('admin_dashboard')
         elif user.type_of_user=="tutor":  
             return reverse('tutor_dashboard')
@@ -300,80 +358,73 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
 @login_required
 @user_passes_test(is_admin)
-def admin_welcome(request):
-    """welcome page for admins"""
-
-    context = {
-
-    }
-
-    return render(request, 'tutor_dashboard/tutor_schedule.html', context)
+def admin_welcome(request)-> HttpResponse:
+    """
+    welcome page for admins
+    """
+    return render(request, 'admin/admin_welcome.html', context = {})
 
 
-# @login_required
-def tutor_welcome(request):
-    """welcome page for tutors"""
+@login_required
+def tutor_welcome(request)-> HttpResponse:
+    """
+    welcome page for tutors
+    """
+    return render(request, 'tutor/tutor_welcome.html', context = {})
 
-    context = {
-
-    }
-
-    return render(request, 'tutor_dashboard/tutor_welcome.html', context)
-
-
-def leave_message(request):
+def leave_message(request)-> HttpResponse:      
+    """
+    student leaving messages for admins
+    """
     if request.method == 'POST':
+        # saving student message request 
         form = MessageForm(request.POST)
         if form.is_valid():
             message = form.save(commit=False)
             message.student = request.user.student
             message.save()
             return redirect('student_dashboard')
+    form = MessageForm()
+    return render(request, 'student/leave_message.html', {'form': form})
 
-    else:
-        form = MessageForm()
-        return render(request, 'student_dashboard_templates/leave_message.html', {'form': form})
-
-
-
-
-
-
-def get_tutor(time, day, subject):
-
-
-    print(time, day, subject.capitalize())
+def get_tutor(subject)->list:
+    """
+    return available list of tutors on the basis on subjects
+    """
     available_tutors = set()
-
-    print("tutor_list 999", Subjects.objects.get(subject_name=subject.capitalize()).tutor_list)
+    # fetching tutor list from Subjects table, if subject matches 
     tutor_list = Subjects.objects.get(subject_name=subject.capitalize()).tutor_list
-
-    for tutor in tutor_list:
+    for tutor in tutor_list:       
+        # adding tutor objects to available_tutors list 
         available_tutors.add(Tutor.objects.get(username=tutor))
-    
     return list(available_tutors)
 
 
-def get_lesson_data():
+def get_lesson_data()->dict:        # vincent TODO: complete refactoring (remove this comment in final version)
+    """
+    extracting all lesson datas with associated available tutors
+    """
     context = {}
 
+    # filtering lesson data on the basis of status, and sorting the data by 'start_time' in descending order
     confirmed_lessons = Lesson.objects.filter(status='Confirmed').order_by('-start_time')
     pending_lessons = Lesson.objects.filter(Q(status='Pending') | Q(status='Late')).order_by('-start_time')
     rejected_lessons = Lesson.objects.filter(status='Rejected').order_by('-start_time')
 
     for lesson in pending_lessons:
         lesson.duration = lesson.duration // 60      # Convert duration to hours
-        print("subject: ", lesson.start_time, lesson.day_of_week, lesson.subject,)
-        lesson.available_tutors=get_tutor(time=lesson.start_time, day=lesson.day_of_week, subject=lesson.subject)
-   
+        # get available_tutor by calling get_tutor function
+        lesson.available_tutors=get_tutor(subject=lesson.subject)
+        # combining date with time to calculate lesson_start_time and lesson_end_time
         lesson_start_time = datetime.combine(datetime.today(), lesson.start_time)
         lesson_end_time = lesson_start_time + timedelta(minutes=int(lesson.duration))
 
         filtered_tutors = []
         for tutor in lesson.available_tutors:
             try:
-                un = tutor.username
-                tutor = Tutor.objects.get(username=un)
+                tutor_username = tutor.username
+                tutor = Tutor.objects.get(username=tutor_username)
+                # filtering available tutor by start_time, end_time and day
                 if not TutorAvailability.objects.filter(
                     tutor=tutor,
                     day=lesson.day_of_week,
@@ -381,164 +432,128 @@ def get_lesson_data():
                     endtime__gt=lesson_start_time.time()
                 ).exists():
                     filtered_tutors.append(tutor)
-            except Tutor.DoesNotExist:
-                print(f"Tutor with username '{un}' does not exist.")
-
+            except Exception as e:
+                print("Exception occurred while filtering tutors: ", e)
+        # updating Lesson object with available tutors
         lesson.available_tutors = filtered_tutors
-
-
+    # updating context with lesson details
     context["confirmed_lessons"] = confirmed_lessons
     context["pending_lessons"] = pending_lessons       
     context["rejected_lessons"] = rejected_lessons
-    # context["available_tutors"] = TutorAvailability.objects.all()
-    
-
     return context
 
 @login_required
 @user_passes_test(is_admin)
-def admin_schedule(request):
-    """schedule page for tutors"""
-
-
+def admin_schedule(request)-> HttpResponse:
+    """
+    schedule page for admin to manage lesson requests
+    """
     if request.user.is_authenticated and hasattr(request.user, 'admin'):
+        # getting lesson_data for admin to manage, with a list of available tutors
         context = get_lesson_data()
-
-
-    return render(request, 'admin_schedule.html', context)
+    return render(request, 'admin/admin_schedule.html', context)
 
 @login_required
-def tutor_schedule(request):
-    """schedule page for tutors"""
-
-    context = {
-
-    }
-
-    return render(request, 'tutor_schedule.html', context)
+def tutor_schedule(request)-> HttpResponse:
+    """
+    schedule page for tutors
+    """
+    return render(request, 'tutor/tutor_schedule.html', context={})
 
 @login_required
 @user_passes_test(is_admin)
-def admin_payment(request):
-    """payment page for admin"""
-
-    context = {
-
-    }
-
+def admin_payment(request)-> HttpResponse:
+    """
+    payment page for admin
+    """
+    context = {}
+    # getting all invoice objects, sorted by orderNo, in descending order
     invoice_detail = Invoice.objects.all().order_by('-orderNo')
-    context["pending_lessons"] = invoice_detail 
-    # context["available_tutors"] = Tutor.objects.all()
-
-    return render(request, 'admin_payment.html', context)
+    context["invoice_detail"] = invoice_detail 
+    return render(request, 'admin/admin_payment.html', context)
 
 
 @login_required
-def tutor_payment(request):
+def tutor_payment(request)-> HttpResponse:
     """payment page for tutors"""
 
     invoices = []  # Return an empty queryset if the user is not a tutor
 
     context = {}
 
-    return render(request, 'tutor_payment.html', context)
+    return render(request, 'tutor/tutor_payment.html', context)
 
 @login_required
-def student_payment(request):
-    """payment page for admin"""
-
+def student_payment(request)-> HttpResponse:
+    """
+    payment page for admin
+    """
     if hasattr(request.user, 'student'):  # Ensure the user is a student
         invoices = Invoice.objects.filter(student=request.user.student).order_by('-orderNo')
     else:
         invoices = []  # Return an empty queryset if the user is not a student
-
     context = {
         'invoices': invoices,
     }
-
-    return render(request, 'student_payment.html', context)
+    return render(request, 'student/student_payment.html', context)
 
 @login_required
 @user_passes_test(is_admin)
-def admin_messages(request):
-    """payment page for admin"""
+def admin_messages(request)-> HttpResponse:
+    """
+    payment page for admin
+    """
+    context = {}
+    return render(request, 'admin/admin_payment.html', context)
 
-    context = {
-
-    }
-
-    return render(request, 'admin_payment.html', context)
-
-# working, without the tutoravailability function
-class ConfirmClassView(APIView):
-    
-    def post(self, request, lesson_id):
+# check the tutoravailability function
+class ConfirmClassView(APIView):        # Vincent: complete 'refactoring'
+    def post(self, request, lesson_id)-> HttpResponse:
+        """
+        accept button for admins to accept lesson requests from students
+        """
+        # get request data from POST request
         request_data = request.data
-        print('received the request with data', request.POST)       # testing
-        
+        # validate the incoming data
         serializer = LessonSerializer(data=request_data)
         if serializer.is_valid():
-            print('valid data: success')
+            # retreive the lesson object based on the lesson_id
             lesson_obj = Lesson.objects.get(lesson_id=lesson_id)
-            # price_per_class = Invoice.objects.price_per_class
-
-
-            invoice = Invoice.objects.filter(orderNo=lesson_obj.invoiceNo).first() 
-            if not invoice:
-                return redirect("admin_schedule")
-
-            price_per_class = invoice.price_per_class  
-            print(f"Price per class: {price_per_class}")
-
-
+            # checks if a tutor ID is provided in the POST request
             if(request.POST.get("tutor")):
+                # get the tutor object based on the provided tutor ID
                 tutor = Tutor.objects.get(id=request.POST.get("tutor"))  # Fetch the Tutor object
                 lesson_obj.tutor = tutor  # Assign the Tutor object
-
-                lesson_obj.status = "Confirmed"
+                lesson_obj.status = "Confirmed" # update its status
+                # calculate the no_of_classes
+                no_of_classes = lesson_obj.duration//60
+                # calculate the total price of classes
+                total_price = no_of_classes * 20
+                # create an invoice for the lesson
+                invoice = Invoice.objects.create(                
+                    tutor=Tutor.objects.get(id=request.POST.get("tutor")),
+                    student=Student.objects.get(id=lesson_obj.student_id),
+                    topic=lesson_obj.subject,
+                    no_of_classes=no_of_classes,
+                    total_sum=total_price
+                )
+                lesson_obj.invoice_no = invoice
                 lesson_obj.save()
-
-            
-            no_of_classes = lesson_obj.duration//60
-            print("no_of_classes: ", type(no_of_classes), no_of_classes)
-            
-
-            total = no_of_classes * price_per_class
-
-        try:
-            Invoice.objects.create(                
-                tutor=Tutor.objects.get(id=request.POST.get("tutor")),
-                student=Student.objects.get(id=lesson_obj.student_id),
-                topic=lesson_obj.subject,
-                no_of_classes=no_of_classes,
-                price_per_class=price_per_class,
-                total_sum=total
-            )
-        except Exception as e:
-            print(f"Error creating invoice: {e}")
-            return redirect("admin_schedule")
-
-        else:
-            return redirect("admin_schedule")
+        return redirect("admin_schedule")
 
 
-class RejectClassView(APIView):
-    
-    def post(self, request, lesson_id):
+class RejectClassView(APIView):  # Vincent: complete 'refactoring'
+    def post(self, request, lesson_id)-> HttpResponse:
+        """
+        reject button for admins to reject lesson requests from students
+        """
+        # get the data from the POST request
         request_data = request.data
-        print('RejectClassView', request.POST)       # testing
-        
+        # validate the lesson object based on the lesson_id
         serializer = LessonSerializer(data=request_data)
         if serializer.is_valid():
-            print('RejectClassView valid data: success')
+            # get the lesson object based on the lesson_id
             lesson_obj = Lesson.objects.get(lesson_id=lesson_id)
-
-            print("inside if-statement.")
-            lesson_obj.status = "Rejected"
+            lesson_obj.status = "Rejected"      # update the lesson status
             lesson_obj.save()
-
-            return redirect("admin_schedule")
-
-        else:
-            return redirect("admin_schedule")
-    
+        return redirect("admin_schedule")

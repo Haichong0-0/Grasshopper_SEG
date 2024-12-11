@@ -3,10 +3,16 @@ from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from libgravatar import Gravatar
+from django.http import HttpRequest
 
 
 class User(AbstractUser):
-    """Model used for user authentication, and team member related information."""
+    """
+    Model used for user authentication, and team member related information.
+    """
+    # vincent: Docstrings on 3 lines for better readibilty (remove these comments in final version)
+    # vincent: TODO: change all Docstrings to multiple lines
+    # vincent: TODO: remove spacings within functions
 
     username = models.CharField(
         max_length=30,
@@ -35,19 +41,19 @@ class User(AbstractUser):
 
         ordering = ['last_name', 'first_name']
 
-    def full_name(self):
+    def full_name(self) -> str:
         """Return a string containing the user's full name."""
 
         return f'{self.first_name} {self.last_name}'
 
-    def gravatar(self, size=120):
+    def gravatar(self, size=120) -> str:
         """Return a URL to the user's gravatar."""
 
         gravatar_object = Gravatar(self.email)
         gravatar_url = gravatar_object.get_image(size=size, default='mp')
         return gravatar_url
 
-    def mini_gravatar(self):
+    def mini_gravatar(self) -> str:
         """Return a URL to a miniature version of the user's gravatar."""
         
         return self.gravatar(size=60)
@@ -56,13 +62,12 @@ class Admin(User):
 
     type_of_user = 'admin'
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         self.is_staff = True
         self.superuser = True
         super().save(*args, **kwargs)
     
-    def __str__(self):
-        # return (f"Admin: {self.user.full_name()}")
+    def __str__(self) -> str:
         return f"Admin: {self.get_full_name()}"
 
 
@@ -102,13 +107,10 @@ class Tutor(User):
 class Subjects(models.Model):  
 
     subject_name = models.CharField(max_length=100, unique=True)    
-
     timings = models.CharField(max_length=255, blank=True)
     bio = models.CharField(max_length=520, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     tutor_list = models.JSONField(default=list)
-
-
 
     def setTimings(self, timings_list):
         self.Timings = ','.join(timings_list)
@@ -140,16 +142,13 @@ class TutorAvailability(models.Model):
     endtime = models.TimeField(blank=False)
 
 class Invoice(models.Model):   
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)      # vincent: need this to make lesson acceptance, remove this comment in final version
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)  # vincent: need this to make lesson acceptance, remove this comment in final version
     orderNo = models.AutoField(primary_key=True)
-    
-    no_of_classes = models.IntegerField(blank=False)
+    topic = models.CharField(max_length=100, blank=False)       # vincent: need this to make lesson acceptance, remove this comment in final version
+    no_of_classes = models.IntegerField(blank=False)           
     price_per_class = models.DecimalField(max_digits=10, decimal_places=2, blank=False, default=20)
-    totalsum = models.DecimalField(max_digits=10, decimal_places=2, blank=False, default=0)
-    
-    def calc_sum(self):
-        self.totalsum = self.no_of_classes * self.price_per_class
-        return self.totalsum
-
+    total_sum = models.DecimalField(max_digits=10, decimal_places=2, blank=False, default=0)
 
 class Lesson(models.Model):  
 
@@ -181,7 +180,7 @@ class Lesson(models.Model):
         ('fortnightly', 'Fortnightly'),
     ]
     
-    DURATION_CHOICES = [        # add later
+    DURATION_CHOICES = [        
         (60, '1 hour'),
         (120, '2 hours')
     ]
@@ -215,19 +214,15 @@ class Lesson(models.Model):
     tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='lessons') 
     day_of_week = models.CharField(max_length=10, choices=DAYS)
     start_time = models.TimeField()
-    
-    
-
-    
     duration = models.IntegerField(choices=DURATION_CHOICES, default=60)
     frequency = models.CharField(max_length=20, choices=FREQUENCY_CHOICES)
     term = models.CharField(max_length=50, choices=TERMS)
-
     subject = models.CharField(max_length=100, choices=SUBJECTS)
-    
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
-    invoiceNo = models.ForeignKey(Invoice, null = True,on_delete=models.CASCADE)
+    invoice_no = models.ForeignKey(Invoice, null = True,on_delete=models.CASCADE)      
+    
 
+# vincent TODO: not used in my version, and everything works perfectly fine
 # class Invoice(models.Model): 
 #     orderNo = models.AutoField(primary_key=True)
 #     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
@@ -237,15 +232,11 @@ class Lesson(models.Model):
 #     price_per_class = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
 #     total_sum = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
  
-    
 
-
-class Message(models.Model): #Arjan
+class Message(models.Model): 
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='messages')
     admin = models.ForeignKey(Admin, on_delete=models.SET_NULL, null=True, blank=True)
     subject = models.CharField(max_length=255)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('resolved', 'Resolved')], default='pending')
-
- 
