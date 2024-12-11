@@ -513,7 +513,7 @@ def admin_messages(request)-> HttpResponse:
     payment page for admin
     """
     context = {}
-    return render(request, 'admin/admin_payment.html', context)
+    return render(request, 'admin/admin_messages.html', context)
 
 # check the tutoravailability function
 class ConfirmClassView(APIView):        # Vincent: complete 'refactoring'
