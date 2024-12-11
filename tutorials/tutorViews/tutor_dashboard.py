@@ -15,7 +15,7 @@ def tutor_schedule(request):
         status='Confirmed'
     ).order_by('start_date', 'start_time')
 
-    return render(request, 'tutor_dashboard/tutor_schedule.html', {
+    return render(request, 'tutor/tutor_schedule.html', {
         'confirmed_lessons': confirmed_lessons,
         'pending_lessons': pending_lessons,
         'rejected_lessons': rejected_lessons,
@@ -38,7 +38,7 @@ def tutor_payments(request):
         'next_payment_due': next_payment_due.student if next_payment_due else None,
     }
 
-    return render(request, 'tutor_dashboard/tutor_payment.html', context)
+    return render(request, 'tutor/tutor_payment.html', context)
 
 
 @login_required
@@ -57,9 +57,13 @@ def tutor_lessons(request):
         'upcoming_lessons_count': upcoming_lessons.count(),
     }
 
-    return render(request, 'tutor_dashboard/lessons.html', context)
+    return render(request, 'tutor/lessons.html', context)
 
 
+@login_required
+@user_type_required('tutor')
+def tutor_profile(request):
+    return render(request, 'tutor/tutor_profile.html')
 
 
 @login_required
@@ -78,7 +82,7 @@ def sort_lessons(request):
     else:
         lessons = Lesson.objects.all()  # no sorting
     
-    return render(request, 'your_template.html', {'lessons': lessons})
+    return render(request, '.html', {'lessons': lessons})
 
 
 @login_required
@@ -97,4 +101,6 @@ def sort_invoices(request):
     else:
         invoice = Invoice.objects.all()  # no sorting
     
-    return render(request, 'your_invoice_template.html', {'invoices': invoice})
+    return render(request, '.html', {'invoices': invoice})
+
+
