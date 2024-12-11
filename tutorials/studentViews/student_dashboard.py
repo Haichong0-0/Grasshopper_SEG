@@ -34,10 +34,7 @@ def lesson_create_view(request):
         if form.is_valid():
             lesson = form.save(commit=False)
         
-            try:
-                student = request.user.student 
-            except Student.DoesNotExist:
-                return redirect('some_error_page')
+            student = request.user.student 
             
             lesson.student = student
             
@@ -102,7 +99,7 @@ def lesson_create_view(request):
 
     else:
         form = LessonForm() 
-    
+
     return render(request, 'student/lesson_form.html', {
         'form': form, 
         'term_warning': term_warning, 
@@ -114,8 +111,8 @@ def lesson_create_view(request):
 @login_required
 @user_type_required('student')
 def student_invoices(request):
-
-    invoices = Invoice.objects.all()
+    student = request.user
+    invoices = Invoice.objects.filter(student=student).order_by('orderNo')
 
     context = {
         'invoices': invoices,
@@ -131,16 +128,11 @@ def student_welcome(request):
 @login_required
 @user_type_required('student')
 def student_schedule(request):
-    if request.user.is_authenticated and hasattr(request.user, 'student'):
-        confirmed_lessons = Lesson.objects.filter(student=request.user, status='Confirmed').order_by('start_time')
-        pending_lessons = Lesson.objects.filter(
+    confirmed_lessons = Lesson.objects.filter(student=request.user, status='Confirmed').order_by('start_time')
+    pending_lessons = Lesson.objects.filter(
             Q(student=request.user) & (Q(status='Pending') | Q(status='Late'))
         ).order_by('start_time')
-        rejected_lessons = Lesson.objects.filter(student=request.user, status='Rejected').order_by('start_time')
-    else:
-        confirmed_lessons = []
-        pending_lessons = []
-        rejected_lessons = []
+    rejected_lessons = Lesson.objects.filter(student=request.user, status='Rejected').order_by('start_time')
 
     return render(request, 'student/student_schedule.html', {
         'confirmed_lessons': confirmed_lessons,
@@ -161,10 +153,10 @@ def leave_message(request):
             message.student = request.user.student
             message.save()
             return redirect('student_dashboard')
-
+        else:
+            return render(request, 'student/leave_message.html', {'form': form}) 
     else:
         form = MessageForm()
-
         return render(request, 'student/leave_message.html', {'form': form})
 
 

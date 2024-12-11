@@ -178,16 +178,14 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
 class LessonForm(forms.ModelForm):
     "Form for lessons"
     class Meta:
-        # define the model and its associated fields
         model = Lesson
         fields = ['subject','frequency','term','start_time', 'day_of_week', 'duration']
-    # define available start tiem for lessons as choices(9am to 5pm)
     AVAILABLE_HOURS = [(f'{hour}:00', f'{hour}:00') for hour in range(9, 18)]
     # override the start_time field with a ChoiceField using the available hours
     start_time = forms.ChoiceField(
-        choices=AVAILABLE_HOURS,    # set the available time options
+        choices=AVAILABLE_HOURS,    
         widget=forms.Select(attrs={'class': 'form-control'}),
-        required=True,          # set the field as mandatory
+        required=True,    
     )
         
 class MessageForm(forms.ModelForm):
@@ -197,6 +195,5 @@ class MessageForm(forms.ModelForm):
         model = Message
         # specify the fields to include the form
         fields = ['subject', 'content']
-
 
 # Vincent: TODO: are the following used??? remove if not?

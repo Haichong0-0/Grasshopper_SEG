@@ -112,14 +112,14 @@ class Subjects(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     tutor_list = models.JSONField(default=list)
 
-    def setTimings(self, timings_list):
-        self.Timings = ','.join(timings_list)
+    # def setTimings(self, timings_list):
+    #     self.Timings = ','.join(timings_list)
 
-    def getTimings(self):
-        return self.Timings.split(',')
+    # def getTimings(self):
+    #     return self.Timings.split(',')
 
-    def __str__(self):
-            return self.subject_name
+    # def __str__(self):
+    #         return self.subject_name
 
 class Student(User):
     type_of_user = 'student'
