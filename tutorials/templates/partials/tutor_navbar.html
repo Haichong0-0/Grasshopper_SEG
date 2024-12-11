@@ -1,16 +1,3 @@
-<style>
-  .nav-link.active {
-      background-color: #ffffff; 
-  }
-
-  .navbar-toggler {
-      color: #ffffff;
-  }
-
-  .nav-link {
-      color: #ffffff; 
-  }
-  </style>
 <nav class="navbar navbar-expand-lg" style="background-color: #001540;">
   <div class="container">
     <a class="navbar-brand" href="{% url 'tutor_welcome' %}">
@@ -31,9 +18,7 @@
             <a class="nav-link {% if request.path == '/tutor/payment' %}active{% endif %}"  href="{% url 'tutor_payment' %}">Payment</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {% if request.path == '/tutor/messages' %}active{% endif %}" href="{% url 'tutor_messages' %}">Messages</a>
-          <li class="nav-item">
-            <a class="nav-link {% if request.path == '/tutor/payment' %}active{% endif %}" href="{% url 'tutor_payment' %}">Payment</a>
+            <a class="nav-link {% if request.path == '/tutor/payment' %}active{% endif %}"  href="{% url 'tutor_payment' %}">Payment</a>
           </li>
         </ul>
   </div>

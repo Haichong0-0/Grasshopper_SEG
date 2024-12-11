@@ -20,8 +20,8 @@ from django.contrib import admin
 from django.urls import path
 from tutorials import views
 from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule, student_welcome
-from tutorials.tutorViews.tutor_dashboard import tutor_schedule, tutor_lessons, tutor_payments # vincent TODO: remove in final version??
-from tutorials.views import leave_message
+from tutorials.tutorViews.tutor_dashboard import tutor_schedule, tutor_lessons, tutor_payments
+from tutorials.views import leave_message, user_profile
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -86,6 +86,10 @@ urlpatterns = [
     path('lesson/<int:lesson_id>/reject_class/', views.RejectClassView.as_view(), name='reject_class'),    
     path('student_welcome/', student_welcome, name='student_welcome'),
     path('leave-message/', leave_message, name='leave_message'),
+
+
+    path('users/<str:username>/', user_profile, name='user_profile'),
+    
 
 ]
 

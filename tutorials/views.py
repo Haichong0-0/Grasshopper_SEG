@@ -19,6 +19,7 @@ from rest_framework.response import Response
 from .serialiser import LessonSerializer
 from datetime import datetime, date, timedelta
 from django.db.models import Q
+from django.shortcuts import render, get_object_or_404
 
 
 #############################################################
@@ -241,15 +242,20 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
 
-class UserListView(ListView):
+
+class UserListView(ListView): #need to make test
     model = User
     template_name = 'user_list.html'
     context_object_name = 'users'
 
     def get_queryset(self):
-        """
-        Customize the queryset to fetch all users.
-        """
+        query = self.request.GET.get('q', '')
+        if query:
+            return User.objects.filter(
+                Q(username__icontains=query) |
+                Q(first_name__icontains=query) |
+                Q(email__icontains=query)
+            )
         return User.objects.all()
 
 
@@ -559,4 +565,24 @@ class RejectClassView(APIView):  # Vincent: complete 'refactoring'
             lesson_obj = Lesson.objects.get(lesson_id=lesson_id)
             lesson_obj.status = "Rejected"      # update the lesson status
             lesson_obj.save()
+
         return redirect("admin_schedule")
+
+
+
+def user_profile(request, username):
+   
+    user = get_object_or_404(User, username=username)
+
+    tutor = None
+    availability_slots = []
+    if hasattr(user, 'tutor_profile'):
+        tutor = user.tutor_profile  
+        availability_slots = TutorAvailability.objects.filter(tutor=tutor)  
+
+    return render(request, 'user_profile.html', {
+        'user': user,
+        'tutor': tutor,
+        'availability_slots': availability_slots,
+    })
+

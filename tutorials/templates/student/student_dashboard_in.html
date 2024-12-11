@@ -1,5 +1,4 @@
-{% extends 'student/student_base.html' %}
-
+{% extends 'student_dashboard_templates/student_base.html' %}
 {% block title %}
     <title>Student Dashboard - Task Manager</title>
 {% endblock %}
@@ -10,7 +9,7 @@
         <title>Welcome Page</title>
         <style>
             body {
-                color: white; /* Set text color to white for the entire body */
+                color: white; 
             }
 
             .background {
@@ -26,7 +25,7 @@
         </style>
     </head>
 <body> 
-<div class=" background">
+<div class="background">
 <div class="container mt-5">
     <h1 class="text-center mb-4">Welcome to your Dashboard, {{ request.user.username }}</h1>
 
