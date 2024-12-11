@@ -188,10 +188,13 @@ def leave_message(request):
 
     else:
         form = MessageForm()
-        return render(request, 'student_dashboard_templates/leave_message.html', {'form': form})
+        return render(request, 'student/leave_message.html', {'form': form})
 
 
-
+@login_required
+@user_type_required('student')
+def student_profile(request):
+    return render(request, 'student/student_profile.html')
     
 '''
 @login_required
