@@ -4,39 +4,65 @@
     <title>Tutor Dashboard - Task Manager</title>
 {% endblock %}
 
-
 {% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <style>
+        body {
+            color: white; 
+        }
+
+        .background {
+            height: 100vh; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000435; 
+        }
+        .card-header {
+            color: black
+        }
+    </style>
+</head>
+<body> 
+<div class="background">
     <div class="container mt-5">
         <h1 class="text-center mb-4">Welcome to your Dashboard, {{ user.username }}</h1>
 
         <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="card text-white bg-primary mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Upcoming Lessons</h5>
-                        <p class="card-text">You have {{ upcoming_lessons_count }} upcoming lessons this week.</p>
-                        <a href="{% url 'tutor_schedule' %}" class="btn btn-light" {% if upcoming_lessons_count == 0 %}disabled{% endif %}>View Lessons</a>
-                    </div>
+
+        <div class="col-md-6">
+            <div class="card text-white mb-3" style="background-color: #1565c0;">
+                <div class="card-body">
+                    <h5 class="card-title">Upcoming Lessons</h5>
+                    <p class="card-text">You have {{ upcoming_lessons_count }} upcoming lessons this week.</p>
+                    <a href="{% url 'tutor_schedule' %}" class="btn btn-light" {% if upcoming_lessons_count == 0 %}disabled{% endif %}>View Lessons</a>
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-6">
-            <div class="card text-white bg-dark mb-3">
+
+        <div class="col-md-6">
+            <div class="card text-white mb-3" style="background-color: #5c6bc0;">
                 <div class="card-body">
                     <h5 class="card-title">View Invoices</h5>
-                    <p class="card-text">Access your payment statements.</p>
+                    <p class="card-text">Access your payment invoices.</p>
                     <a href="{% url 'invoices' %}" class="btn btn-light">View Payments</a>
                 </div>
             </div>
         </div>
-        </div>        
-            <div class="col-md-6">
-                <div class="card text-white bg-success mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Profile</h5>
-                        <p class="card-text">Update your profile information.</p>
-                        <a href="{% url 'profile' %}" class="btn btn-light" disabled>Edit Profile</a>  <!-- Placeholder button -->
-                    </div>
+    </div>
+
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+             <div class="card text-white mb-3" style="background-color: #00bcd4;">
+                <div class="card-body">
+                    <h5 class="card-title">Profile</h5>
+                    <p class="card-text">Update your profile information.</p>
+                    <a href="{% url 'profile' %}" class="btn btn-light" disabled>Edit Profile</a> <!-- Placeholder button -->
                 </div>
             </div>
         </div>
@@ -62,4 +88,7 @@
                 </div>
             </div>
         </div>
+    </div>
+    </div>
+    </body>
  {% endblock %}
