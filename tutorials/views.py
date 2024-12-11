@@ -576,6 +576,16 @@ class ConfirmClassView(APIView):        # Vincent: complete 'refactoring'
                 )
                 lesson_obj.invoice_no = invoice
                 lesson_obj.save()
+                # create a tutor availability for the lesson (mark the tutor unavailable during lesson time)
+                lesson_start_time = datetime.combine(datetime.today(), lesson_obj.start_time)
+                lesson_end_time = lesson_start_time + timedelta(minutes=int(lesson_obj.duration))
+                tutor_availability = TutorAvailability.objects.create(
+                    tutor=lesson_obj.tutor,
+                    day=lesson_obj.day_of_week,
+                    starttime=lesson_start_time,
+                    endtime = lesson_end_time
+                )
+                tutor_availability.save()
         return redirect("admin_schedule")
 
 

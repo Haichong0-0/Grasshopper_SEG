@@ -1,5 +1,4 @@
-{% extends 'admin/admin_base.html' %}
-
+{% extends 'student/student_base.html' %}
 {% block title %}
     <title>User Public Profile</title>
 {% endblock %}
@@ -54,55 +53,32 @@
         </style>
     </head>
     <body>
+        <div class="container mt-3">
+        <h2 class="text-center" style="font-size: 1.5rem; font-weight: 500; color: white;">
+            <i class="bi bi-person-circle" style="font-size: 1.4rem; margin-right: 10px;"></i> This is your Public Profile
+        </h2>
         <div class="background">
             <div class="card">
                 <div class="card-header">
-                    {{ user.username }}'s Public Profile
+                    {{ request.user.username }}'s Public Profile
                 </div>
                 <img src="{{ user.gravatar }}" alt="Gravatar" class="gravatar-img">
                 <div class="info">
-                    <strong>Username: </strong> {{ user.username }}
+                    <strong>Username: </strong> {{ request.user.username }}
                 </div>
                 <div class="info">
-                    <strong>Full Name: </strong> {{ user.full_name }}
+                    <strong>Full Name: </strong> {{ request.user.full_name }}
                 </div>
                 <div class="info">
-                    <strong>Email: </strong> {{ user.email }}
+                    <strong>Email: </strong> {{ request.user.email }}
                 </div>
                 <div class="info">
-                    <strong>Type: </strong> {{ user.type_of_user }}
+                    <strong>User Type: </strong> {{ request.user.type_of_user }}
                 </div>
-               
-                {% if type_of_user == 'tutor' %}
-                    <h2>Availability</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Day</th>
-                                <th>Start Time</th>
-                                <th>End Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for slot in availability_slots %}
-                                <tr>
-                                    <td>{{ slot.day }}</td>
-                                    <td>{{ slot.starttime }}</td>
-                                    <td>{{ slot.endtime }}</td>
-                                </tr>
-                            {% empty %}
-                                <tr>
-                                    <td colspan="3">No availability slots found.</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% else %}
-                    <p>This user is not a tutor.</p> <!-- debug statement-->
-                {% endif %}
+                <div style="display: flex; justify-content: flex-end;">
+                    <a href="{% url 'profile' %}" class="btn btn-primary">Edit Profile</a>
+                </div>
             </div>
-            <!-- invoices-->
-             <!--lessons-->
         </div>
     </body>
 {% endblock %}

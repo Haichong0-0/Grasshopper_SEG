@@ -52,7 +52,7 @@ def lesson_create_view(request):
                 
                 if lesson_start_time < existing_end_time and lesson_end_time > existing_start_time:
                     form.add_error('start_time', 'This lesson conflicts with another lesson in your schedule.')
-                    return render(request, 'student_dashboard_templates/lesson_form.html', {
+                    return render(request, 'student/lesson_form.html', {
                         'form': form,
                         'term_warning': term_warning,
                         'submit': submit,
@@ -164,10 +164,14 @@ def leave_message(request):
 
     else:
         form = MessageForm()
+
         return render(request, 'student/leave_message.html', {'form': form})
 
 
-
+@login_required
+@user_type_required('student')
+def student_profile(request):
+    return render(request, 'student/student_profile.html')
     
 '''
 @login_required

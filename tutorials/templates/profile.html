@@ -1,9 +1,69 @@
 {% extends 'base_content.html' %}
 {% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-up Page</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Mina:wght@400;700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Prata&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <style>
+      body, html {
+          height: 100%;
+          margin: 0;
+          font-family: "Mina", sans-serif;
+          color: black;
+          background: linear-gradient(to right, #007bff, #6f42c1);
+      }
+      .log-in {
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+        }
+
+      .content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 1rem; 
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 600px; 
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="submit"] {
+            margin-top: 1rem;
+            width: 100%;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
 <div class="container">
+  <div class="content">
   <div class="row">
     <div class="col-12">
-      <h1>Edit profile</h1>
+      <h1>Edit Profile</h1>
       <form action="{% url 'profile' %}" method="post">
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
@@ -11,5 +71,6 @@
       </form>
     </div>
   </div>
+</div>
 </div>
 {% endblock %}
