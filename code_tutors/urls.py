@@ -86,6 +86,7 @@ urlpatterns = [
     path('lesson/<int:lesson_id>/reject_class/', views.RejectClassView.as_view(), name='reject_class'),    
     path('student_welcome/', student_welcome, name='student_welcome'),
     path('leave-message/', leave_message, name='leave_message'),
+    path('users/<str:username>/', user_profile, name='user_profile'),
 
     #path('admin/messages/update/<int:message_id>/', views.update_message_status, name='update_message_status'),
 
