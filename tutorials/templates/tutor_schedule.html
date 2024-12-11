@@ -1,13 +1,13 @@
-{% extends 'tutor_base.html' %}
+{% extends 'tutor/tutor_base.html' %}
 {% block content %}
+<body style="background-color: #000435; color: white;">
     <div class="container mt-3">
-        <h1 class="text-center mb-4">Schedule</h1>
-        <h2 class="text-left mb-4 text-primary" style="font-size: 1.45rem; font-weight: 500;">
-            <i class="bi bi-calendar-date" style="font-size: 1.4rem; margin-right: 10px;"></i> Your Schedule
-        </h2>
-          <!-- Sort Button -->
+        <h1 class="text-center mb-4">{{ request.user.first_name }}'s Lessons</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-left" style="font-size: 1.5rem; font-weight: 500; color: white;">
+                <i class="bi bi-book-fill" style="font-size: 1.4rem; margin-right: 10px;"></i> Your Upcoming Lessons
+            </h2>
           <div class="d-flex justify-content-end mb-3">
-            <!-- Sort Button with Dropdown -->
             <div class="btn-group">
                 <button id="sort-button" class="btn btn-primary">Sort</button>
                 <button 
@@ -23,8 +23,6 @@
                 </ul>
             </div>
         </div>
-        
-        
         <div class="container">
             <div class="row bg-dark text-white text-center fw-bold">
                 <div class="col">Student</div>
@@ -37,4 +35,7 @@
                 <!-- will add data here -->
             </div>
         </div>
+        </div>
+    </div>
+</body>
 {% endblock %}

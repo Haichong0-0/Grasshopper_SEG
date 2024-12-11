@@ -25,11 +25,11 @@ def tutor_schedule(request):
 @login_required
 @user_type_required('tutor')
 def tutor_payments(request):
-    invoices = Invoice.objects.filter(tutor=request.user)  # Filter invoices for the tutor
+    invoices = Invoice.objects.filter(tutor=request.user)  
     
     total_students = invoices.values('student').distinct().count()
     total_balance_due = sum(invoice.sum for invoice in invoices)
-   # next_payment_due = invoices.order_by('due_date').first()  # Adjusted for clarity
+   # next_payment_due =x invoices.order_by('due_date').first()  
 
     context = {
         'invoices': invoices,

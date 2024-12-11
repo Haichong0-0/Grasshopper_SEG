@@ -1,10 +1,17 @@
 {% extends 'tutor_base.html' %}
 {% block content %}
-    <div class="container mt-10">
-        <h1 class="text-center mb-4">Lessons</h1>
-        <h2 class="text-left mb-4 text-primary" style="font-size: 1.45rem; font-weight: 500;">
-            <i class="bi bi-book-fill" style="font-size: 1.4rem; margin-right: 10px;"></i> Your upcoming lessons
-        </h2>
+   
+<body style="background-color: #000435; color: white;">
+    <div class="container mt-3">
+        <h1 class="text-center mb-4">{{ request.user.first_name }}'s Lessons</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-left" style="font-size: 1.5rem; font-weight: 500; color: white;">
+                <i class="bi bi-book-fill" style="font-size: 1.4rem; margin-right: 10px;"></i> Your Upcoming Lessons
+            </h2>
+            <a href="{% url 'lesson_create' %}" class="btn btn-success">
+                <i class="fas fa-plus-circle"></i> Create a New Lesson
+            </a>
+        </div>
         
         <div class="table-responsive">
             <table class="table table-striped table-hover table-bordered" style="table-layout: fixed;">
@@ -20,7 +27,7 @@
                 <tbody>
                     {% for lesson in lessons %}
                     <tr>
-                        <th scope="row">{{ lesson.student.username }}</th> <!-- need to change-->>
+                        <th scope="row">{{ lesson.student.username }}</th> <!-- need to change-->
                         <td>{{ lesson.student.id }}</td>
                         <td>{{ lesson.subject }}</td>
                         <td>{{ lesson.lesson_date }}</td>
@@ -35,4 +42,5 @@
             </table>
         </div>
     </div>
+    </body>
 {% endblock %}
