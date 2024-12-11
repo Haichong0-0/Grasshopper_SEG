@@ -193,7 +193,7 @@ def leave_message(request):
 
 
     
-    """ 
+'''
 @login_required
 def sort_lessons(request):
     sort_by = request.GET.get('sort', 'date_asc')  # default 'date_asc' jic
@@ -230,5 +230,6 @@ def sort_invoices(request):
     else:
         invoice = Invoice.objects.all()  # no sorting
     
-    return render(request, '.html', {'invoices': invoice})'''
+    return render(request, '.html', {'invoices': invoice})
     
+'''
