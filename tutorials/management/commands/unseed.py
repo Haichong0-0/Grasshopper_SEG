@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from tutorials.models import User,Tutor,Student,Admin
+from tutorials.models import *
 
 class Command(BaseCommand):
     """Build automation command to unseed the database."""
@@ -8,7 +8,14 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """Unseed the database."""
-        Tutor.objects.all().delete()
-        Student.objects.all().delete()
-        Admin.objects.all().delete()
-        User.objects.filter(is_staff=False).delete()
+        try:
+            Tutor.objects.all().delete()
+            Student.objects.all().delete()
+            Admin.objects.all().delete()
+            Lesson.objects.all().delete()  
+            TutorAvailability.objects.all().delete()
+            # Subjects.objects.all().delete() # vincent: attempt to resolve available tutors not showing on admin lesson request page
+            Invoice.objects.all().delete()
+            User.objects.filter(is_staff=False).delete()
+        except Exception as e:
+            print(f"An error occurred while unseeding: {e}")

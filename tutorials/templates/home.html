@@ -1,26 +1,69 @@
 {% extends 'base.html' %}
 {% block body %}
-  <div class="container vh-100">
-    <div class="row h-100">
-      <div class="col-12 my-auto">
-        <div class="card cover-card offset-sm-2 offset-md-4 offset-lg-7">
-          <h1 class="cover-heading">Online Lessons</h1>
-          <p class="cover-text"> Online lessons <i>online lessons</i></p>
-          <p>
-            <a href="{% url 'sign_up' %}?variation=student" class="btn btn-lg btn-secondary" onclick="">
-              Student Sign up
-            </a>
-            <a href="{% url 'sign_up' %}?variation=tutor" class="btn btn-lg btn-secondary">
-              Tutor Sign up
-            </a>
-          </p>
-          <p>
-            <a href='{% url 'log_in' %}' class="btn btn-lg btn-secondary">
-              Log in
-            </a>
-          </p>  
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-up Page</title>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Mina:wght@400;700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Prata&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+
+            height: 100%;
+            margin: 0;
+            font-family: "Mina", sans-serif; 
+            color: white;
+        }
+
+        .signup-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right, #007bff, #6f42c1);
+            text-align: center;
+        }
+        .signup-title {
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            font-weight: 700; 
+        }
+        .card {
+            background: white;
+            border: none;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: #333;
+        }
+        .card h1 {
+            color: #6f42c1;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-section">
+        <div class="signup-title">Welcome to Code Tutors</div>
+        <div class="card text-center">
+            <h1 class="mb-4">Sign-up Page</h1>
+            <div class="d-grid gap-3">
+                <a href="{% url 'sign_up' %}?variation=student" class="btn btn-lg btn-primary">
+                    Student Sign up
+                </a>
+                <a href="{% url 'sign_up' %}?variation=tutor" class="btn btn-lg btn-primary">
+                    Tutor Sign up
+                </a>
+                <a href="{% url 'log_in' %}" class="btn btn-lg btn-outline-primary">
+                    Log in
+                </a>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+</body>
+</html>
 {% endblock %}

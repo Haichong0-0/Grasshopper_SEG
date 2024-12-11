@@ -17,6 +17,7 @@ class UserFormTestCase(TestCase):
             'last_name': 'Doe',
             'username': '@janedoe',
             'email': 'janedoe@example.org',
+            'date_of_birth': '2000-01-01',
         }
 
     def test_form_has_necessary_fields(self):
@@ -27,7 +28,8 @@ class UserFormTestCase(TestCase):
         self.assertIn('email', form.fields)
         email_field = form.fields['email']
         self.assertTrue(isinstance(email_field, forms.EmailField))
-
+        
+    # failing
     def test_valid_user_form(self):
         form = UserForm(data=self.form_input)
         self.assertTrue(form.is_valid())
