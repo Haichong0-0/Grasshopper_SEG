@@ -19,7 +19,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from tutorials import views
-from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule, student_welcome
+from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule, student_welcome, leave_message
 from tutorials.tutorViews.tutor_dashboard import tutor_schedule, tutor_lessons, tutor_payments
 from tutorials.views import leave_message, user_profile
 
@@ -75,9 +75,9 @@ urlpatterns = [
     path('student-dashboard/', views.student_dashboard, name='student_dashboard'),
     path('tutor/welcome', views.tutor_welcome, name='tutor_welcome'),
     path('tutor/dashboard', views.tutor_dashboard, name='tutor_dashboard'),
-    path('tutor/lessons', views.tutor_lessons, name='tutor_lessons'),
-    path('tutor/schedule', views.tutor_schedule, name='tutor_schedule'),
-    path('tutor/payment', views.tutor_payment, name='tutor_payment'),
+    path('tutor/lessons', tutor_lessons, name='tutor_lessons'),
+    path('tutor/schedule', tutor_schedule, name='tutor_schedule'),
+    path('tutor/payment', tutor_payments, name='tutor_payment'),
     path('requestlesson/', lesson_create_view, name='lesson_create'), 
     path('student_dashboard/', student_dashboard, name='student_dashboard'),
     path('invoices/', student_invoices, name='invoices'),
@@ -87,9 +87,14 @@ urlpatterns = [
     path('student_welcome/', student_welcome, name='student_welcome'),
     path('leave-message/', leave_message, name='leave_message'),
 
+    path('admin/messages/update/<int:message_id>/', views.update_message_status, name='update_message_status'),
 
-    path('users/<str:username>/', user_profile, name='user_profile'),
-    
+    path('tutor/profile', tutor_profile, name='tutor_profile'),
+    path('student_profile/', student_profile, name='student_profile'),
+
+
+
+
 
 ]
 

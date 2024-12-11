@@ -36,7 +36,10 @@
                 <div class="card-body">
                     <h5 class="card-title">Upcoming Lessons</h5>
                     <p class="card-text">You have {{ upcoming_lessons_count }} upcoming lessons this week.</p>
+                    <p class="card-text">You have x payments due, make payments.</p> <!-- if invoices !empty, add-->
                     <a href="{% url 'student_schedule' %}" class="btn btn-light" {% if upcoming_lessons_count == 0 %}disabled{% endif %}>View Lessons</a>
+
+                    <button type="button" class="btn btn-success">Make Payment</button>
                 </div>
             </div>
         </div>
@@ -64,6 +67,18 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-6">
+        <div class="card text-white mb-3 " style="background-color: #00897b;">
+            <div class="card-body">
+                <h5 class="card-title">Study Tips</h5>
+                <p class="card-text">Boost your programming skills with these tips:</p>
+                <ul>
+                    <li>1. Practice daily with small but manageable tasks</li>
+                    <li>2. Work on real world projects to solidify your skills</li>
+                </ul>
+            </div>
+        </div>
+    </div>
     </div>
     <div class="row">
         <div class="col-md-12">

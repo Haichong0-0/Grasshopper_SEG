@@ -5,12 +5,14 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
 from django.db.models import Q
 from tutorials.models import Tutor, Subjects
+from tutorials.decorators import user_type_required
 
     # vincent: TODO: add Docstrings for all classes and methods 
     # vincent: TODO: Docstrings on multiple lines for better readibilty
     # vincent: TODO: remove spacings within functions
 
 @login_required
+@user_type_required('student')
 def student_dashboard(request):
 
     context = {
@@ -20,6 +22,7 @@ def student_dashboard(request):
     return render(request, 'student/student_dashboard_in.html', context)
 
 @login_required
+@user_type_required('student')
 def lesson_create_view(request):
     term_warning = None
     submit = 'Submit Lesson Request'
@@ -62,6 +65,25 @@ def lesson_create_view(request):
                     'button_class': button_class,
                     'hours': hours,
                 })
+            
+            lesson_start_time = datetime.combine(datetime.today(), lesson.start_time)
+            lesson_end_time = lesson_start_time + timedelta(minutes=int(lesson.duration))
+
+            student_lessons = Lesson.objects.filter(student=student, day_of_week=lesson.day_of_week, term= lesson.term)
+            for existing_lesson in student_lessons:
+                existing_start_time = datetime.combine(datetime.today(), existing_lesson.start_time)
+                existing_end_time = existing_start_time + timedelta(minutes=int(existing_lesson.duration))
+                
+                if lesson_start_time < existing_end_time and lesson_end_time > existing_start_time:
+                    form.add_error('start_time', 'This lesson conflicts with another lesson in your schedule.')
+                    return render(request, 'student_dashboard_templates/lesson_form.html', {
+                        'form': form,
+                        'term_warning': term_warning,
+                        'submit': submit,
+                        'button_class': button_class,
+                        'hours': hours,
+                    })
+
 
             term_dates = {
                 'September-Christmas': datetime(2024, 9, 2),
@@ -114,6 +136,7 @@ def lesson_create_view(request):
     })
 
 @login_required
+@user_type_required('student')
 def student_invoices(request):
 
     invoices = Invoice.objects.all()
@@ -124,11 +147,13 @@ def student_invoices(request):
     return render(request, 'student/student_invoices.html', context)
 
 @login_required
+@user_type_required('student')
 def student_welcome(request):
     return render(request, 'student/student_welcome.html')
 
 
 @login_required
+@user_type_required('student')
 def student_schedule(request):
     if request.user.is_authenticated and hasattr(request.user, 'student'):
         confirmed_lessons = Lesson.objects.filter(student=request.user, status='Confirmed').order_by('start_time')
@@ -149,7 +174,26 @@ def student_schedule(request):
 
 
 
-'''  
+  
+@login_required
+@user_type_required('student')
+def leave_message(request):
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.student = request.user.student
+            message.save()
+            return redirect('student_dashboard')
+
+    else:
+        form = MessageForm()
+        return render(request, 'student_dashboard_templates/leave_message.html', {'form': form})
+
+
+
+    
+    """ 
 @login_required
 def sort_lessons(request):
     sort_by = request.GET.get('sort', 'date_asc')  # default 'date_asc' jic
@@ -167,6 +211,7 @@ def sort_lessons(request):
         lessons = Lesson.objects.all()  # no sorting
     
     return render(request, '.html', {'lessons': lessons})
+    
 
 
 @login_required
@@ -186,3 +231,4 @@ def sort_invoices(request):
         invoice = Invoice.objects.all()  # no sorting
     
     return render(request, '.html', {'invoices': invoice})'''
+    

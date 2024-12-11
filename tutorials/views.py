@@ -6,20 +6,24 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ImproperlyConfigured
 from django.forms import BaseModelForm
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
 from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm, MessageForm
 from tutorials.helpers import login_prohibited
-from tutorials.models import User, Lesson, Tutor, Student, Invoice, TutorAvailability, Subjects
+from tutorials.models import User, Lesson, Tutor, Student, Invoice, TutorAvailability, Subjects, Message
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serialiser import LessonSerializer
+
 from datetime import datetime, date, timedelta
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
+
+
+from tutorials.decorators import user_type_required
 
 
 #############################################################
@@ -48,7 +52,30 @@ def admin_dashboard(request):
     else:
         return render(request, 'access_denied.html', {'user': current_user})
 
+# @login_required
+# def tutor_dashboard(request):
+#     """Display the tutor's dashboard."""
+
+#     current_user = request.user
+#     if (current_user.type_of_user == 'tutor'):
+#         print("current_user(tutor_dashboard): ", current_user)
+#         return render(request, 'tutor_dashboard/tutor_dashboard.html', {'user': current_user})
+#     else:
+#         return render(request, 'access_denied.html', {'user': current_user})
+
+# @login_required
+# def student_dashboard(request):
+#     """Display the student's dashboard."""
+
+#     current_user = request.user
+#     if (current_user.type_of_user == 'student'):
+#         print("current_user(student_dashboard): ", current_user)
+#         return render(request, 'student_dashboard.html', {'user': current_user})
+#     else:
+#         return render(request, 'access_denied.html', {'user': current_user})
+    
 @login_required
+@user_type_required('tutor')
 def tutor_dashboard(request):
     """
     Display the tutor's dashboard.
@@ -62,6 +89,7 @@ def tutor_dashboard(request):
         return render(request, 'access_denied.html', {'user': current_user})
 
 @login_required
+@user_type_required('student')
 def student_dashboard(request):
     """
     Display the student's dashboard.
