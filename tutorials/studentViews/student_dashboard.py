@@ -40,32 +40,8 @@ def lesson_create_view(request):
                 return redirect('some_error_page')
             
             lesson.student = student
-            tutors = Tutor.objects.all()
-
-            print("lesson.subject: ", lesson.subject)
-            try:
-                subject = Subjects.objects.get(subject_name=lesson.subject)
-                print("lesson.subject: ", lesson.subject)
-                tutors = tutors.filter(subjects=subject)
-            except Subjects.DoesNotExist:
-                form.add_error('subject', 'No tutors available for this subject.')
-                tutors = Tutor.objects.none()
-
-            lesson.tutor_list = tutors 
-
-                                    
-
-            if Lesson.objects.filter(student=student, subject=lesson.subject).exists():
-                form.add_error('subject', 'You already have requested a lesson for this subject.')
-                # print("Lesson's tutor before: ", lesson.tutor.username)
-                return render(request, 'student/lesson_form.html', {
-                    'form': form,
-                    'term_warning': term_warning,
-                    'submit': submit,
-                    'button_class': button_class,
-                    'hours': hours,
-                })
             
+            # check if there is a lesson conflict 
             lesson_start_time = datetime.combine(datetime.today(), lesson.start_time)
             lesson_end_time = lesson_start_time + timedelta(minutes=int(lesson.duration))
 
@@ -84,7 +60,7 @@ def lesson_create_view(request):
                         'hours': hours,
                     })
 
-
+            # handle late lesson requests (after two weeks before the start of term)
             term_dates = {
                 'September-Christmas': datetime(2024, 9, 2),
                 'January-Easter': datetime(2025, 1, 6),
@@ -188,7 +164,7 @@ def leave_message(request):
 
     else:
         form = MessageForm()
-        return render(request, 'student_dashboard_templates/leave_message.html', {'form': form})
+        return render(request, 'student/leave_message.html', {'form': form})
 
 
 
