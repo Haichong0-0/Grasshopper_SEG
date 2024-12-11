@@ -551,7 +551,18 @@ class RejectClassView(APIView):
     
 
 
-@login_required
 def user_profile(request, username):
+   
     user = get_object_or_404(User, username=username)
-    return render(request, 'user_profile.html', {'user': user})
+
+    tutor = None
+    availability_slots = []
+    if hasattr(user, 'tutor_profile'):
+        tutor = user.tutor_profile  
+        availability_slots = TutorAvailability.objects.filter(tutor=tutor)  
+
+    return render(request, 'user_profile.html', {
+        'user': user,
+        'tutor': tutor,
+        'availability_slots': availability_slots,
+    })

@@ -62,14 +62,6 @@ def tutor_lessons(request):
 
 
 @login_required
-def tutor_profile(request):
-    context = {
-
-    }
-    return render(request, 'tutor_dashboard/tutor_profile.html', context)
-
-
-@login_required
 def sort_lessons(request):
     sort_by = request.GET.get('sort', 'date_asc')  # default 'date_asc' jic
     if sort_by == 'date_asc':
