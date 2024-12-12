@@ -7,6 +7,7 @@ from django.db.models import Q
 from tutorials.models import Tutor, Subjects
 from tutorials.decorators import user_type_required
 
+
     # vincent: TODO: add Docstrings for all classes and methods 
     # vincent: TODO: Docstrings on multiple lines for better readibilty
     # vincent: TODO: remove spacings within functions
@@ -196,43 +197,43 @@ def leave_message(request):
 def student_profile(request):
     return render(request, 'student/student_profile.html')
     
-'''
+
 @login_required
-def sort_lessons(request):
-    sort_by = request.GET.get('sort', 'date_asc')  # default 'date_asc' jic
+def student_sort_lessons(request):
+    sort_by = request.GET.get('sort', 'subject_asc') 
+    
+  
+    pending_lessons = Lesson.objects.filter(status='Pending')
+    confirmed_lessons = Lesson.objects.filter(status='Confirmed')  
+    rejected_lessons = Lesson.objects.filter(status='Rejected')  
+
     if sort_by == 'date_asc':
-        lessons = Lesson.objects.all().order_by('start_time')  # ascend
+        pending_lessons = pending_lessons.order_by('start_time')
+        confirmed_lessons = confirmed_lessons.order_by('start_time')
+        rejected_lessons = rejected_lessons.order_by('start_time')
     elif sort_by == 'date_desc':
-        lessons = Lesson.objects.all().order_by('-start_time')  # descend
+        pending_lessons = pending_lessons.order_by('-start_time')
+        confirmed_lessons = confirmed_lessons.order_by('-start_time')
+        rejected_lessons = rejected_lessons.order_by('-start_time')
     elif sort_by == 'subject_asc':
-        lessons = Lesson.objects.all().order_by('subject')  
+        pending_lessons = pending_lessons.order_by('subject')
+        confirmed_lessons = confirmed_lessons.order_by('subject')
+        rejected_lessons = rejected_lessons.order_by('subject')
     elif sort_by == 'subject_desc':
-        lessons = Lesson.objects.all().order_by('-subject')  
-    elif sort_by == 'reset': 
-        lessons = Lesson.objects.all()  # maybe redundant
+        pending_lessons = pending_lessons.order_by('-subject')
+        confirmed_lessons = confirmed_lessons.order_by('-subject')
+        rejected_lessons = rejected_lessons.order_by('-subject')
     else:
-        lessons = Lesson.objects.all()  # no sorting
-    
-    return render(request, '.html', {'lessons': lessons})
-    
+     
+        pending_lessons = Lesson.objects.filter(status='Pending')
+        confirmed_lessons = Lesson.objects.filter(status='Confirmed')
+        rejected_lessons = Lesson.objects.filter(status='Rejected')
 
 
-@login_required
-def sort_invoices(request):
-    sort_by = request.GET.get('sort', 'date_asc')  # default 'date_asc' jic
-    if sort_by == 'date_asc':
-        invoice = Lesson.objects.all().order_by('start_time')  # ascend
-    elif sort_by == 'date_desc':
-        invoice = Lesson.objects.all().order_by('-start_time')  # descend
-    elif sort_by == 'price_asc':
-        invoice = Invoice.objects.all().order_by('totalsum')   #?? maybe need to change to price_per_class 
-    elif sort_by == 'price_desc':
-        invoice = Invoice.objects.all().order_by('-totalsum') 
-    elif sort_by == 'reset': 
-        invoice = Invoice.objects.all()  # maybe redundant
-    else:
-        invoice = Invoice.objects.all()  # no sorting
-    
-    return render(request, '.html', {'invoices': invoice})
-    
-'''
+    return render(request, 'student/student_schedule.html', {
+        'pending_lessons': pending_lessons,
+        'confirmed_lessons': confirmed_lessons,
+        'rejected_lessons': rejected_lessons,
+    })
+
+
