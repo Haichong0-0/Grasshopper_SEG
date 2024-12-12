@@ -21,7 +21,8 @@ from django.urls import path
 from tutorials import views
 from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule, student_welcome, leave_message, student_profile, student_sort_lessons
 from tutorials.tutorViews.tutor_dashboard import tutor_schedule,  tutor_payments, tutor_profile, tutor_sort_lessons, tutor_sort_invoices
-from tutorials.views import leave_message, user_profile
+from tutorials.views import user_profile
+from tutorials.studentViews.student_dashboard import leave_message
 
 urlpatterns = [
     path('admin/', admin.site.urls),

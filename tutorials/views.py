@@ -369,20 +369,20 @@ def tutor_welcome(request)-> HttpResponse:
     """
     return render(request, 'tutor/tutor_welcome.html', context = {})
 
-def leave_message(request)-> HttpResponse:      
+#def leave_message(request)-> HttpResponse:
     """
     student leaving messages for admins
     """
-    if request.method == 'POST':
+   # if request.method == 'POST':
         # saving student message request 
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            message = form.save(commit=False)
-            message.student = request.user.student
-            message.save()
-            return redirect('student_dashboard')
-    form = MessageForm()
-    return render(request, 'student/leave_message.html', {'form': form})
+      #  form = MessageForm(request.POST)
+      #  if form.is_valid():
+          #  message = form.save(commit=False)
+         #   message.student = request.user.student
+        #    message.save()
+        #    return redirect('student_dashboard')
+  #  form = MessageForm()
+  #  return render(request, 'student/leave_message.html', {'form': form})
 
 def get_tutor(subject)->list:
     """
