@@ -10,12 +10,10 @@ from tutorials.decorators import user_type_required
 @login_required
 @user_type_required('tutor')
 def tutor_schedule(request):  
-    confirmed_lessons = Lesson.objects.filter(tutor=request.user, status='confirmed').order_by('start_time')
-    pending_lessons = Lesson.objects.filter(tutor=request.user, status='pending').order_by('start_time')
+    confirmed_lessons = Lesson.objects.filter(tutor=request.user, status='Confirmed').order_by('start_time')
 
     return render(request, 'tutor/tutor_schedule.html', {
         'confirmed_lessons': confirmed_lessons,
-        'pending_lessons': pending_lessons
     })
 
 
