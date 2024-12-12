@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 from django.http import HttpRequest
 from typing import Optional
-from .models import User, Tutor, Student, Message, Lesson
+from .models import User, Tutor, Student, Message, Lesson, Subjects
 from django.contrib.auth.hashers import make_password
 
 class LogInForm(forms.Form):
@@ -195,5 +195,15 @@ class MessageForm(forms.ModelForm):
         model = Message
         # specify the fields to include the form
         fields = ['subject', 'content']
+
+
+class UpdateSubjectsForm(forms.Form):
+    subjects = forms.MultipleChoiceField(
+        choices=Tutor.SUBJECTS,  
+        widget=forms.CheckboxSelectMultiple, 
+        required=False,
+    )
+    
+
 
 # Vincent: TODO: are the following used??? remove if not?

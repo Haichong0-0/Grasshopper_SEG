@@ -1,0 +1,163 @@
+{% extends 'tutor/tutor_base.html' %}
+{% block title %}
+    <title>Update Subjects</title>
+{% endblock %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Mina:wght@400;700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Orienta&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Prata&family=Quicksand:wght@300..700&family=Varela&display=swap" rel="stylesheet">
+    <style>
+        /* Include your previous styles here */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: "Orienta", sans-serif;
+            background-color: #000435;
+            color: white;
+        }
+        .background {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap; /* Allows wrapping on small screens */
+            gap: 20px;
+        }
+        .card {
+            background: rgb(91, 52, 208);
+            color: white;
+            border-radius: 10px;
+            width: 40rem;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+            flex: 1; /* Ensures cards share space evenly */
+            min-width: 300px; /* Sets a minimum width for smaller screens */
+        }
+        .card-header {
+            background: rgb(64, 35, 152);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .info {
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+        .subjects-list {
+            font-size: 1.1rem;
+            margin: 10px 0;
+            padding-left: 20px;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .subjects-list li {
+            margin: 5px 0;
+        }
+        .btn-container {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .btn-container a:hover {
+            background-color: rgb(91, 52, 208);
+        }
+
+        .btn-container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center; /* Center the buttons */
+        gap: 15px; /* Space between buttons */
+        }
+
+        .btn {
+            color: white;
+            background-color: rgb(64, 35, 152);
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 1rem;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            flex: 1; /* Ensure buttons take equal space */
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: rgb(91, 52, 208);
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container mt-3">
+        <h1 class="text-center mb-4">Update Subjects</h1>
+        <h2 class="text-left" style="font-size: 1.45rem; font-weight: 500; color: white;">
+            <i class="bi bi-pencil-square" style="font-size: 1.4rem; margin-right: 10px;"></i> Update Your Subjects
+        </h2>
+        <div class="background">
+            
+            <!-- Card for selecting subjects -->
+            <div class="card">
+                <div class="card-header">
+                    Update Subjects for {{ request.user.username }}
+                </div>
+                {% if form.errors %}
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <form method="POST" action="{% url 'update_subjects' %}">
+                    {% csrf_token %}
+                    <div class="info">
+                        <label for="subjects" style="display:block; margin-bottom: 5px; font-weight: bold;">Select Subjects</label>
+                        <div id="subjects">
+                            {% for value, label in form.subjects.field.choices %}
+                                <div class="form-check" style="text-align:left;">
+                                    <input class="form-check-input" type="checkbox" name="subjects" value="{{ value }}" id="subject_{{ value }}"
+                                    {% if value in form.initial.subjects %}checked{% endif %}>
+                                    <label class="form-check-label" for="subject_{{ value }}">
+                                        {{ label }}  <!-- This is the human-readable name of the subject -->
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="btn-container">
+                        <!-- Update Subjects button -->
+                        <button type="submit" class="btn btn-update">Update Subjects</button>
+                    
+                        <!-- Back to Profile button -->
+                        <a href="{% url 'profile' %}" class="btn btn-back">Back to Profile</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Card for displaying current subjects -->
+            <div class="card">
+                <div class="card-header">
+                    Current Subjects
+                </div>
+                <div class="info" style="margin-top: 20px;">
+                    <ul class="subjects-list">
+                        {% for subject in request.user.tutor.subjects.all %}
+                            <li>{{ subject.subject_name }}</li>
+                        {% empty %}
+                            <li>No subjects selected</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+    </div>
+</body>
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from tutorials.forms import LessonForm
-from tutorials.models import Lesson, Invoice, Student
+from tutorials.forms import LessonForm, UpdateSubjectsForm
+from tutorials.models import Lesson, Invoice, Student, Subjects, Tutor
 from django.contrib.auth.decorators import login_required 
 from datetime import datetime, timedelta
 from tutorials.decorators import user_type_required
@@ -93,5 +93,27 @@ def tutor_sort_invoices(request):
 
     return render(request, 'tutor/tutor_payment.html', {'invoices': invoices})
 
+
+def update_subjects(request):
+    tutor = request.user.tutor  
+    if request.method == 'POST':
+        form = UpdateSubjectsForm(request.POST)
+        if form.is_valid():
+            selected_subjects = form.cleaned_data['subjects']
+            subjects_to_add = []
+            for subject_code in selected_subjects:
+                subject_name = dict(Tutor.SUBJECTS).get(subject_code)
+                if subject_name:
+                    subject, created = Subjects.objects.get_or_create(subject_name=subject_name)
+                    subjects_to_add.append(subject)
+            tutor.subjects.set(subjects_to_add)
+            tutor.save()
+            return redirect('tutor_profile')
+        else:
+            print('Form is not valid')
+    else:
+        form = UpdateSubjectsForm()
+
+    return render(request, 'tutor/update_subjects.html', {'form': form, 'tutor': tutor})
 
 

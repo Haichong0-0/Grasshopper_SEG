@@ -20,8 +20,8 @@ from django.contrib import admin
 from django.urls import path
 from tutorials import views
 from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule, student_welcome, leave_message, student_profile, student_sort_lessons
-from tutorials.tutorViews.tutor_dashboard import tutor_schedule,  tutor_payments, tutor_profile, tutor_sort_lessons, tutor_sort_invoices
-from tutorials.views import leave_message, user_profile
+from tutorials.tutorViews.tutor_dashboard import tutor_schedule,  tutor_payments, tutor_profile, tutor_sort_lessons, tutor_sort_invoices, update_subjects
+from tutorials.views import user_profile
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -60,7 +60,6 @@ urlpatterns = [
     # Additional Routes
     path('requestlesson/', lesson_create_view, name='lesson_create'),
     path('invoices/', student_invoices, name='invoices'),
-    path('admin/', admin.site.urls),        # default django built-in admin page
     path('', views.home, name='home'),
     # path('dashboard/', views.dashboard, name='dashboard'),            # vincent TODO: delete in final version
     path('code_admin/welcome', views.admin_welcome, name='admin_welcome'),       # custom admin page
@@ -89,6 +88,8 @@ urlpatterns = [
     path('student_schedule/sort/', student_sort_lessons, name='student_sort_lessons'),
     path('tutor/schedule/sort/', tutor_sort_lessons, name='tutor_sort_lessons'),
     path('tutor/payments/sort/', tutor_sort_invoices, name='tutor_sort_invoices'),
+    path('update_subjects/', update_subjects, name='update_subjects'),
+
 
     #path('admin/messages/update/<int:message_id>/', views.update_message_status, name='update_message_status'),
 
