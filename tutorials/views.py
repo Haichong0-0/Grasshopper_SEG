@@ -21,15 +21,7 @@ from .serialiser import LessonSerializer
 from datetime import datetime, date, timedelta
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
-
-
 from tutorials.decorators import user_type_required
-
-
-#############################################################
-'''from .models import Admin, Tutor, Student, Lesson, Invoice
-from .forms import AdminForm, TutorForm, StudentForm, LessonForm, InvoiceForm'''
-
 from django.views.generic import CreateView, ListView, DeleteView
 
 
@@ -52,27 +44,7 @@ def admin_dashboard(request):
     else:
         return render(request, 'access_denied.html', {'user': current_user})
 
-# @login_required
-# def tutor_dashboard(request):
-#     """Display the tutor's dashboard."""
 
-#     current_user = request.user
-#     if (current_user.type_of_user == 'tutor'):
-#         print("current_user(tutor_dashboard): ", current_user)
-#         return render(request, 'tutor_dashboard/tutor_dashboard.html', {'user': current_user})
-#     else:
-#         return render(request, 'access_denied.html', {'user': current_user})
-
-# @login_required
-# def student_dashboard(request):
-#     """Display the student's dashboard."""
-
-#     current_user = request.user
-#     if (current_user.type_of_user == 'student'):
-#         print("current_user(student_dashboard): ", current_user)
-#         return render(request, 'student_dashboard.html', {'user': current_user})
-#     else:
-#         return render(request, 'access_denied.html', {'user': current_user})
     
 @login_required
 @user_type_required('tutor')
@@ -300,18 +272,6 @@ def admin_lessons(request):
     context = {}
 
     return render(request, 'admin/admin_lessons.html', context)
-
-"""@login_required
-def tutor_dashboard(request):
-    display tutor dashboard if user is a tutor
-    
-    context = {
-        'full_name': request.user.full_name(),
-        'gravatar': request.user.gravatar(),
-    }
-    
-    return render(request, 'tutortutor_dashboard.html', context)
-"""
 
 #@login_required
 def tutor_lessons(request):

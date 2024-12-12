@@ -15,7 +15,7 @@ def tutor_schedule(request):
         status='Confirmed'
     ).order_by('start_date', 'start_time')
 
-    return render(request, 'tutor_dashboard/tutor_schedule.html', {
+    return render(request, 'tutor/tutor_schedule.html', {
         'confirmed_lessons': confirmed_lessons,
         'pending_lessons': pending_lessons,
         'rejected_lessons': rejected_lessons,
@@ -25,20 +25,18 @@ def tutor_schedule(request):
 @login_required
 @user_type_required('tutor')
 def tutor_payments(request):
-    invoices = Invoice.objects.filter(tutor=request.user)  # Filter invoices for the tutor
+    invoices = Invoice.objects.filter(tutor=request.user)  
     
     total_students = invoices.values('student').distinct().count()
     total_balance_due = sum(invoice.sum for invoice in invoices)
-    next_payment_due = invoices.order_by('due_date').first()  # Adjusted for clarity
 
     context = {
         'invoices': invoices,
         'total_students': total_students,
         'total_balance_due': total_balance_due,
-        'next_payment_due': next_payment_due.student if next_payment_due else None,
     }
 
-    return render(request, 'tutor_dashboard/tutor_payment.html', context)
+    return render(request, 'tutor/tutor_payment.html', context)
 
 
 @login_required
@@ -57,9 +55,13 @@ def tutor_lessons(request):
         'upcoming_lessons_count': upcoming_lessons.count(),
     }
 
-    return render(request, 'tutor_dashboard/lessons.html', context)
+    return render(request, 'tutor/lessons.html', context)
 
 
+@login_required
+@user_type_required('tutor')
+def tutor_profile(request):
+    return render(request, 'tutor/tutor_profile.html')
 
 
 @login_required
@@ -78,7 +80,7 @@ def sort_lessons(request):
     else:
         lessons = Lesson.objects.all()  # no sorting
     
-    return render(request, 'your_template.html', {'lessons': lessons})
+    return render(request, '.html', {'lessons': lessons})
 
 
 @login_required
@@ -97,4 +99,6 @@ def sort_invoices(request):
     else:
         invoice = Invoice.objects.all()  # no sorting
     
-    return render(request, 'your_invoice_template.html', {'invoices': invoice})
+    return render(request, '.html', {'invoices': invoice})
+
+

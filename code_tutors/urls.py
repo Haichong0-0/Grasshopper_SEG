@@ -20,7 +20,7 @@ from django.contrib import admin
 from django.urls import path
 from tutorials import views
 from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule, student_welcome, leave_message, student_profile
-from tutorials.tutorViews.tutor_dashboard import tutor_schedule, tutor_lessons, tutor_payments
+from tutorials.tutorViews.tutor_dashboard import tutor_schedule, tutor_lessons, tutor_payments, tutor_profile
 from tutorials.views import user_profile
 
 urlpatterns = [
@@ -93,6 +93,7 @@ urlpatterns = [
     
 
     path('student/profile', student_profile, name='student_profile'),
+    path('tutor/profile', tutor_profile, name='tutor_profile'),
 
 
 
