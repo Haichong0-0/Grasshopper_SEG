@@ -91,15 +91,13 @@ urlpatterns = [
     path('tutor/schedule/sort/', tutor_sort_lessons, name='tutor_sort_lessons'),
     path('tutor/payments/sort/', tutor_sort_invoices, name='tutor_sort_invoices'),
 
-    #path('admin/messages/update/<int:message_id>/', views.update_message_status, name='update_message_status'),
 
     
 
     path('student/profile', student_profile, name='student_profile'),
     path('tutor/profile', tutor_profile, name='tutor_profile'),
-   
 
-
+    path('code_admin/messages/update/<int:message_id>/', views.update_message_status, name='update_message_status'),
 
 ]
 

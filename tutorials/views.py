@@ -496,12 +496,31 @@ def student_payment(request)-> HttpResponse:
 
 @login_required
 @user_passes_test(is_admin)
-def admin_messages(request)-> HttpResponse:
-    """
-    payment page for admin
-    """
-    context = {}
+def admin_messages(request):
+    messages = Message.objects.all().order_by('-created_at')
+
+    context = {
+       'messages': messages,
+    }
+
     return render(request, 'admin/admin_messages.html', context)
+
+@login_required
+@user_passes_test(is_admin)
+def update_message_status(request, message_id):
+    message = get_object_or_404(Message, id=message_id)
+
+    if request.method == "POST":
+        new_status = request.POST.get('status')
+        if new_status in ['pending', 'resolved']:
+            message.status = new_status
+            message.admin = request.user.admin
+            message.save()
+            return redirect('admin_messages')
+
+    return redirect('admin_messages')
+
+
 
 # check the tutoravailability function
 class ConfirmClassView(APIView):        # Vincent: complete 'refactoring'
