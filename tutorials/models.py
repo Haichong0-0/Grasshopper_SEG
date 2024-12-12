@@ -112,15 +112,6 @@ class Subjects(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     tutor_list = models.JSONField(default=list)
 
-    # def setTimings(self, timings_list):
-    #     self.Timings = ','.join(timings_list)
-
-    # def getTimings(self):
-    #     return self.Timings.split(',')
-
-    # def __str__(self):
-    #         return self.subject_name
-
 class Student(User):
     type_of_user = 'student'
     phone = models.CharField(max_length=12, default='07777777777')
@@ -221,17 +212,6 @@ class Lesson(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     invoice_no = models.ForeignKey(Invoice, null = True,on_delete=models.CASCADE)      
     
-
-# vincent TODO: not used in my version, and everything works perfectly fine
-# class Invoice(models.Model): 
-#     orderNo = models.AutoField(primary_key=True)
-#     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
-#     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-#     topic = models.CharField(max_length=100, blank=False)
-#     no_of_classes = models.IntegerField(blank=False)
-#     price_per_class = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
-#     total_sum = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
- 
 
 class Message(models.Model): 
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='messages')

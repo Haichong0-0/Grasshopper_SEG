@@ -154,11 +154,10 @@ def leave_message(request):
             message.save()
             return redirect('student_dashboard')
         else:
-            return render(request, 'student/leave_message.html', {'form': form}) 
+            return render(request, 'student/leave_message.html', {'form': form})
     else:
         form = MessageForm()
         return render(request, 'student/leave_message.html', {'form': form})
-
 
 @login_required
 @user_type_required('student')
