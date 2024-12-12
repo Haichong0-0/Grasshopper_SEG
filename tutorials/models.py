@@ -200,6 +200,11 @@ class Lesson(models.Model):
         ('sunday', 'Sunday'),
     ]
 
+    PAYMENT_STATUS_CHOICES = [
+        ('Unpaid', 'Unpaid'),
+        ('Paid', 'Paid'),
+    ]
+
     lesson_id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='lessons')
     tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='lessons') 
@@ -210,7 +215,9 @@ class Lesson(models.Model):
     term = models.CharField(max_length=50, choices=TERMS)
     subject = models.CharField(max_length=100, choices=SUBJECTS)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
-    invoice_no = models.ForeignKey(Invoice, null = True,on_delete=models.CASCADE)      
+    invoice_no = models.ForeignKey(Invoice, null = True,on_delete=models.CASCADE)    
+    payment_status = models.CharField(max_length=10,choices=PAYMENT_STATUS_CHOICES,default='Unpaid')
+  
     
 
 class Message(models.Model): 

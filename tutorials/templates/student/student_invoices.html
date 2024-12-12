@@ -25,7 +25,7 @@
         <h2 class="text-left mb-0" style="font-size: 1.45rem; font-weight: 500; color: white;">
             <i class="bi bi-cash-coin" style="font-size: 1.4rem; margin-right: 10px; color: white;"></i> Your Due Payments
         </h2>
-        <button type="button" class="btn btn-success">Make Payment</button>
+        <a href="{% url 'make_payment' %}" class="btn btn-success" {% if upcoming_lessons_count == 0 %}disabled{% endif %}>Make Payment</a>
     </div>
     <div class="container mt-5">
         <div class="container my-5">

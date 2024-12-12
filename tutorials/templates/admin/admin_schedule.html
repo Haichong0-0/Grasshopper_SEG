@@ -135,16 +135,14 @@
                                 <th>Subject</th>
                                 <th>Tutor</th>
                                 <th>Frequency</th>
-                                <th>Start Date</th>
                                 <th>Day of Week</th>
                                 <th>Start Time</th>
                                 <th>No of Classes</th>
                                 <th>Status</th>
                                 <th>Term</th>
                                 <th>Payment</th>
-                                <th>Status</th>
-                                <th> </th>
-                            </tr>
+                                <th>  </th>
+`                            </tr>
                         </thead>
                         <tbody>
                             {% for lesson in pending_lessons %}
@@ -159,13 +157,12 @@
                                         </select>
                                     </td>                                
                                 <td>{{ lesson.frequency }}</td>
-                                <td>{{ lesson.start_date }}</td>
                                 <td>{{ lesson.day_of_week }}</td>
                                 <td>{{ lesson.start_time }}</td>
                                 <td>{{ lesson.duration }}</td>
                                 <td>{{ lesson.status }}</td>
                                 <td>{{ lesson.term }}</td>
-                                <td>{{ lesson.invoice_paid }}</td>
+                                <td>{{ lesson.payment_status }}</td>
                                 <td>
                                     <button type="submit" class="btn btn-success">Accept</button>
                                 </td>
@@ -199,12 +196,10 @@
                             <th>Subject</th>
                             <th>Tutor</th>
                             <th>Frequency</th>
-                            <th>Start Date</th>
                             <th>Day of Week</th>
                             <th>Start Time</th>
                             <th>Status</th>
                             <th>Term</th>
-                            <th>Location</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -213,16 +208,14 @@
                             <td>{{ lesson.subject }}</td>
                             <td>{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }}</td>
                             <td>{{ lesson.frequency }}</td>
-                            <td>{{ lesson.start_date }}</td>
                             <td>{{ lesson.day_of_week }}</td>
                             <td>{{ lesson.start_time }}</td>
                             <td>{{ lesson.status }}</td>
                             <td>{{ lesson.term }}</td>
-                            <td>{{ lesson.location }}</td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="9" class="empty-message">You have no confirmed lessons.</td>
+                            <td colspan="7" class="empty-message">You have no confirmed lessons.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -241,12 +234,10 @@
                             <th>Subject</th>
                             <th>Tutor</th>
                             <th>Frequency</th>
-                            <th>Start Date</th>
                             <th>Day of Week</th>
                             <th>Start Time</th>
                             <th>Status</th>
                             <th>Term</th>
-                            <th>Location</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -255,16 +246,14 @@
                             <td>{{ lesson.subject }}</td>
                             <td>{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }}</td>
                             <td>{{ lesson.frequency }}</td>
-                            <td>{{ lesson.start_date }}</td>
                             <td>{{ lesson.day_of_week }}</td>
                             <td>{{ lesson.start_time }}</td>
                             <td>{{ lesson.status }}</td>
                             <td>{{ lesson.term }}</td>
-                            <td>{{ lesson.location }}</td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="9" class="empty-message">You have no rejected lessons.</td>
+                            <td colspan="7" class="empty-message">You have no rejected lessons.</td>
                         </tr>
                         {% endfor %}
                     </tbody> 

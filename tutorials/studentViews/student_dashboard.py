@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from django.db.models import Q
 from tutorials.models import Tutor, Subjects
 from tutorials.decorators import user_type_required
+from django.shortcuts import get_object_or_404
 
 
     # vincent: TODO: add Docstrings for all classes and methods 
@@ -204,4 +205,33 @@ def student_sort_lessons(request):
         'rejected_lessons': rejected_lessons,
     })
 
+
+@login_required
+@user_type_required('student')
+def make_payment(request):
+    if request.method == 'POST':
+        subject = request.POST.get('subject')
+        start_time = request.POST.get('start_time')
+        day_of_week = request.POST.get('day_of_week')
+        if subject and start_time and day_of_week:
+            lesson = get_object_or_404(
+                Lesson,
+                student=request.user,
+                subject=subject,
+                day_of_week=day_of_week,
+                status__in=['Pending', 'Late'],  
+                payment_status='Unpaid'
+            )
+            lesson.payment_status = 'Paid'
+            lesson.save()
+            return redirect('student_schedule')
+
+    unpaid_pending_lessons = Lesson.objects.filter(
+        student=request.user,
+        status__in=['Pending', 'Late'],
+        payment_status='Unpaid'
+    )
+    return render(request, 'student/make_payment.html', {
+        'unpaid_pending_lessons': unpaid_pending_lessons,
+    })
 

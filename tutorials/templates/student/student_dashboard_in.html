@@ -46,8 +46,7 @@
                     <p class="card-text">You have {{ upcoming_lessons_count }} upcoming lessons this week.</p>
                     <p class="card-text">You have x payments due, make payments.</p> <!-- if invoices !empty, add-->
                     <a href="{% url 'student_schedule' %}" class="btn btn-light" {% if upcoming_lessons_count == 0 %}disabled{% endif %}>View Lessons</a>
-
-                    <button type="button" class="btn btn-success">Make Payment</button>
+                    <a href="{% url 'make_payment' %}" class="btn btn-success" {% if upcoming_lessons_count == 0 %}disabled{% endif %}>Make Payment</a>
                 </div>
             </div>
         </div>
