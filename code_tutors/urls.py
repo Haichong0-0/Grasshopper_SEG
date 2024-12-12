@@ -65,7 +65,6 @@ urlpatterns = [
     path('code_admin/welcome', views.admin_welcome, name='admin_welcome'),       # custom admin page
     path('code_admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('code_admin/dashboard', views.admin_dashboard, name='admin_dashboard'),
-    path('code_admin/lessons', views.admin_lessons, name='admin_lessons'),
     path('code_admin/schedule', views.admin_schedule, name='admin_schedule'),
     path('code_admin/messages', views.admin_messages, name='admin_messages'),
     path('code_admin/payment', views.admin_payment, name='admin_payment'),

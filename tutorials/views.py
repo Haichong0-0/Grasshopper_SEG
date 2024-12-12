@@ -262,17 +262,6 @@ class UserListView(ListView): #need to make test
 def is_admin(user):
     return user.is_staff 
 
-@login_required
-@user_passes_test(is_admin)
-def admin_lessons(request):
-    """
-    lessons page for admins
-    """
-
-    context = {}
-
-    return render(request, 'admin/admin_lessons.html', context)
-
 #@login_required
 def tutor_lessons(request):
     """
