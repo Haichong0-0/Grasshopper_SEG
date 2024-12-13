@@ -28,5 +28,4 @@ class TutorModelTest(TestCase):
         self.assertIsNone(tutor_without_bio.bio)
 
     def test_tutor_string_representation(self):
-        self.assertEqual(str(self.tutor),
-                         self.tutor.username)
+        self.assertEqual(str(self.tutor), f'Tutor: {self.tutor.username} ({self.tutor.id})')

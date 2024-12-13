@@ -11,7 +11,7 @@ class StudentDashboardViewTestCase(TestCase):
         self.client.login(username='testuser', password='password')
         response = self.client.get(reverse('student_dashboard'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'student_dashboard_templates/student_dashboard_in.html')
+        self.assertTemplateUsed(response, 'student/student_dashboard_in.html')
         self.assertIn('user', response.context)
         self.assertEqual(response.context['user'], 'Student!')
 
