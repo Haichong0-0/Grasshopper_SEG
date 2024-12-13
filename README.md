@@ -2,17 +2,17 @@
 
 ## Team members
 The members of the team are:
-- *enter full name 1 here*
-- *enter full name 2 here*
-- *enter full name 3 here*
-- *enter full name 4 here*
-- *enter full name 5 here*
+- Arjan Bedi
+- Maryam Marei
+- Fatimah Al Yousef
+- Deyu Li
+- Zhaoqi He
 
 ## Project structure
 The project is called `task_manager`.  It currently consists of a single app `tasks`.
 
 ## Deployed version of the application
-The deployed version of the application can be found at [*enter url here*](*enter_url_here*).
+The deployed version of the application can be found at [*https://haichong.pythonanywhere.com/*](*https://haichong.pythonanywhere.com/*).
 
 ## Installation instructions
 To install the software and use it in your local development environment, you must first set up and activate a local development environment.  From the root of the project:
