@@ -297,7 +297,7 @@ class Command(BaseCommand):
                 Lesson.objects.create(
                     student=student,
                     tutor=tutor,
-                    subject=['subject'],
+                    subject=data['subject'],
                     frequency=data['frequency'],
                     term=data['terms'],
                     duration=data['duration'],
@@ -334,7 +334,6 @@ class Command(BaseCommand):
             student=student,
             tutor=tutor
         )
-        invoice.calc_sum()
         return invoice
 
     def create_lesson(self, data):
@@ -351,7 +350,7 @@ class Command(BaseCommand):
             day_of_week=data['day_of_week'],
             start_time=data['start_time'],
             status=data['status'],
-            # invoiceNo=invoice,
+            payemnt_status = 'Paid',
             invoice=invoice,
         )
         return lesson
