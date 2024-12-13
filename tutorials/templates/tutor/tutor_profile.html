@@ -20,7 +20,6 @@
         }
 
         .background {
-            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -31,9 +30,7 @@
             color: white;
             border-radius: 10px;
             width: 40rem;
-            padding: 20px;
             text-align: center;
-            margin-top: -100px;
         }
 
         .card-header {
@@ -60,10 +57,10 @@
         .subjects-list {
             font-size: 1.1rem;
             margin: 10px 0;
-            padding-left: 270px;  /* Indent the list slightly for better readability */
-            text-align: left;    /* Align list items to the left */
-            max-height: 200px;   /* Limit the height of the list */
-            overflow-y: auto;    /* Add vertical scrolling if the list exceeds the max height */
+            padding-left: 270px;  
+            text-align: left;    
+            max-height: 200px;   
+            overflow-y: auto;    
         }
 
         .subjects-list li {
@@ -92,7 +89,7 @@
             background-color: rgb(91, 52, 208);
         }
 
-        /* Responsive Design for smaller screens */
+       
         @media (max-width: 768px) {
             .card {
                 width: 100%;
@@ -116,9 +113,9 @@
 </head>
 <body>
     <div class="container mt-3">
-        <h1 class="text-center mb-4">Public Profile</h1>
-        <h2 class="text-left" style="font-size: 1.45rem; font-weight: 500; color: white;">
-            <i class="bi bi-person-circle" style="font-size: 1.4rem; margin-right: 10px;"></i> Your Public Profile
+        <h1 class="text-center mb-4">Profile</h1>
+        <h2 class="text-left mb-4 text-primary" style="font-size: 1.45rem; font-weight: 500;">
+            <i class="bi bi-person" style="font-size: 1.4rem; margin-right: 10px;"></i> This is your public profile
         </h2>
         <div class="background">
             <div class="card">
@@ -140,11 +137,10 @@
                 </div>
                 <div class="info">
                     <strong>Subjects: </strong>
-                    <ul class="subjects-list">
                         {% for subject in request.user.tutor.subjects.all %}
-                            <li>{{ subject.subject_name }}</li>
+                            {{ subject.subject_name }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
-                    </ul>
+                    </p>
                 </div>
                 <div class="btn-container">
                     <a href="{% url 'profile' %}">Update Profile</a>
