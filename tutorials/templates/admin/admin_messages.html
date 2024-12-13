@@ -47,7 +47,7 @@
             {% for message in messages %}
             <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ message.student.user.username }}</td>
+                <td>{{ message.student.first_name }} {{ message.student.last_name }}</td>
                 <td>{{ message.subject }}</td>
                 <td>{{ message.content }}</td>
                 <td>{{ message.created_at }}</td>
