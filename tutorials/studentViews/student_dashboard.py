@@ -115,16 +115,22 @@ def lesson_create_view(request):
 def student_invoices(request):
     student = request.user
     invoices = Invoice.objects.filter(student=student).order_by('orderNo')
+    lessons = Lesson.objects.filter(student=student).select_related('invoice_no')
 
     context = {
         'invoices': invoices,
+        'lessons': lessons
     }
     return render(request, 'student/student_invoices.html', context)
+
+
 
 @login_required
 @user_type_required('student')
 def student_welcome(request):
     return render(request, 'student/student_welcome.html')
+
+
 
 
 @login_required
