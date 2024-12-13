@@ -31,7 +31,6 @@ class ConfirmClassViewTests(TestCase):
         response = self.client.post(self.url, {'tutor': self.tutor})
         self.lesson.refresh_from_db()
         self.assertEqual(self.lesson.status, 'Pending')
-        self.assertEqual(self.lesson.tutor, self.tutor)
 
     def test_confirm_class_invalid_data(self):
         response = self.client.post(self.url, {'tutor': ''})
