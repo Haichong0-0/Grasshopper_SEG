@@ -115,7 +115,7 @@ def lesson_create_view(request):
 def student_invoices(request):
     student = request.user
     invoices = Invoice.objects.filter(student=student).order_by('orderNo')
-    lessons = Lesson.objects.filter(student=student).select_related('invoice_no')
+    lessons = Lesson.objects.filter(student=student, invoice_no_isnull=False).select_related('invoice_no')
 
     context = {
         'invoices': invoices,
