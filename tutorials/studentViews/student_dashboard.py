@@ -115,7 +115,7 @@ def lesson_create_view(request):
 def student_invoices(request):
     student = request.user
     invoices = Invoice.objects.filter(student=student).order_by('orderNo')
-    lessons = Lesson.objects.filter(student=student, invoice_no_isnull=False).select_related('invoice_no')
+    lessons = Lesson.objects.filter(student=student, invoice_no__isnull=False).select_related('invoice_no')
 
     context = {
         'invoices': invoices,
@@ -175,12 +175,24 @@ def student_profile(request):
 
 @login_required
 def student_sort_lessons(request):
-    sort_by = request.GET.get('sort', 'subject_asc') 
-    
-  
+    sort_by = request.GET.get('sort', 'subject_asc')  
+
     pending_lessons = Lesson.objects.filter(status='Pending')
-    confirmed_lessons = Lesson.objects.filter(status='Confirmed')  
-    rejected_lessons = Lesson.objects.filter(status='Rejected')  
+    confirmed_lessons = Lesson.objects.filter(status='Confirmed')
+    rejected_lessons = Lesson.objects.filter(status='Rejected')
+
+
+    print("Confirmed Lessons:")
+    for lesson in confirmed_lessons:
+        print(lesson.subject, lesson.start_time)
+
+    print("Pending Lessons:")
+    for lesson in pending_lessons:
+        print(lesson.subject, lesson.start_time)
+
+    print("Rejected Lessons:")
+    for lesson in rejected_lessons:
+        print(lesson.subject, lesson.start_time)
 
     if sort_by == 'date_asc':
         pending_lessons = pending_lessons.order_by('start_time')
@@ -198,11 +210,6 @@ def student_sort_lessons(request):
         pending_lessons = pending_lessons.order_by('-subject')
         confirmed_lessons = confirmed_lessons.order_by('-subject')
         rejected_lessons = rejected_lessons.order_by('-subject')
-    else:
-     
-        pending_lessons = Lesson.objects.filter(status='Pending')
-        confirmed_lessons = Lesson.objects.filter(status='Confirmed')
-        rejected_lessons = Lesson.objects.filter(status='Rejected')
 
 
     return render(request, 'student/student_schedule.html', {
