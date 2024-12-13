@@ -14,8 +14,8 @@ class Command(BaseCommand):
             Admin.objects.all().delete()
             Lesson.objects.all().delete()  
             TutorAvailability.objects.all().delete()
-            # Subjects.objects.all().delete() # vincent: attempt to resolve available tutors not showing on admin lesson request page
             Invoice.objects.all().delete()
             User.objects.filter(is_staff=False).delete()
+            print("Unseed successfully. All relevant data has been removed.")
         except Exception as e:
             print(f"An error occurred while unseeding: {e}")
