@@ -1,10 +1,10 @@
-from django.core.exceptions import ValidationError
 from django.test import TestCase
 from tutorials.models import Lesson, Student, Tutor, Invoice
 from datetime import time
 
 class LessonModelTestCase(TestCase):
     def setUp(self):
+
         self.student = Student.objects.create(
             username="teststudent",
             email="teststudent@example.com"
@@ -14,21 +14,26 @@ class LessonModelTestCase(TestCase):
             username="testtutor",
             email="testtutor@example.com"
         )
+
+
         self.invoice = Invoice.objects.create(
+            student=self.student,
+            tutor=self.tutor,
             no_of_classes=10,
             price_per_class=50.00
         )
+
         self.lesson = Lesson.objects.create(
             student=self.student,
             tutor=self.tutor,
             day_of_week="monday",
-            start_time=time(10, 0),  # meaning 10am
-            duration=60, # 1 hour
+            start_time=time(10, 0),
+            duration=60,
             frequency="weekly",
             term="September-Christmas",
             subject="python",
             status="confirmed",
-            invoiceNo=self.invoice
+            invoice_no=self.invoice
         )
 
     def test_lesson_creation(self):
@@ -41,7 +46,7 @@ class LessonModelTestCase(TestCase):
         self.assertEqual(self.lesson.term, "September-Christmas")
         self.assertEqual(self.lesson.subject, "python")
         self.assertEqual(self.lesson.status, "confirmed")
-        self.assertEqual(self.lesson.invoiceNo, self.invoice)
+        self.assertEqual(self.lesson.invoice_no, self.invoice)
 
     def test_lesson_default_values(self):
         lesson_without_status = Lesson.objects.create(
@@ -53,10 +58,9 @@ class LessonModelTestCase(TestCase):
             frequency="fortnightly",
             term="January-Easter term",
             subject="django",
-            invoiceNo=self.invoice
+            invoice_no=self.invoice
         )
         self.assertEqual(lesson_without_status.status, "Pending")
-
 
     def test_related_name_for_student(self):
         lessons = self.student.lessons.all()
@@ -77,6 +81,6 @@ class LessonModelTestCase(TestCase):
             frequency="weekly",
             term="May-July",
             subject="react",
-            invoiceNo=self.invoice
+            invoice_no=self.invoice
         )
         self.assertIsNone(lesson_without_tutor.tutor)
