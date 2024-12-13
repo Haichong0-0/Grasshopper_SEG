@@ -19,6 +19,30 @@ class TutorViewsTestCase(TestCase):
             password='password', 
             type_of_user='student'
         )
+        self.student.set_password('password')
+        self.student.save()
+
+
+        self.invoice1 = Invoice.objects.create(
+            tutor=self.tutor,
+            student=self.student,
+            topic='python',
+            no_of_classes = 5,
+            price_per_class = 20,
+            total_sum = 100
+        ) 
+        self.invoice1.save()
+
+        self.invoice2 = Invoice.objects.create(
+            tutor=self.tutor,
+            student=self.student,
+            topic='django',
+            no_of_classes = 3,
+            price_per_class = 20,
+            total_sum = 60
+        ) 
+        self.invoice2.save()
+
 
         self.lesson1 = Lesson.objects.create(
             tutor=self.tutor,
@@ -29,7 +53,8 @@ class TutorViewsTestCase(TestCase):
             frequency='weekly',
             term='September-Christmas',
             subject='python',
-            status='Confirmed'
+            status='Confirmed',
+            invoice_no= self.invoice1
         )
         self.lesson2 = Lesson.objects.create(
             tutor=self.tutor,
@@ -40,26 +65,9 @@ class TutorViewsTestCase(TestCase):
             frequency='fortnightly',
             term='January-Easter term',
             subject='django',
-            status='Confirmed'
+            status='Confirmed',
+            invoice_no= self.invoice2
         )
-
-        self.invoice1 = Invoice.objects.create(
-            tutor=self.tutor,
-            student=self.student,
-            topic='python',
-            no_of_classes = 5,
-            price_per_class = 20,
-            total_sum = 100
-        ) 
-
-        self.invoice2 = Invoice.objects.create(
-            tutor=self.tutor,
-            student=self.student,
-            topic='django',
-            no_of_classes = 3,
-            price_per_class = 20,
-            total_sum = 60
-        ) 
          
 
     def test_tutor_schedule_view(self):
@@ -75,13 +83,15 @@ class TutorViewsTestCase(TestCase):
   
 
     def test_tutor_payments_view(self):
+        self.client.login(username='tutor', password='password')
         response = self.client.get(reverse('tutor_payment'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'tutor/tutor_payment.html')
-        self.assertEqual(response.context['total_balance_due'], 160)
+        self.assertEqual(response.context['total_balance'], 160)
 
 
     def test_tutor_profile_view(self):
+        self.client.login(username='tutor', password='password')
         response = self.client.get(reverse('tutor_profile'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'tutor/tutor_profile.html')

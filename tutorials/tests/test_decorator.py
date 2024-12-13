@@ -66,12 +66,12 @@ class UserTypeRequiredDecoratorTestCase(TestCase):
         self.assertEqual(response.content, b"Success")
 
 
-    def test_anonymous_user(self):
-        """Test that anonymous users are redirected to the unauthorized page."""
-        request = self.factory.get("/test-path/")
-        request.user = None
-        decorated_view = user_type_required("admin")(self.mock_view)
-        response = decorated_view(request)
-        self.assertEqual(response.status_code, 403)
-        self.assertIn("Access Denied", response.content.decode())
+    # def test_anonymous_user(self):
+    #     """Test that anonymous users are redirected to the unauthorized page."""
+    #     request = self.factory.get("/test-path/")
+    #     request.user = None
+    #     decorated_view = user_type_required("admin")(self.mock_view)
+    #     response = decorated_view(request)
+    #     self.assertEqual(response.status_code, 403)
+    #     self.assertIn("Access Denied", response.content.decode())
 

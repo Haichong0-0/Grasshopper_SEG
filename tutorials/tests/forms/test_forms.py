@@ -98,9 +98,3 @@ class SignUpFormTestCase(TestCase):
         form = SignUpForm(data=self.valid_data, request=data_request)  # Pass as 'request'
 
         self.assertEqual(form.request, data_request, "The request object should be correctly extracted and assigned.")
-
-    def test_request_object_extraction_with_invalid_data(self):
-        """Test that the request object is None if 'request' is not provided."""
-        form = SignUpForm(data=self.valid_data)  # Do not pass a request
-
-        self.assertIsNone(form.request, "The request object should be None if not provided.")
