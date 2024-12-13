@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from tutorials.models import Message, Student, Admin  # Import required models
+from tutorials.models import Message, Student, Admin   
 
 class UpdateMessageStatusViewTest(TestCase):
     def setUp(self):
@@ -73,6 +73,5 @@ class UpdateMessageStatusViewTest(TestCase):
             reverse('update_message_status', args=[self.message.id]),
             data={'status': 'resolved'}
         )
-
 
         self.assertRedirects(response, f"{reverse('log_in')}?next={reverse('update_message_status', args=[self.message.id])}")

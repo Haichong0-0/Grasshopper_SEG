@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth.models import User
 from tutorials.models import Tutor, TutorAvailability, Subjects
 from django.contrib.auth import get_user_model
 
@@ -28,5 +27,3 @@ class UserProfileViewTest(TestCase):
         self.assertEqual(response.context['user'], self.user)
         self.assertIsNone(response.context['tutor'])
         self.assertEqual(len(response.context['availability_slots']), 0)
-
-

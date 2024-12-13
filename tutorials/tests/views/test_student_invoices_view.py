@@ -56,6 +56,3 @@ class StudentInvoicesViewTestCase(TestCase):
             response.context['invoices'].order_by('orderNo'),
             invoices,
         )
-
-
-    

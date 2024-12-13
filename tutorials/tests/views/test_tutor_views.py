@@ -1,10 +1,6 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from django.contrib.auth.models import User
-from django.contrib.auth import get_user_model 
 from tutorials.models import Tutor, Student, Lesson, Invoice
-from decimal import Decimal
-
 
 
 class TutorViewsTestCase(TestCase):
@@ -80,6 +76,7 @@ class TutorViewsTestCase(TestCase):
         self.assertIn('confirmed_lessons', response.context)
         self.assertEqual(len(response.context['confirmed_lessons']), 2)
         
+<<<<<<< Updated upstream
   
 
     def test_tutor_payments_view(self):
@@ -90,6 +87,8 @@ class TutorViewsTestCase(TestCase):
         self.assertEqual(response.context['total_balance'], 160)
 
 
+=======
+>>>>>>> Stashed changes
     def test_tutor_profile_view(self):
         self.client.login(username='tutor', password='password')
         response = self.client.get(reverse('tutor_profile'))

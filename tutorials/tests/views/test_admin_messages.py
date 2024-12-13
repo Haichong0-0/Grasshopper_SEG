@@ -35,4 +35,3 @@ class AdminMessagesViewTest(TestCase):
         response = self.client.get(reverse('admin_messages'))
 
         self.assertRedirects(response, f"{reverse('log_in')}?next={reverse('admin_messages')}")
-

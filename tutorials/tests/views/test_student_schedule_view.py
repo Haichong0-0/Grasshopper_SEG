@@ -119,5 +119,3 @@ class StudentScheduleViewTestCase(TestCase):
         self.assertEqual(len(response.context['confirmed_lessons']), 0)
         self.assertEqual(len(response.context['pending_lessons']), 0)
         self.assertEqual(len(response.context['rejected_lessons']), 0)
-
-

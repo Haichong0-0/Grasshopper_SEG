@@ -77,6 +77,7 @@ class ProfileViewTest(TestCase):
     #     self.assertEqual(self.user.last_name, 'Doe')
     #     self.assertEqual(self.user.email, 'johndoe@example.org')
 
+<<<<<<< Updated upstream
     # def test_succesful_profile_update(self):
     #     self.client.login(username=self.user.username, password='Password123')
     #     before_count = User.objects.count()
@@ -99,3 +100,9 @@ class ProfileViewTest(TestCase):
     #     redirect_url = reverse_with_next('log_in', self.url)
     #     response = self.client.post(self.url, self.form_input)
     #     self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+=======
+    def test_post_profile_redirects_when_not_logged_in(self):
+        redirect_url = reverse_with_next('log_in', self.url)
+        response = self.client.post(self.url, self.form_input)
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+>>>>>>> Stashed changes

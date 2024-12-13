@@ -477,7 +477,7 @@ def update_message_status(request, message_id):
 
 
 # check the tutoravailability function
-class ConfirmClassView(APIView):        # Vincent: complete 'refactoring'
+class ConfirmClassView(APIView):        
     def post(self, request, lesson_id)-> HttpResponse:
         """
         accept button for admins to accept lesson requests from students
@@ -522,7 +522,7 @@ class ConfirmClassView(APIView):        # Vincent: complete 'refactoring'
         return redirect("admin_schedule")
 
 
-class RejectClassView(APIView):  # Vincent: complete 'refactoring'
+class RejectClassView(APIView):   
     def post(self, request, lesson_id)-> HttpResponse:
         """
         reject button for admins to reject lesson requests from students

@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-from tutorials.models import Student  # If you have a custom Student model
+from tutorials.models import Student  
 
 class StudentProfileViewTest(TestCase):
 

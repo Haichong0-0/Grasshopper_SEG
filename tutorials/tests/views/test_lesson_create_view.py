@@ -113,8 +113,6 @@ class LessonCreateViewTestCase(TestCase):
             'This lesson conflicts with another lesson in your schedule.',
         )
 
-
-
     def test_post_late_lesson_request(self):
         late_data = self.valid_form_data.copy()
         late_data['term'] = 'September-Christmas'  # Modify term to a late request term
@@ -139,5 +137,3 @@ class LessonCreateViewTestCase(TestCase):
         self.assertTrue(
             Lesson.objects.filter(student=self.student, subject='python', status='Late').exists()
         )
-
-

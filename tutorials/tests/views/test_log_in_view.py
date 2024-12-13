@@ -35,5 +35,3 @@ class LogInViewTest(TestCase):
         url = reverse('log_in')
         response = self.client.get(url)
         self.assertRedirects(response, '/student_dashboard/')
-
-

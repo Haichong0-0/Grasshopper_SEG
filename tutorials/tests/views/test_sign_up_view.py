@@ -21,6 +21,7 @@ class SignUpViewTestCase(TestCase, LogInTester):
             'new_password': 'Password123',
             'password_confirmation': 'Password123'
         }
+<<<<<<< Updated upstream
         self.user = User.objects.get(username='@johndoe')
 
     # def test_sign_up_url(self):
@@ -82,3 +83,6 @@ class SignUpViewTestCase(TestCase, LogInTester):
         self.assertEqual(after_count, before_count)
         redirect_url = reverse('student_dashboard')
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+=======
+        self.user = User.objects.get(username='@johndoe')
+>>>>>>> Stashed changes

@@ -33,4 +33,3 @@ class AdminWelcomeViewTest(TestCase):
         response = self.client.get(reverse('admin_welcome'))
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(reverse('log_in')))
-
