@@ -10,21 +10,16 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
-from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm, MessageForm
+from tutorials.forms import LogInForm, PasswordForm, UserForm, SignUpForm
 from tutorials.helpers import login_prohibited
 from tutorials.models import User, Lesson, Tutor, Student, Invoice, TutorAvailability, Subjects, Message
-from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from .serialiser import LessonSerializer
-
-from datetime import datetime, date, timedelta
+from .serializer import LessonSerializer
+from datetime import datetime, timedelta
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from tutorials.decorators import user_type_required
-from django.views.generic import CreateView, ListView, DeleteView
-
-
+from django.views.generic import ListView
 
 
 @login_required
@@ -44,7 +39,6 @@ def admin_dashboard(request):
     else:
         return render(request, 'access_denied.html', {'user': current_user})
 
-
     
 @login_required
 @user_type_required('tutor')
@@ -60,13 +54,13 @@ def tutor_dashboard(request):
     else:
         return render(request, 'access_denied.html', {'user': current_user})
 
+
 @login_required
 @user_type_required('student')
 def student_dashboard(request):
     """
     Display the student's dashboard.
     """
-
     current_user = request.user
     if (current_user.type_of_user == 'student'):
         print("current_user(student_dashboard): ", current_user)
@@ -80,9 +74,7 @@ def home(request):
     """
     Display the application's start/home screen.
     """
-    print(request.user.is_authenticated) # vincent: TODO: (remove this line in final version)for testing purposes
     return render(request, 'home.html')
-
 
 class LoginProhibitedMixin:
     """
@@ -130,7 +122,6 @@ class LogInView(LoginProhibitedMixin, View):
         """
         Display log in template.
         """
-
         self.next = request.GET.get('next') or ''
         print("get(): ", self.next)
         return self.render()
@@ -139,19 +130,15 @@ class LogInView(LoginProhibitedMixin, View):
         """
         Handle log in attempt.
         """
-
         form = LogInForm(request.POST)
         self.next = request.POST.get('next') or settings.REDIRECT_URL_WHEN_LOGGED_IN
         user = form.get_user(request)
         print("after post(): ", user)
-
         if user is not None:
             try:
-                login(request, user)
-            
+                login(request, user) 
             except Exception as e:
                 print("error occured at login: ",e)
-
             if user.type_of_user=="student":  
                 print(self.next)
                 return redirect(reverse('student_dashboard'))
@@ -159,7 +146,6 @@ class LogInView(LoginProhibitedMixin, View):
                 return redirect(reverse('tutor_dashboard'))
             elif user.type_of_user=="admin":  
                 return redirect(reverse('admin_dashboard'))
-        
         else: 
             print("login_view, user is None: ", user)
         messages.add_message(request, messages.ERROR, "The credentials provided were invalid!")
@@ -169,7 +155,6 @@ class LogInView(LoginProhibitedMixin, View):
         """
         Render log in template with blank log in form.
         """
-
         form = LogInForm()
         return render(self.request, 'log_in.html', {'form': form, 'next': self.next})
 
@@ -178,7 +163,6 @@ def log_out(request):
     """
     Log out the current user
     """
-
     logout(request)
     return redirect('home')
 
@@ -187,7 +171,6 @@ class PasswordView(LoginRequiredMixin, FormView):
     """
     Display password change screen and handle password change requests.
     """
-
     template_name = 'password.html'
     form_class = PasswordForm
 
@@ -195,7 +178,6 @@ class PasswordView(LoginRequiredMixin, FormView):
         """
         Pass the current user to the password change form.
         """
-
         kwargs = super().get_form_kwargs(**kwargs)
         kwargs.update({'user': self.request.user})
         return kwargs
@@ -204,7 +186,6 @@ class PasswordView(LoginRequiredMixin, FormView):
         """
         Handle valid form by saving the new password.
         """
-
         form.save()
         login(self.request, self.request.user)
         return super().form_valid(form)
@@ -213,7 +194,6 @@ class PasswordView(LoginRequiredMixin, FormView):
         """
         Redirect the user after successful password change.
         """
-
         messages.add_message(self.request, messages.SUCCESS, "Password updated!")
         return reverse('dashboard')
 
@@ -222,7 +202,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """
     Display user profile editing screen, and handle profile modifications.
     """
-
     model = UserForm
     template_name = "profile.html"
     form_class = UserForm
@@ -242,12 +221,10 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
 
-
-class UserListView(ListView): #need to make test
+class UserListView(ListView): 
     model = User
     template_name = 'user_list.html'
     context_object_name = 'users'
-
     def get_queryset(self):
         query = self.request.GET.get('q', '')
         if query:
@@ -267,21 +244,16 @@ def tutor_lessons(request):
     """
     lessons page for tutors
     """
-
     context = {}
-
     return render(request, 'tutor/tutor_lessons.html', context)
 
 class SignUpView(LoginProhibitedMixin, FormView): 
     """
     Display the sign-up screen and handle sign-ups.
     """
-
     form_class = SignUpForm
     template_name = "sign_up.html"
     redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
-
-    
     def get_form_kwargs(self)->dict:       
         """
         get all sign_up_form data in dictionary
@@ -339,8 +311,6 @@ class SignUpView(LoginProhibitedMixin, FormView):
             print('after get_success_url, else statement')
             return reverse('home')
 
-    
-
 
 @login_required
 @user_passes_test(is_admin)
@@ -371,7 +341,7 @@ def get_tutor(subject)->list:
     return list(available_tutors)
 
 
-def get_lesson_data()->dict:        # vincent TODO: complete refactoring (remove this comment in final version)
+def get_lesson_data()->dict:       
     """
     extracting all lesson datas with associated available tutors
     """
@@ -413,6 +383,7 @@ def get_lesson_data()->dict:        # vincent TODO: complete refactoring (remove
     context["rejected_lessons"] = rejected_lessons
     return context
 
+
 @login_required
 @user_passes_test(is_admin)
 def admin_schedule(request)-> HttpResponse:
@@ -424,12 +395,14 @@ def admin_schedule(request)-> HttpResponse:
         context = get_lesson_data()
     return render(request, 'admin/admin_schedule.html', context)
 
+
 @login_required
 def tutor_schedule(request)-> HttpResponse:
     """
     schedule page for tutors
     """
     return render(request, 'tutor/tutor_schedule.html', context={})
+
 
 @login_required
 @user_passes_test(is_admin)
@@ -447,11 +420,8 @@ def admin_payment(request)-> HttpResponse:
 @login_required
 def tutor_payment(request)-> HttpResponse:
     """payment page for tutors"""
-
     invoices = []  # Return an empty queryset if the user is not a tutor
-
     context = {}
-
     return render(request, 'tutor/tutor_payment.html', context)
 
 @login_required
@@ -472,7 +442,6 @@ def student_payment(request)-> HttpResponse:
 @user_passes_test(is_admin)
 def admin_messages(request):
     messages = Message.objects.all().order_by('-created_at')
-
     context = {
        'messages': messages,
     }
@@ -483,7 +452,6 @@ def admin_messages(request):
 @user_passes_test(is_admin)
 def update_message_status(request, message_id):
     message = get_object_or_404(Message, id=message_id)
-
     if request.method == "POST":
         new_status = request.POST.get('status')
         if new_status in ['pending', 'resolved']:
@@ -491,9 +459,7 @@ def update_message_status(request, message_id):
             message.admin = request.user.admin
             message.save()
             return redirect('admin_messages')
-
     return redirect('admin_messages')
-
 
 
 # check the tutoravailability function
@@ -556,15 +522,11 @@ class RejectClassView(APIView):  # Vincent: complete 'refactoring'
             lesson_obj = Lesson.objects.get(lesson_id=lesson_id)
             lesson_obj.status = "Rejected"      # update the lesson status
             lesson_obj.save()
-
         return redirect("admin_schedule")
 
 
-
 def user_profile(request, username):
-   
     user = get_object_or_404(User, username=username)
-
     tutor = None
     availability_slots = []
     if hasattr(user, 'tutor_profile'):
@@ -576,4 +538,3 @@ def user_profile(request, username):
         'tutor': tutor,
         'availability_slots': availability_slots,
     })
-
