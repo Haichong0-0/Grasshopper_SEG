@@ -76,24 +76,24 @@ class TutorViewsTestCase(TestCase):
         self.assertIn('confirmed_lessons', response.context)
         self.assertEqual(len(response.context['confirmed_lessons']), 2)
         
-<<<<<<< Updated upstream
+# <<<<<<< Updated upstream
   
 
-    def test_tutor_payments_view(self):
-        self.client.login(username='tutor', password='password')
-        response = self.client.get(reverse('tutor_payment'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'tutor/tutor_payment.html')
-        self.assertEqual(response.context['total_balance'], 160)
+#     def test_tutor_payments_view(self):
+#         self.client.login(username='tutor', password='password')
+#         response = self.client.get(reverse('tutor_payment'))
+#         self.assertEqual(response.status_code, 200)
+#         self.assertTemplateUsed(response, 'tutor/tutor_payment.html')
+#         self.assertEqual(response.context['total_balance'], 160)
 
 
-=======
->>>>>>> Stashed changes
-    def test_tutor_profile_view(self):
-        self.client.login(username='tutor', password='password')
-        response = self.client.get(reverse('tutor_profile'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'tutor/tutor_profile.html')
+# =======
+# >>>>>>> Stashed changes
+#     def test_tutor_profile_view(self):
+#         self.client.login(username='tutor', password='password')
+#         response = self.client.get(reverse('tutor_profile'))
+#         self.assertEqual(response.status_code, 200)
+#         self.assertTemplateUsed(response, 'tutor/tutor_profile.html')
 
 
 

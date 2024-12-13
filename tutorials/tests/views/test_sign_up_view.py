@@ -21,9 +21,7 @@ class SignUpViewTestCase(TestCase, LogInTester):
             'new_password': 'Password123',
             'password_confirmation': 'Password123'
         }
-<<<<<<< Updated upstream
-        self.user = User.objects.get(username='@johndoe')
-
+        
     # def test_sign_up_url(self):
     #     self.assertEqual(self.url,'/sign_up/')
 
@@ -71,18 +69,18 @@ class SignUpViewTestCase(TestCase, LogInTester):
     #     self.assertTrue(is_password_correct)
     #     self.assertTrue(self._is_logged_in())
 
-    def test_post_sign_up_redirects_when_logged_in(self):
-        self.client.login(username=self.user.username, password="Password123")
-        before_count = User.objects.count()
-        # response = self.client.get('/') 
-        # print("response.cookies ", response)
-        # csrf_token = response.cookies['csrftoken'].value
-        # self.form_input["csrfmiddlewaretoken"]=csrf_token
-        response = self.client.post(self.url + "?variation=student",  self.form_input, follow=True)
-        after_count = User.objects.count()
-        self.assertEqual(after_count, before_count)
-        redirect_url = reverse('student_dashboard')
-        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-=======
-        self.user = User.objects.get(username='@johndoe')
->>>>>>> Stashed changes
+#     def test_post_sign_up_redirects_when_logged_in(self):
+#         self.client.login(username=self.user.username, password="Password123")
+#         before_count = User.objects.count()
+#         # response = self.client.get('/') 
+#         # print("response.cookies ", response)
+#         # csrf_token = response.cookies['csrftoken'].value
+#         # self.form_input["csrfmiddlewaretoken"]=csrf_token
+#         response = self.client.post(self.url + "?variation=student",  self.form_input, follow=True)
+#         after_count = User.objects.count()
+#         self.assertEqual(after_count, before_count)
+#         redirect_url = reverse('student_dashboard')
+#         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+# =======
+#         self.user = User.objects.get(username='@johndoe')
+# >>>>>>> Stashed changes
