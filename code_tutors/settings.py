@@ -140,9 +140,9 @@ LOGIN_URL = 'log_in'
 # URL where @login_prohibited redirects to
 # REDIRECT_URL_WHEN_LOGGED_IN = 'dashboard'         # vincent TODO:remove this line in final version, not in use in our app
 REDIRECT_URL_WHEN_LOGGED_IN = 'student_dashboard'
-REDIRECT_TO_ADMIN_WHEN_LOGGED_IN = 'admin_dashboard'
-REDIRECT_TO_TUTOR_WHEN_LOGGED_IN = 'tutor_dashboard'
-REDIRECT_TO_STUDENT_WHEN_LOGGED_IN = 'student_dashboard'
+REDIRECT_TO_ADMIN_WHEN_LOGGED_IN = 'admin_welcome'
+REDIRECT_TO_TUTOR_WHEN_LOGGED_IN = 'tutor_welcome'
+REDIRECT_TO_STUDENT_WHEN_LOGGED_IN = 'student_welcome'
 
 # Convert Django ERROR messages to Bootstrap DANGER messages
 MESSAGE_TAGS = {
