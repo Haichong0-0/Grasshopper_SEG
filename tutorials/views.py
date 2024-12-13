@@ -413,7 +413,15 @@ def admin_payment(request)-> HttpResponse:
     context = {}
     # getting all invoice objects, sorted by orderNo, in descending order
     invoice_detail = Invoice.objects.all().order_by('-orderNo')
-    context["invoice_detail"] = invoice_detail 
+    # getting all lessons objects
+    lessons = Lesson.objects.filter(invoice_no__isnull=False).select_related('invoice_no')
+    for lesson in lessons:
+        if lesson.invoice_no:
+            lesson.total_cost = lesson.invoice_no.price_per_class * lesson.invoice_no.no_of_classes
+    context = {
+        'invoices': invoice_detail,
+        'lessons': lessons
+    } 
     return render(request, 'admin/admin_payment.html', context)
 
 

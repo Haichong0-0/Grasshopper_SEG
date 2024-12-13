@@ -21,14 +21,19 @@ def tutor_schedule(request):
 @user_type_required('tutor')
 def tutor_payments(request):
     invoices = Invoice.objects.filter(tutor=request.user)  
-    
+    lessons = Lesson.objects.filter(tutor=request.user, invoice_no__isnull=False).select_related('invoice_no')
     total_students = invoices.values('student').distinct().count()
-    total_balance_due = sum(invoice.total_sum for invoice in invoices)
+    total_balance = 0
+    for lesson in lessons:
+        if lesson.invoice_no:
+            lesson.total_cost = lesson.invoice_no.price_per_class * lesson.invoice_no.no_of_classes
+            total_balance += lesson.total_cost
 
     context = {
         'invoices': invoices,
         'total_students': total_students,
-        'total_balance_due': total_balance_due,
+        'lessons': lessons,
+        'total_balance':total_balance
     }
 
     return render(request, 'tutor/tutor_payment.html', context)

@@ -132,27 +132,27 @@
                                 <th>Subject</th>
                                 <th>No. of Classes</th>
                                 <th>Price per Class</th>
-                                <th>Sum</th>
+                                <th>Total Cost</th>
                                 <th>Status</th>
                                 <th> </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for Invoice in invoice_detail %}
+                            {% for lesson in lessons %}
                             <tr>  
-                                <td>{{ Invoice.orderNo }}</td>
-                                <td>{{ Invoice.tutor.first_name }} {{ Invoice.tutor.last_name }}</td>
-                                <td>{{ Invoice.student.first_name }} {{ Invoice.student.last_name }}</td>
-                                <td>{{ Invoice.topic }}</td>
-                                <td>{{ Invoice.no_of_classes }}</td>
-                                <td>{{ Invoice.price_per_class }}</td>
-                                <td>{{ Invoice.total_sum }}</td>
-                                <td>{{ Invoice.status }}</td>
+                                <td>{{ lesson.invoice_no.orderNo }}</td>
+                                <td>{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }}</td>
+                                <td>{{ lesson.student.first_name }} {{ lesson.student.last_name }}</td>
+                                <td>{{ lesson.subject }}</td>
+                                <td>{{ lesson.invoice_no.no_of_classes }}</td>
+                                <td>{{ lesson.invoice_no.price_per_class }}</td>
+                                <td>{{ lesson.total_cost }}</td>
+                                <td>{{ lesson.payment_status }}</td>
                                 <td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="9" class="empty-message">No payments.</td>
+                                <td colspan="8" class="empty-message">No payments.</td>
                             </tr>
                             {% endfor %}
                         </tbody>

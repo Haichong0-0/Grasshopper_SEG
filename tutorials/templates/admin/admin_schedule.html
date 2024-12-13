@@ -137,6 +137,7 @@
                             <tr>
                                 <th>Subject</th>
                                 <th>Tutor</th>
+                                <th>Student</th>
                                 <th>Frequency</th>
                                 <th>Day of Week</th>
                                 <th>Start Time</th>
@@ -158,7 +159,8 @@
                                             <option value="{{ tutor.id }}">{{ tutor.first_name }} {{ tutor.last_name }}</option>
                                             {% endfor %}
                                         </select>
-                                    </td>                                
+                                    </td>      
+                                <td>{{ lesson.student.first_name }}  {{ lesson.student.last_name }}</td>                          
                                 <td>{{ lesson.frequency }}</td>
                                 <td>{{ lesson.day_of_week }}</td>
                                 <td>{{ lesson.start_time }}</td>
@@ -174,7 +176,7 @@
                         <form method="post" action="{% url 'reject_class' lesson_id=lesson.lesson_id %}">
                             {% csrf_token %}
                             <tr>
-                                <td colspan="11" class="text-end">
+                                <td colspan="12" class="text-end">
                                     <button type="submit" class="btn btn-danger">Reject</button>
                                 </td>
                             </tr>
@@ -198,6 +200,7 @@
                         <tr>
                             <th>Subject</th>
                             <th>Tutor</th>
+                            <th>Student</th>
                             <th>Frequency</th>
                             <th>Day of Week</th>
                             <th>Start Time</th>
@@ -210,6 +213,7 @@
                         <tr>
                             <td>{{ lesson.subject }}</td>
                             <td>{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }}</td>
+                            <td>{{ lesson.student.first_name }}  {{ lesson.student.last_name }}</td>                          
                             <td>{{ lesson.frequency }}</td>
                             <td>{{ lesson.day_of_week }}</td>
                             <td>{{ lesson.start_time }}</td>
@@ -218,7 +222,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="7" class="empty-message">You have no confirmed lessons.</td>
+                            <td colspan="8" class="empty-message">You have no confirmed lessons.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -233,6 +237,7 @@
                         <tr>
                             <th>Subject</th>
                             <th>Tutor</th>
+                            <th>Student</th>
                             <th>Frequency</th>
                             <th>Day of Week</th>
                             <th>Start Time</th>
@@ -245,6 +250,7 @@
                         <tr>
                             <td>{{ lesson.subject }}</td>
                             <td>{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }}</td>
+                            <td>{{ lesson.student.first_name }}  {{ lesson.student.last_name }}</td>                          
                             <td>{{ lesson.frequency }}</td>
                             <td>{{ lesson.day_of_week }}</td>
                             <td>{{ lesson.start_time }}</td>
@@ -253,7 +259,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="7" class="empty-message">You have no rejected lessons.</td>
+                            <td colspan="8" class="empty-message">You have no rejected lessons.</td>
                         </tr>
                         {% endfor %}
                     </tbody> 

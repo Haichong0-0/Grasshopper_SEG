@@ -116,7 +116,9 @@ def student_invoices(request):
     student = request.user
     invoices = Invoice.objects.filter(student=student).order_by('orderNo')
     lessons = Lesson.objects.filter(student=student, invoice_no__isnull=False).select_related('invoice_no')
-
+    for lesson in lessons:
+        if lesson.invoice_no:
+            lesson.total_cost = lesson.invoice_no.price_per_class * lesson.invoice_no.no_of_classes
     context = {
         'invoices': invoices,
         'lessons': lessons

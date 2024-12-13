@@ -4,9 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Mina:wght@400;700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Orienta&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Prata&family=Quicksand:wght@300..700&family=Varela&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Mina:wght@400;700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Orienta&family=Poppins:wght@100;400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body, html {
@@ -16,68 +14,115 @@
             background: #000435;
             color: white;
         }
+
+        .content-area {
+            margin-left: 50px; 
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: white;
+        }
+
+        .table-container {
+            width: 100%;
+            max-width: 100%; 
+            margin: 0 auto;
+            margin-bottom: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
+            padding: 16px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            color: #5A5A5A;
+            font-weight: bold;
+        }
+
+        .table td {
+            background-color: #fff;
+            color: #666;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .table tbody tr:hover {
+            background-color: #e9ecef;
+            cursor: pointer;
+        }
+
+        .table-striped tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        @media (max-width: 1200px) { 
+            .content-area {
+                margin-left: 0;
+                padding: 10px;
+            }
+
+            .table th, .table td {
+                font-size: 0.85rem;
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 
-<body style="background-color: #000435; color: white;">
-<div class="container mt-3">
-    <h1 class="text-center mb-4">Payments</h1>
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-left mb-0" style="font-size: 1.45rem; font-weight: 500; color: white;">
-            <i class="bi bi-cash-coin" style="font-size: 1.4rem; margin-right: 10px; color: white;"></i> Your Due Payments
+<body>
+    <div class="content-area">
+        <h1 class="text-center mb-4">Payments</h1>
+        <h2 class="text-left mb-4 text-primary" style="font-size: 1.45rem; font-weight: 500;">
+            <i class="bi bi-cash-coin" style="font-size: 1.4rem; margin-right: 10px;"></i> Your Due Payments
         </h2>
-        <a href="{% url 'make_payment' %}" class="btn btn-success" {% if upcoming_lessons_count == 0 %}disabled{% endif %}>Make Payment</a>
-    </div>
-    <div class="container mt-5">
-        <div class="container my-5">
-            <div class="dropdown">
-                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="sort-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-sort-alpha-down"></i> Sort
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="sort-dropdown">
-                    <li class="dropdown-header">Sort by Price</li>
-                    <li><a class="dropdown-item" href=#><i class="bi bi-sort-numeric-up"></i> Ascending</a></li>
-                    <li><a class="dropdown-item" href=#><i class="bi bi-sort-numeric-down"></i> Descending</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href=#>Reset</a></li>
-
-                </ul>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" style="background-color: white; color: #333;">
-                            <thead class="table" style="background-color: rgb(220, 226, 248);">
-                                <tr>
-                                    <th scope="col">Invoice</th>
-                                    <th scope="col">Topic</th>
-                                    <th scope="col">No. of Classes</th>
-                                    <th scope="col">Price per Class</th>
-                                    <th scope="col">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for lesson in lessons %}
-                                <tr style="background-color: white; color: #333;">
-                                    <td>{{ forloop.counter }}</td> <!-- invoice # starts from 1 -->
-                                    <td>
-                                        {% if lesson.invoice_no %}
-                                            {{ lesson.subject }} 
-                                        {% else %}
-                                            No invoice assigned
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ lesson.invoice_no.no_of_classes }}</td>
-                                    <td>{{ lesson.invoice_no.price_per_class }}</td>
-                                    <td>{{ lesson.payment_status }}</td> 
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>  
-                    </div>
-                </div>
-            </div>
+        <div class="table-container">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Invoice</th>
+                        <th>Topic</th>
+                        <th>No. of Classes</th>
+                        <th>Price per Class</th>
+                        <th>Total Cost</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lesson in lessons %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            {% if lesson.invoice_no %}
+                                {{ lesson.subject }}
+                            {% else %}
+                                No invoice assigned
+                            {% endif %}
+                        </td>
+                        <td>{{ lesson.invoice_no.no_of_classes }}</td>
+                        <td>{{ lesson.invoice_no.price_per_class }}</td>
+                        <td>{{ lesson.total_cost }}</td>
+                        <td>{{ lesson.payment_status }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="empty-message">No payments.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
-</div>
+</body>
 {% endblock %}

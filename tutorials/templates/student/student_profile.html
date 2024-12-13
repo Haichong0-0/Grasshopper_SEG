@@ -55,6 +55,12 @@
                 margin: 10px 0;
             }
 
+            .btn {
+                margin: 15px;
+            }
+
+            
+
         </style>
     </head>
     <body>
@@ -81,7 +87,7 @@
                 <div class="info">
                     <strong>User Type: </strong> {{ request.user.type_of_user }}
                 </div>
-                <div style="display: flex; justify-content: flex-end;">
+                <div style="display: flex; justify-content: center;">
                     <a href="{% url 'profile' %}" class="btn btn-primary">Edit Profile</a>
                 </div>
             </div>
