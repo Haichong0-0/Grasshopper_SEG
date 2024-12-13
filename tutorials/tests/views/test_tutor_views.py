@@ -29,7 +29,7 @@ class TutorViewsTestCase(TestCase):
             frequency='weekly',
             term='September-Christmas',
             subject='python',
-            status='confirmed'
+            status='Confirmed'
         )
         self.lesson2 = Lesson.objects.create(
             tutor=self.tutor,
@@ -40,7 +40,7 @@ class TutorViewsTestCase(TestCase):
             frequency='fortnightly',
             term='January-Easter term',
             subject='django',
-            status='confirmed'
+            status='Confirmed'
         )
 
         self.invoice1 = Invoice.objects.create(
@@ -73,8 +73,6 @@ class TutorViewsTestCase(TestCase):
         self.assertEqual(len(response.context['confirmed_lessons']), 2)
         
   
-
-        
 
     def test_tutor_payments_view(self):
         response = self.client.get(reverse('tutor_payment'))

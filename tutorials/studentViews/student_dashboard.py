@@ -171,7 +171,23 @@ def leave_message(request):
 @user_type_required('student')
 def student_profile(request):
     return render(request, 'student/student_profile.html')
+
+
+@login_required
+def student_sort_invoices(request):
+    sort_by = request.GET.get('sort', 'price_asc')  
     
+    if sort_by == 'price_asc':
+        invoices = Invoice.objects.all().order_by('total_sum')  
+    elif sort_by == 'price_desc':
+        invoices = Invoice.objects.all().order_by('-total_sum') 
+    elif sort_by == 'reset': 
+        invoices = Invoice.objects.all()  
+    else:
+        invoices = Invoice.objects.all()  
+
+    return render(request, 'student/student_invoices.html', {'invoices': invoices})
+
 
 @login_required
 def student_sort_lessons(request):
@@ -193,6 +209,7 @@ def student_sort_lessons(request):
     print("Rejected Lessons:")
     for lesson in rejected_lessons:
         print(lesson.subject, lesson.start_time)
+
 
     if sort_by == 'date_asc':
         pending_lessons = pending_lessons.order_by('start_time')
@@ -236,4 +253,5 @@ def make_payment(request):
     return render(request, 'student/make_payment.html', {
         'unpaid_pending_lessons': unpaid_pending_lessons,
     })
+
 

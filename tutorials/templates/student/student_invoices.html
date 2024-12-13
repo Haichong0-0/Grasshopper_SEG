@@ -35,15 +35,12 @@
                     <i class="bi bi-sort-alpha-down"></i> Sort
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="sort-dropdown">
-                    <li class="dropdown-header">Sort by Due Date</li>
-                    <li><a class="dropdown-item" href=#><i class="bi bi-sort-numeric-up"></i> Ascending</a></li>
-                    <li><a class="dropdown-item" href=#><i class="bi bi-sort-numeric-down"></i> Descending</a></li>
-                    <li><hr class="dropdown-divider"></li>
                     <li class="dropdown-header">Sort by Price</li>
-                    <li><a class="dropdown-item" href=#><i class="bi bi-sort-numeric-up"></i> Ascending</a></li>
-                    <li><a class="dropdown-item" href=#><i class="bi bi-sort-numeric-down"></i> Descending</a></li>
+                    <li><a class="dropdown-item" href="{% url 'student_sort_invoices' %}?sort=price_asc"><i class="bi bi-sort-numeric-up"></i> Ascending</a></li>
+                    <li><a class="dropdown-item" href="{% url 'student_sort_invoices' %}?sort=price_desc"><i class="bi bi-sort-numeric-down"></i> Descending</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href=#>Reset</a></li>
+                    <li><a class="dropdown-item" href="{% url 'student_sort_invoices' %}?sort=reset">Reset</a></li>
+
                 </ul>
             </div>
             <div class="row justify-content-center">
@@ -62,17 +59,17 @@
                             <tbody>
                                 {% for lesson in lessons %}
                                 <tr style="background-color: white; color: #333;">
-                                    <td>{{ forloop.counter }}</td> <!-- Invoice # starts from 1 -->
+                                    <td>{{ forloop.counter }}</td> <!-- invoice # starts from 1 -->
                                     <td>
                                         {% if lesson.invoice_no %}
-                                            {{ lesson.subject }} <!-- Accessing the topic of the invoice from the lesson's related invoice -->
+                                            {{ lesson.subject }} 
                                         {% else %}
                                             No invoice assigned
                                         {% endif %}
                                     </td>
                                     <td>{{ lesson.invoice_no.no_of_classes }}</td>
                                     <td>{{ lesson.invoice_no.price_per_class }}</td>
-                                    <td>{{ lesson.payment_status }}</td> <!-- Accessing the status from the related invoice -->
+                                    <td>{{ lesson.payment_status }}</td> 
                                 </tr>
                                 {% endfor %}
                             </tbody>

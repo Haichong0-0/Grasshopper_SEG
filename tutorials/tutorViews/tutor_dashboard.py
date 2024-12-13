@@ -43,11 +43,10 @@ def tutor_profile(request):
 
 @login_required
 def tutor_sort_lessons(request):
-    sort_by = request.GET.get('sort', 'subject_asc') 
-    
+    sort_by = request.GET.get('sort', 'subject_asc')  
+
     pending_lessons = Lesson.objects.filter(status='Pending')
-    confirmed_lessons = Lesson.objects.filter(status='Confirmed')  
-    
+    confirmed_lessons = Lesson.objects.filter(status='Confirmed')
 
     if sort_by == 'date_asc':
         pending_lessons = pending_lessons.order_by('start_time')
@@ -61,10 +60,6 @@ def tutor_sort_lessons(request):
     elif sort_by == 'subject_desc':
         pending_lessons = pending_lessons.order_by('-subject')
         confirmed_lessons = confirmed_lessons.order_by('-subject')
-    else:
-     
-        pending_lessons = Lesson.objects.filter(status='Pending')
-        confirmed_lessons = Lesson.objects.filter(status='Confirmed')
 
     return render(request, 'tutor/tutor_schedule.html', {
         'pending_lessons': pending_lessons,
