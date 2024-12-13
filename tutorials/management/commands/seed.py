@@ -304,6 +304,7 @@ class Command(BaseCommand):
                     day_of_week=data['day_of_week'],
                     start_time=data['start_time'],
                     status=data['status'],
+                    payment_status = 'Paid',
                     invoice_no=invoice,
                 )
                 print(f"Lesson created: {data['student']} with {data['tutor']} for {data['subject']}")
