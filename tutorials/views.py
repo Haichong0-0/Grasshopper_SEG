@@ -210,15 +210,21 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         """
         Return the object (user) to be updated.
         """
-        user = self.request.user
-        return user
+        return self.request.user
 
     def get_success_url(self):
         """
         Return redirect URL after successful update.
         """
         messages.add_message(self.request, messages.SUCCESS, "Profile updated!")
-        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
+
+        if self.request.user.type_of_user == 'tutor':
+            return reverse('tutor_dashboard')
+        elif self.request.user.type_of_user == 'student':
+            return reverse('student_dashboard')
+        else:
+            return reverse('admin_dashboard')
 
 
 class UserListView(ListView): 
