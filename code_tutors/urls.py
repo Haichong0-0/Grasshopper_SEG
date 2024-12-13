@@ -19,8 +19,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from tutorials import views
-from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule, student_welcome, leave_message, student_profile, student_sort_lessons, make_payment, student_sort_invoices
-from tutorials.tutorViews.tutor_dashboard import tutor_schedule,  tutor_payments, tutor_profile, tutor_sort_lessons, tutor_sort_invoices, update_subjects
+from tutorials.studentViews.student_dashboard import student_dashboard,lesson_create_view, student_invoices, student_schedule, student_welcome, leave_message, student_profile, make_payment
+from tutorials.tutorViews.tutor_dashboard import tutor_schedule,  tutor_payments, tutor_profile, update_subjects
 from tutorials.views import user_profile
 
 urlpatterns = [
@@ -76,18 +76,13 @@ urlpatterns = [
     path('tutor/payment', tutor_payments, name='tutor_payment'),
     path('requestlesson/', lesson_create_view, name='lesson_create'), 
     path('student_dashboard/', student_dashboard, name='student_dashboard'),
-    path('invoices/', student_invoices, name='invoices'),
     path('student_schedule/', student_schedule, name='student_schedule'),
     path('lesson/<int:lesson_id>/confirm_class/', views.ConfirmClassView.as_view(), name='confirm_class'),
     path('lesson/<int:lesson_id>/reject_class/', views.RejectClassView.as_view(), name='reject_class'),    
     path('student_welcome/', student_welcome, name='student_welcome'),
     path('leave-message/', leave_message, name='leave_message'),
     path('users/<str:username>/', user_profile, name='user_profile'),
-    #path('tutor/schedule/', sort_lessons, name='sort_lessons'),
-    path('invoices/sort/', student_sort_invoices, name='student_sort_invoices'),
-    path('student_schedule/sort/', student_sort_lessons, name='student_sort_lessons'),
-    path('tutor/schedule/sort/', tutor_sort_lessons, name='tutor_sort_lessons'),
-    path('tutor/payments/sort/', tutor_sort_invoices, name='tutor_sort_invoices'),
+    path('invoices/', student_invoices, name='invoices'),
     path('update_subjects/', update_subjects, name='update_subjects'),
     path('make_payment/', make_payment, name='make_payment'),
 

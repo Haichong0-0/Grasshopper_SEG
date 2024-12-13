@@ -58,20 +58,4 @@ class StudentInvoicesViewTestCase(TestCase):
         )
 
 
-    def test_sort_invoices_by_price_asc(self):
-        login_success = self.client.login(username='teststudent', password='testpassword')
-        self.assertTrue(login_success)
-        response = self.client.get(reverse('student_sort_invoices'), {'sort': 'price_asc'})
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'student/student_invoices.html')
-        invoices = list(response.context['invoices'])
-        self.assertEqual([invoice.total_sum for invoice in invoices], [Decimal('250.00'), Decimal('300.00')])
-
-    def test_sort_invoices_by_price_desc(self):
-        login_success = self.client.login(username='teststudent', password='testpassword')
-        self.assertTrue(login_success)
-        response = self.client.get(reverse('student_sort_invoices'), {'sort': 'price_desc'})
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'student/student_invoices.html')
-        invoices = list(response.context['invoices'])
-        self.assertEqual([invoice.total_sum for invoice in invoices], [Decimal('300.00'), Decimal('250.00')])
+    

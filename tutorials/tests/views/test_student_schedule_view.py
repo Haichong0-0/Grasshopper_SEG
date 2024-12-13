@@ -1,6 +1,6 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
-from tutorials.models import Lesson, Student
+from tutorials.models import Lesson, Student, Tutor
 from datetime import time
 
 class StudentScheduleViewTestCase(TestCase):
@@ -119,3 +119,5 @@ class StudentScheduleViewTestCase(TestCase):
         self.assertEqual(len(response.context['confirmed_lessons']), 0)
         self.assertEqual(len(response.context['pending_lessons']), 0)
         self.assertEqual(len(response.context['rejected_lessons']), 0)
+
+
